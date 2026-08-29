@@ -1,0 +1,56 @@
+.frame {
+  padding: var(--pixel-border);
+  background: var(--color-border-strong);
+  clip-path: polygon(
+    var(--pixel-step) 0,
+    calc(100% - var(--pixel-step)) 0,
+    calc(100% - var(--pixel-step)) 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) var(--pixel-step),
+    100% var(--pixel-step),
+    100% calc(100% - var(--pixel-step)),
+    calc(100% - 4px) calc(100% - var(--pixel-step)),
+    calc(100% - 4px) calc(100% - 4px),
+    calc(100% - var(--pixel-step)) calc(100% - 4px),
+    calc(100% - var(--pixel-step)) 100%,
+    var(--pixel-step) 100%,
+    var(--pixel-step) calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px calc(100% - var(--pixel-step)),
+    0 calc(100% - var(--pixel-step)),
+    0 var(--pixel-step),
+    4px var(--pixel-step),
+    4px 4px,
+    var(--pixel-step) 4px
+  );
+  filter: drop-shadow(8px 10px 0 rgb(64 42 35 / 18%));
+}
+
+.inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-surface);
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    calc(100% - 8px) 3px,
+    calc(100% - 3px) 3px,
+    calc(100% - 3px) 8px,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 3px) calc(100% - 8px),
+    calc(100% - 3px) calc(100% - 3px),
+    calc(100% - 8px) calc(100% - 3px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    8px calc(100% - 3px),
+    3px calc(100% - 3px),
+    3px calc(100% - 8px),
+    0 calc(100% - 8px),
+    0 8px,
+    3px 8px,
+    3px 3px,
+    8px 3px
+  );
+}

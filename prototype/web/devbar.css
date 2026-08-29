@@ -1,0 +1,49 @@
+/* 演示用画面切换条 —— 不属于产品 UI，只为 demo 和视觉 QA 能直接跳到任一稳定状态。 */
+.devbar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: translateX(-50%);
+  border: 2px solid var(--color-border-strong);
+  padding: 6px 8px;
+  background: var(--color-surface);
+  box-shadow: 3px 3px 0 rgb(75 43 34 / 20%);
+  font-family: var(--font-ui);
+}
+
+.devbar button {
+  border: 1px solid var(--color-border);
+  padding: 5px 10px;
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.devbar button:hover:not(:disabled) {
+  background: var(--color-surface-raised);
+}
+
+.devbar button[aria-current='true'] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.devbar button:disabled {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.devbar-meta {
+  padding-left: 6px;
+  border-left: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}

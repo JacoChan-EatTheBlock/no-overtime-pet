@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>不要加班原型</title>
+<style>
+  :root {
+    --desk-a: #2b3050; --desk-b: #6b4d63; --desk-c: #c8756a;
+    --paper: #f8efdd; --paper-2: #f2e5c9; --ink: #4a3b2a; --ink-soft: #7a6647;
+    --line: #d9c8a4; --border: #6b4f33;
+    --teal: #2f7a6d; --teal-deep: #245e54; --teal-ink: #eaf4f1;
+    --red: #c94f44; --orange: #d9862f; --green: #4c8a4f;
+    --chip-red-bg: #f6ddd8; --chip-orange-bg: #f7e8d2; --chip-gray-bg: #e7e3d3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; padding: 28px 16px 48px;
+    background: linear-gradient(168deg, var(--desk-a) 0%, var(--desk-b) 58%, var(--desk-c) 100%);
+    color: var(--ink);
+    font: 14px/1.65 "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  .window {
+    max-width: 1020px; margin: 0 auto; background: var(--paper);
+    border: 3px solid var(--border); border-radius: 4px;
+    box-shadow: 0 4px 0 rgba(30,20,10,.35), 0 18px 50px rgba(15,12,30,.45);
+  }
+  .titlebar {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    border-bottom: 3px solid var(--border); background: var(--paper-2);
+  }
+  .titlebar .dot { width: 12px; height: 12px; border: 2px solid var(--border); background: var(--paper); }
+  .titlebar h1 { font-size: 15px; margin: 0; letter-spacing: 1px; }
+  .titlebar .sub { margin-left: auto; font-size: 12px; color: var(--ink-soft); }
+
+  .cols { display: grid; grid-template-columns: 1.15fr .85fr; gap: 0; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr; } .pane-right { border-left: none !important; border-top: 3px solid var(--border); } }
+  .pane { padding: 18px 20px 24px; }
+  .pane-right { border-left: 3px solid var(--border); background: #fbf4e6; }
+
+  h2 { font-size: 14px; margin: 0 0 4px; letter-spacing: 2px; }
+  h2 .step { display: inline-block; min-width: 20px; text-align: center; background: var(--ink); color: var(--paper); padding: 1px 5px 2px; margin-right: 8px; font-size: 11px; }
+  .hint { font-size: 12px; color: var(--ink-soft); margin: 0 0 14px; }
+
+  .task { display: flex; align-items: center; gap: 10px; padding: 10px 4px; border-bottom: 2px dashed var(--line); }
+  .task .title { font-weight: 600; }
+  .task .meta { font-size: 12px; color: var(--ink-soft); }
+  .task.done .title { text-decoration: line-through; color: var(--ink-soft); }
+  .chip { font-size: 11px; padding: 2px 8px; border: 2px solid currentColor; border-radius: 2px; white-space: nowrap; }
+  .chip.OVERDUE, .chip.URGENT { color: var(--red); background: var(--chip-red-bg); }
+  .chip.UPCOMING { color: var(--orange); background: var(--chip-orange-bg); }
+  .chip.NOT_URGENT { color: #6f7d6a; background: var(--chip-gray-bg); }
+  .origin { font-size: 10px; letter-spacing: 1px; color: var(--teal-deep); border: 1px solid var(--teal-deep); padding: 0 4px; border-radius: 2px; }
+  .lock { font-size: 10px; letter-spacing: 1px; color: var(--red); border: 1px solid var(--red); padding: 0 4px; border-radius: 2px; }
+  .task .spacer { flex: 1; }
+  .task button { font-size: 11px; }
+  .task .btns { display: flex; gap: 6px; }
+
+  form.new { margin-top: 16px; padding: 14px; border: 3px solid var(--border); background: var(--paper-2); }
+  form.new .row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  label { font-size: 12px; color: var(--ink-soft); display: block; margin-bottom: 3px; }
+  label b { color: var(--red); }
+  input, select, textarea {
+    font: inherit; color: var(--ink); background: #fffdf6;
+    border: 2px solid var(--border); border-radius: 2px; padding: 7px 9px;
+  }
+  input:focus-visible, select:focus-visible, button:focus-visible, textarea:focus-visible { outline: 3px solid var(--orange); outline-offset: 1px; }
+  #f-title { width: 100%; }
+
+  button {
+    font: inherit; cursor: pointer; border-radius: 2px; padding: 8px 16px;
+    border: 2px solid var(--border); background: var(--paper); color: var(--ink);
+  }
+  button:active { transform: translateY(1px); }
+  button.primary { background: var(--teal); border-color: var(--teal-deep); color: var(--teal-ink); box-shadow: 0 3px 0 var(--teal-deep); font-weight: 600; }
+  button.primary:active { box-shadow: 0 1px 0 var(--teal-deep); }
+  button.ghost { background: transparent; border-color: var(--ink-soft); color: var(--ink-soft); }
+  button.danger { background: transparent; border-color: var(--red); color: var(--red); }
+  button.danger:hover { background: var(--chip-red-bg); }
+
+  /* ── AI 确认弹层 ─────────────────────────────── */
+  dialog {
+    border: 3px solid var(--border); border-radius: 4px; background: var(--paper);
+    color: var(--ink); width: min(560px, 92vw); padding: 0;
+    box-shadow: 0 20px 60px rgba(15,12,30,.5);
+  }
+  dialog::backdrop { background: rgba(25,20,40,.55); }
+  .dlg-head { padding: 14px 18px 10px; border-bottom: 3px double var(--line); }
+  .dlg-head h3 { margin: 0 0 2px; font-size: 15px; }
+  .dlg-head p { margin: 0; font-size: 12px; color: var(--ink-soft); }
+  .dlg-body { padding: 14px 18px; }
+  .you-wrote { font-size: 12px; color: var(--ink-soft); border: 2px solid var(--line); padding: 8px 10px; margin-bottom: 12px; background: #fffdf6; }
+  .prow { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 2px dashed var(--line); }
+  .prow .k { width: 72px; color: var(--ink-soft); font-size: 12px; }
+  .prow .v { flex: 1; font-weight: 600; }
+  .prow .v small { font-weight: 400; color: var(--ink-soft); }
+  .prow .adopt { font-size: 11px; padding: 4px 10px; }
+  .prow .adopt.on { background: var(--teal); border-color: var(--teal-deep); color: var(--teal-ink); }
+  .prow input[type=number] { width: 76px; padding: 4px 6px; }
+  .prow select, .prow input { font: inherit; }
+  .prow [data-in]:disabled { opacity: .45; }
+  .prow .v.edited select, .prow .v.edited input { border-color: var(--orange); background: #fff7ea; }
+  .prow .v.edited::after { content: "已改"; font-size: 10px; color: var(--orange); border: 1px solid var(--orange); padding: 0 4px; margin-left: 8px; border-radius: 2px; vertical-align: middle; }
+  .rationale { font-size: 12px; color: var(--ink-soft); margin: 10px 0 0; }
+  .dlg-foot { display: flex; gap: 10px; justify-content: flex-end; padding: 12px 18px 16px; }
+  .spin { text-align: center; padding: 34px 0 38px; color: var(--ink-soft); }
+  .spin .px { display: inline-block; width: 14px; height: 14px; background: var(--teal); margin: 0 3px; animation: hop 0.9s infinite; }
+  .spin .px:nth-child(2) { animation-delay: .15s; } .spin .px:nth-child(3) { animation-delay: .3s; }
+  @keyframes hop { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
+  @media (prefers-reduced-motion: reduce) { .spin .px { animation: none; } }
+
+  /* ── 日程 ─────────────────────────────── */
+  .tl { margin: 6px 0 0; }
+  .block { display: flex; gap: 10px; align-items: center; padding: 7px 10px; margin-bottom: 6px; border: 2px solid var(--teal-deep); background: #e4efe9; border-radius: 2px; }
+  .block .t { font-size: 12px; color: var(--teal-deep); width: 96px; }
+  .block.break { background: #e9e2cf; border-color: var(--ink-soft); color: var(--ink-soft); }
+  .block.buffer { background: transparent; border-style: dashed; color: var(--ink-soft); }
+  .warn { border: 2px solid var(--red); background: var(--chip-red-bg); color: var(--red); font-size: 12px; padding: 8px 10px; margin-top: 10px; }
+  .banner { border: 2px solid var(--green); background: #e2eedd; color: #2f5c31; font-size: 13px; padding: 9px 10px; margin-top: 10px; font-weight: 600; }
+  .banner.late { border-color: var(--orange); background: var(--chip-orange-bg); color: #8a5416; }
+  .commit { font-size: 12px; color: var(--ink-soft); margin-top: 10px; }
+  .commit-box { border: 2px solid var(--teal-deep); background: #eef6f3; padding: 10px 12px; margin-top: 12px; font-size: 12px; }
+  .commit-box .head { font-weight: 600; color: var(--teal-deep); margin-bottom: 4px; }
+  .commit-box .item { padding: 2px 0; }
+  .commit-box .item.done::before { content: "✔ "; color: var(--green); }
+  .commit-box .item.pending::before { content: "○ "; color: var(--ink-soft); }
+  .commit-box .cancelled { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); color: var(--red); }
+  .commit-box .cancelled .item::before { content: "✕ "; }
+  .commit-box .cancelled .reason { color: var(--ink-soft); }
+  .empty { color: var(--ink-soft); font-size: 12px; padding: 18px 0; text-align: center; }
+  .tl.resolved .block { animation: settle .32s ease-out both; }
+  .tl.resolved .block:nth-child(2) { animation-delay: .04s; }
+  .tl.resolved .block:nth-child(3) { animation-delay: .08s; }
+  .tl.resolved .block:nth-child(4) { animation-delay: .12s; }
+  .tl.resolved .block:nth-child(5) { animation-delay: .16s; }
+  @keyframes settle { from { opacity: .25; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .tl.resolved .block { animation: none; } }
+
+  .statusbar { display: flex; gap: 14px; flex-wrap: wrap; padding: 9px 16px; border-top: 3px solid var(--border); background: var(--paper-2); font-size: 11.5px; color: var(--ink-soft); }
+  .statusbar b { color: var(--teal-deep); }
+  .capy { position: fixed; right: 22px; bottom: 14px; font-size: 40px; filter: drop-shadow(0 3px 2px rgba(0,0,0,.4)); user-select: none; }
+</style>
+
+<div class="window">
+  <div class="titlebar">
+    <span class="dot"></span><span class="dot"></span>
+    <h1>不要加班 · 逻辑原型</h1>
+    <span class="sub">创建即分析 → 确认建议 → AI 日程草案 → 硬约束校验</span>
+  </div>
+
+  <div class="cols">
+    <section class="pane">
+      <h2><span class="step">1</span>今天的待办</h2>
+      <p class="hint">只填三个字段。创建后<b>自动</b>进入 AI 建议确认——列表里没有"手动分析"按钮。</p>
+      <div id="task-list"></div>
+
+      <form class="new" id="new-form">
+        <div class="row" style="flex-direction:column">
+          <div style="flex:1">
+            <label for="f-title">要做什么 <b>*</b></label>
+            <input id="f-title" required maxlength="120" placeholder="例：撰写需求文档" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="f-due">DDL <b>*</b></label>
+            <input id="f-due" type="time" required value="17:30" />
+          </div>
+          <div>
+            <label for="f-imp">重要性 <b>*</b></label>
+            <select id="f-imp">
+              <option value="CRITICAL">🚩 关键</option>
+              <option value="HIGH" selected>🚩 高</option>
+              <option value="MEDIUM">中</option>
+              <option value="LOW">低</option>
+            </select>
+          </div>
+          <div style="flex:1; display:flex; align-items:flex-end; justify-content:flex-end">
+            <button type="submit" class="primary">创建并进入 AI 分析</button>
+          </div>
+        </div>
+        <p class="hint" style="margin:0">创建后将直接进入 AI 建议确认</p>
+      </form>
+    </section>
+
+    <section class="pane pane-right">
+      <h2><span class="step">2</span>今日安排草案</h2>
+      <p class="hint">AI 决定任务优先顺序 · 本地求解时间块并校验 DDL/午休/工作时间 · 不合格整份拒绝</p>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <button class="primary" id="btn-solve">生成 AI 安排草案</button>
+        <button id="btn-commit">🔒 确认今日安排</button>
+        <span class="hint" style="margin:0" id="solve-meta"></span>
+      </div>
+      <div class="tl" id="timeline"><div class="empty">先创建并确认任务，再生成安排</div></div>
+      <div id="commitment"></div>
+    </section>
+  </div>
+
+  <div class="statusbar">
+    <span>演示时钟 <b class="mono" id="now-label"></b> · 工时 09:00–18:00 · 午休 12:00–13:00 🔒</span>
+    <span>任务、建议与日程 <b>仅保存在此浏览器本地</b>；本机服务不落库</span>
+    <span>AI 来源 <b>SiliconFlow</b>（接口失败时自动降级基线）</span>
+    <span>WRITING 个人速度乘数 <b class="mono">0.78</b>（5 个高置信样本，已学习你的速度）</span>
+  </div>
+</div>
+
+<dialog id="dlg">
+  <div class="dlg-head">
+    <h3>🤖 AI 分析建议</h3>
+    <p>这是建议，确认后才会写入任务。</p>
+  </div>
+  <div id="dlg-content"></div>
+</dialog>
+
+<dialog id="dlg-cancel">
+  <div class="dlg-head">
+    <h3>⚠ 取消已冻结的承诺任务</h3>
+    <p>快照冻结后仅允许追加；删除已承诺任务需要记录原因，且不会静默减少今日承诺。</p>
+  </div>
+  <div class="dlg-body">
+    <div class="you-wrote" id="cancel-target"></div>
+    <label for="cancel-reason">取消原因 <b>*</b></label>
+    <textarea id="cancel-reason" rows="3" style="width:100%" required placeholder="例：范围变更、与他人重新分工…"></textarea>
+  </div>
+  <div class="dlg-foot">
+    <button class="ghost" id="btn-cancel-abort">不删除了</button>
+    <button class="danger" id="btn-cancel-confirm">确认取消并记录</button>
+  </div>
+</dialog>
+
+<div class="capy" aria-hidden="true">🦫</div>
+
+<script>
+"use strict";
+/* ── 与 prototype/src 同一套规则的浏览器移植（基线模式） ── */
+const MIN = 60000, HOUR = 3600000;
+const CATALOG = {
+  WRITING:      { kw:["写","撰写","文档","方案","报告","总结"], base:60, range:[0.7,1.5], load:"HIGH",   split:"SPLITTABLE", name:"写作" },
+  CODING:       { kw:["开发","实现","修复","代码","接口","bug","调试"], base:90, range:[0.6,1.8], load:"HIGH", split:"SPLITTABLE", name:"编码" },
+  DESIGN:       { kw:["设计","原型","视觉","ui","图标"], base:90, range:[0.7,1.6], load:"HIGH", split:"SPLITTABLE", name:"设计" },
+  RESEARCH:     { kw:["调研","研究","分析","梳理","评估"], base:60, range:[0.6,2.0], load:"HIGH", split:"SPLITTABLE", name:"调研" },
+  COMMUNICATION:{ kw:["回复","邮件","沟通","联系","确认"], base:20, range:[0.5,1.5], load:"LOW",  split:"ATOMIC",     name:"沟通" },
+  MEETING:      { kw:["会议","例会","评审会","对齐","面试"], base:45, range:[0.8,1.3], load:"MEDIUM", split:"ATOMIC",  name:"会议" },
+  ADMIN:        { kw:["报销","填写","整理","登记","排期"], base:30, range:[0.6,1.4], load:"LOW", split:"SPLITTABLE",  name:"事务" },
+  REVIEW:       { kw:["评审","审核","review","检查","校对"], base:40, range:[0.6,1.5], load:"MEDIUM", split:"SPLITTABLE", name:"评审" },
+  LEARNING:     { kw:["学习","教程","阅读","了解"], base:60, range:[0.7,2.0], load:"MEDIUM", split:"SPLITTABLE", name:"学习" },
+  OTHER:        { kw:[], base:45, range:[0.5,2.0], load:"MEDIUM", split:"REQUIRES_REVIEW", name:"其他" },
+};
+const LOAD_NAME = { LOW:"低", MEDIUM:"中", HIGH:"高" };
+const SPLIT_NAME = { ATOMIC:"不可拆", SPLITTABLE:"可拆分", REQUIRES_REVIEW:"需评审" };
+const PERSONAL = { WRITING: { m: 0.78, n: 5 } }; // 已达到产品策略要求的 5 个高置信样本
+
+const now = new Date(); now.setHours(9,30,0,0); // 固定演示时钟，避免下班后打开时所有任务都显示排不下
+const NOW = now.getTime();
+const hm = (h, m=0) => { const d = new Date(NOW); d.setHours(h, m, 0, 0); return d.getTime(); };
+const WORK = { start: hm(9), lunchS: hm(12), lunchE: hm(13), end: hm(18) };
+const fmt = (ms) => new Date(ms).toTimeString().slice(0,5);
+document.getElementById("now-label").textContent = fmt(NOW);
+
+function classify(title) {
+  const t = title.toLowerCase();
+  let best = "OTHER", score = 0;
+  for (const [cat, e] of Object.entries(CATALOG)) {
+    const s = e.kw.filter((k) => t.includes(k)).length;
+    if (s > score) { best = cat; score = s; }
+  }
+  return best;
+}
+function urgency(dueAt, estMs) {
+  const r = dueAt - NOW;
+  if (r < 0) return "OVERDUE";
+  if (r <= (estMs ? estMs + 2*HOUR : 2*HOUR)) return "URGENT";
+  if (r <= 72*HOUR) return "UPCOMING";
+  return "NOT_URGENT";
+}
+function baseline(task) {
+  const cat = classify(task.title);
+  const e = CATALOG[cat];
+  const p = PERSONAL[cat];
+  const est = Math.round(e.base * (p ? p.m : 1)) * MIN;
+  const sub = e.split === "SPLITTABLE" && est >= 50*MIN
+    ? [ { title:"起草/推进", min: Math.round(est/MIN*0.6) }, { title:"收尾检查", min: Math.round(est/MIN*0.4) } ] : null;
+  return {
+    category: cat, estimatedMs: est,
+    low: Math.round(est*e.range[0]), high: Math.round(est*e.range[1]),
+    load: e.load, split: e.split, subtasks: sub,
+    confidence: p ? 0.55 : 0.35,
+    rationale: p ? `参考同类 ${p.n} 个历史样本；你的写作速度约为目录基线 ${Math.round(p.m*100)}%。`
+                 : "目录基线估计；历史样本不足，区间放宽。",
+  };
+}
+
+/* ── 状态 ── */
+const STORAGE_KEY = "buyaojiaban.demo.local.v1";
+let tasks = [];
+let seq = 0;
+let lastSchedule = null;
+/* 当日承诺快照（TASK-COMMIT-001，docs/prd/04-task-capture.md §7）：
+   点击「确认今日安排」时把当前完整排入的任务并入 taskIds，此后只允许追加；
+   删除已承诺任务必须走 requestDelete 的取消原因流程，taskIds 不会因删除静默变小。 */
+let dailyCommitment = null; // { taskIds:Set<number>, frozenAt:number, cancelled:[{id,title,reason,at}] }
+let lastCommitCandidates = []; // 最近一次渲染的日程里"完整排入"的任务 id，供「确认今日安排」读取
+let pendingCancel = null; // 取消对话框上下文：{ ids:number[] }
+
+function loadLocalState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+    if (!saved || saved.version !== 1 || !Array.isArray(saved.tasks)) return false;
+    tasks = saved.tasks.filter((task) => task && Number.isFinite(task.id) && typeof task.title === "string");
+    seq = Number.isFinite(saved.seq) ? saved.seq : tasks.reduce((max, task) => Math.max(max, task.id), 0);
+    lastSchedule = saved.lastSchedule && saved.lastSchedule.draft ? saved.lastSchedule : null;
+    dailyCommitment = saved.dailyCommitment && Array.isArray(saved.dailyCommitment.taskIds)
+      ? { taskIds: new Set(saved.dailyCommitment.taskIds), frozenAt: saved.dailyCommitment.frozenAt, cancelled: saved.dailyCommitment.cancelled || [] }
+      : null;
+    return tasks.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+function saveLocalState() {
+  try {
+    const commitment = dailyCommitment
+      ? { taskIds: [...dailyCommitment.taskIds], frozenAt: dailyCommitment.frozenAt, cancelled: dailyCommitment.cancelled }
+      : null;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version:1, seq, tasks, lastSchedule, dailyCommitment: commitment }));
+  } catch {
+    // 隐私模式或存储配额不足时仍允许当前会话继续。
+  }
+}
+
+function addTask(title, dueAt, importance) {
+  const t = { id: ++seq, title, dueAt, importance, status:"PLANNED", origins:{}, est:null, category:null, load:null, split:null, schedulingMode:"DIRECT", parentId:null, deleted:false };
+  tasks.push(t); return t;
+}
+/* 预置两条已确认任务，让页面一打开就有内容 */
+(function seed(){
+  if (loadLocalState()) return;
+  const a = addTask("整理产品评审材料", hm(17,0), "HIGH");
+  Object.assign(a, { est:30*MIN, category:"ADMIN", load:"LOW", split:"SPLITTABLE", origins:{est:"AI",category:"AI",load:"AI",split:"AI"} });
+  const b = addTask("回复客户邮件", hm(16,0), "LOW");
+  Object.assign(b, { est:20*MIN, category:"COMMUNICATION", load:"LOW", split:"ATOMIC", origins:{est:"AI",category:"AI",load:"AI",split:"AI"} });
+  saveLocalState();
+})();
+
+const IMP_NAME = { CRITICAL:"关键", HIGH:"高", MEDIUM:"中", LOW:"低" };
+const URG_NAME = { OVERDUE:"已逾期", URGENT:"紧急", UPCOMING:"即将到期", NOT_URGENT:"不紧急" };
+
+function renderTasks() {
+  const el = document.getElementById("task-list");
+  el.innerHTML = "";
+  for (const t of tasks) {
+    if (t.deleted) continue;
+    const u = urgency(t.dueAt, t.est);
+    const locked = dailyCommitment && dailyCommitment.taskIds.has(t.id);
+    const row = document.createElement("div");
+    row.className = "task" + (t.status === "COMPLETED" ? " done" : "");
+    row.innerHTML = `
+      <div>
+        <div class="title">${t.parentId ? "└ " : ""}${esc(t.title)}</div>
+        <div class="meta mono">DDL ${fmt(t.dueAt)} · 重要性 ${IMP_NAME[t.importance]}${t.est ? ` · 预计 ${t.est/MIN|0} 分钟` : ""}${t.category ? ` · ${CATALOG[t.category].name}` : ""}
+          ${originBadge(t)} ${t.schedulingMode === "CHILDREN" ? '<span class="origin">汇总容器</span>' : ""} ${locked ? '<span class="lock">🔒承诺</span>' : ""}
+        </div>
+      </div>
+      <span class="spacer"></span>
+      <span class="chip ${u}">${URG_NAME[u]}</span>
+      <span class="btns">
+        ${t.status !== "COMPLETED" && t.schedulingMode !== "CHILDREN" ? `<button data-done="${t.id}">完成</button>` : ""}
+        <button class="danger" data-del="${t.id}">删除</button>
+      </span>`;
+    el.appendChild(row);
+  }
+  el.querySelectorAll("[data-done]").forEach((b) => b.addEventListener("click", () => {
+    const completed = tasks.find((t) => t.id == b.dataset.done);
+    completed.status = "COMPLETED";
+    if (completed.parentId) {
+      const siblings = tasks.filter((t) => t.parentId === completed.parentId && !t.deleted);
+      if (siblings.length && siblings.every((t) => t.status === "COMPLETED")) {
+        tasks.find((t) => t.id === completed.parentId).status = "COMPLETED";
+      }
+    }
+    lastSchedule = null;
+    saveLocalState();
+    renderTasks(); solve();
+  }));
+  el.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", () => requestDelete(Number(b.dataset.del))));
+}
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" })[c]);
+
+/* 来源徽章：只要有任一字段被用户改过就显示 USER（AI 此后不覆盖这些字段） */
+function originBadge(t) {
+  const vals = Object.values(t.origins);
+  if (!vals.length) return "";
+  const userCount = vals.filter((v) => v === "USER").length;
+  return userCount
+    ? `<span class="origin">USER×${userCount}</span>`
+    : '<span class="origin">AI</span>';
+}
+
+/* ── 删除任务：未进入当日承诺快照直接软删除；已冻结的任务删除前必须记录原因，
+   且不会把它从 dailyCommitment.taskIds 里悄悄摘掉——结算资格读快照，不读删除后的列表。 ── */
+function requestDelete(id) {
+  const target = tasks.find((t) => t.id === id && !t.deleted);
+  if (!target) return;
+  const group = target.schedulingMode === "CHILDREN"
+    ? [target, ...tasks.filter((t) => t.parentId === id && !t.deleted)]
+    : [target];
+  const ids = group.map((t) => t.id);
+  const frozenCount = dailyCommitment ? ids.filter((i) => dailyCommitment.taskIds.has(i)).length : 0;
+  if (!frozenCount) { performDelete(ids, null); return; }
+  pendingCancel = { ids };
+  document.getElementById("cancel-target").textContent =
+    `将删除「${group.map((t) => t.title).join("、")}」— 其中 ${frozenCount} 项已在今日承诺快照中，删除后仍会保留在承诺里、计为未完成。`;
+  document.getElementById("cancel-reason").value = "";
+  dlgCancel.showModal();
+}
+function performDelete(ids, reason) {
+  const now = Date.now();
+  for (const id of ids) {
+    const t = tasks.find((x) => x.id === id);
+    if (!t || t.deleted) continue;
+    t.deleted = true;
+    if (dailyCommitment && dailyCommitment.taskIds.has(id)) {
+      dailyCommitment.cancelled.push({ id, title: t.title, reason, at: now });
+    }
+  }
+  lastSchedule = null;
+  saveLocalState();
+  renderTasks(); renderCommitment(); solve();
+}
+const dlgCancel = document.getElementById("dlg-cancel");
+document.getElementById("btn-cancel-abort").addEventListener("click", () => { pendingCancel = null; dlgCancel.close(); });
+document.getElementById("btn-cancel-confirm").addEventListener("click", () => {
+  const reason = document.getElementById("cancel-reason").value.trim();
+  if (!reason) { document.getElementById("cancel-reason").focus(); return; }
+  if (pendingCancel) performDelete(pendingCancel.ids, reason);
+  pendingCancel = null;
+  dlgCancel.close();
+});
+
+/* ── 冻结当日承诺（TASK-COMMIT-001）：把最近一次日程里"完整排入"的任务并入
+   dailyCommitment.taskIds；快照创建后只增不减，删除已承诺项走上面的取消原因流程。 ── */
+function commitToday() {
+  if (!lastCommitCandidates.length && !dailyCommitment) {
+    document.getElementById("commitment").innerHTML = '<p class="warn">暂无可承诺任务：先生成安排草案，且至少一项任务完整排入日程。</p>';
+    return;
+  }
+  if (!dailyCommitment) dailyCommitment = { taskIds: new Set(), frozenAt: Date.now(), cancelled: [] };
+  for (const id of lastCommitCandidates) {
+    const t = tasks.find((x) => x.id === id);
+    if (t && !t.deleted) dailyCommitment.taskIds.add(id);
+  }
+  saveLocalState();
+  renderTasks(); renderCommitment();
+}
+function renderCommitment() {
+  const el = document.getElementById("commitment");
+  if (!dailyCommitment || !dailyCommitment.taskIds.size) { el.innerHTML = ""; return; }
+  const items = [...dailyCommitment.taskIds].map((id) => {
+    const t = tasks.find((x) => x.id === id);
+    if (!t) return "";
+    return `<div class="item ${t.status === "COMPLETED" ? "done" : "pending"}">${esc(t.title)}</div>`;
+  }).join("");
+  const cancelled = dailyCommitment.cancelled.length
+    ? `<div class="cancelled"><div class="head">已删除（仍计入今日承诺，不视为完成）</div>${dailyCommitment.cancelled.map((c) =>
+        `<div class="item">${esc(c.title)} <span class="reason">— ${esc(c.reason)}（${fmt(c.at)}）</span></div>`).join("")}</div>`
+    : "";
+  el.innerHTML = `<div class="commit-box">
+    <div class="head">🔒 今日承诺已冻结 <span class="mono">${fmt(dailyCommitment.frozenAt)}</span>（${dailyCommitment.taskIds.size} 项，仅允许追加）</div>
+    ${items}${cancelled}
+  </div>`;
+}
+document.getElementById("btn-commit").addEventListener("click", commitToday);
+
+/* ── 创建即分析 ── */
+document.getElementById("new-form").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const title = document.getElementById("f-title").value.trim();
+  if (!title) return;
+  const [h, m] = document.getElementById("f-due").value.split(":").map(Number);
+  const t = addTask(title, hm(h, m), document.getElementById("f-imp").value);
+  lastSchedule = null;
+  saveLocalState();
+  document.getElementById("f-title").value = "";
+  renderTasks();
+  openAnalysis(t); // 自动进入，没有手动按钮
+});
+
+const dlg = document.getElementById("dlg");
+const dlgContent = document.getElementById("dlg-content");
+
+async function openAnalysis(task) {
+  dlgContent.innerHTML = `<div class="spin"><span class="px"></span><span class="px"></span><span class="px"></span><br>正在分析「${esc(task.title)}」…</div>`;
+  dlg.showModal();
+  try {
+    const response = await fetch("/api/task-analysis", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ taskId:task.id, title:task.title, dueAt:task.dueAt, importance:task.importance }),
+    });
+    if (!response.ok) throw new Error("AI_REQUEST_FAILED");
+    const result = await response.json();
+    const proposal = result.proposal;
+    showProposal(task, {
+      category: proposal.category,
+      estimatedMs: proposal.estimatedDurationMs,
+      low: proposal.estimateRangeMs.low,
+      high: proposal.estimateRangeMs.high,
+      load: proposal.cognitiveLoad,
+      split: proposal.splittability,
+      subtasks: proposal.suggestedSubtasks?.map((subtask) => ({
+        title: subtask.title,
+        min: Math.round(subtask.estimatedDurationMs / MIN),
+      })),
+      confidence: proposal.confidence,
+      rationale: proposal.rationaleCodes.join("、"),
+      sourceLabel: result.source === "AI" ? `SiliconFlow · ${esc(proposal.modelVersion)}` : `确定性基线 · ${esc(result.fallbackReason || "FALLBACK")}`,
+    });
+  } catch {
+    const fallback = baseline(task);
+    fallback.sourceLabel = "确定性基线 · 本地网页降级";
+    showProposal(task, fallback);
+  }
+}
+
+function showProposal(task, p) {
+  /* 四个建议字段一视同仁：都能采用 / 都能改；改过即 USER 来源 */
+  const value = { category: p.category, est: Math.round(p.estimatedMs / MIN), load: p.load, split: p.split };
+  const suggested = { ...value };
+  const adopted = { category:true, est:true, load:true, split:true, subtasks:false };
+  const opts = (map, cur) => Object.entries(map)
+    .map(([k, label]) => `<option value="${k}"${k === cur ? " selected" : ""}>${label}</option>`).join("");
+  const CAT_OPTS = Object.fromEntries(Object.entries(CATALOG).map(([k, v]) => [k, v.name]));
+
+  dlgContent.innerHTML = `
+    <div class="dlg-body">
+      <div class="you-wrote">你填写的 — DDL <span class="mono">${fmt(task.dueAt)}</span> · 重要性 ${IMP_NAME[task.importance]}（本页不修改用户字段）</div>
+      <div class="prow" data-f="category"><span class="k">任务类型</span>
+        <span class="v"><select data-in="category">${opts(CAT_OPTS, value.category)}</select></span>
+        <button class="adopt on">采用</button></div>
+      <div class="prow" data-f="est"><span class="k">预计时长</span>
+        <span class="v"><input type="number" data-in="est" min="5" max="2400" value="${value.est}" /> 分钟 <small>建议区间 ${p.low/MIN|0}–${p.high/MIN|0}</small></span>
+        <button class="adopt on">采用</button></div>
+      <div class="prow" data-f="load"><span class="k">认知负荷</span>
+        <span class="v"><select data-in="load">${opts(LOAD_NAME, value.load)}</select></span>
+        <button class="adopt on">采用</button></div>
+      <div class="prow" data-f="split"><span class="k">可拆分性</span>
+        <span class="v"><select data-in="split">${opts(SPLIT_NAME, value.split)}</select></span>
+        <button class="adopt on">采用</button></div>
+      ${p.subtasks ? `<div class="prow" data-f="subtasks"><span class="k">子任务建议</span><span class="v"><small>${p.subtasks.map((s)=>`${esc(s.title)}(${s.min}分)`).join(" → ")}<br>确认拆分后，父任务只作汇总，由子任务替代它参与排程。</small></span><button class="adopt">使用拆分</button></div>` : ""}
+      <p class="rationale">ⓘ 来源：<b>${p.sourceLabel || "确定性基线"}</b><br>${p.rationale} · 置信度 ${p.confidence >= 0.5 ? "中" : "低（样本不足）"}</p>
+    </div>
+    <div class="dlg-foot">
+      <button class="ghost" id="btn-reject">全部拒绝</button>
+      <button class="primary" id="btn-confirm">确认建议</button>
+    </div>`;
+
+  const rowOf = (f) => dlgContent.querySelector(`.prow[data-f="${f}"]`);
+  const syncRow = (f) => {
+    const row = rowOf(f);
+    if (f === "subtasks") {
+      row.querySelector(".adopt").textContent = adopted.subtasks ? "已使用拆分" : "使用拆分";
+      return;
+    }
+    const changed = value[f] !== suggested[f];
+    row.querySelector(".v").classList.toggle("edited", changed);
+    row.querySelector(".adopt").textContent = !adopted[f] ? "已忽略" : changed ? "已修改" : "采用";
+  };
+
+  dlgContent.querySelectorAll(".adopt").forEach((b) => b.addEventListener("click", () => {
+    const f = b.closest(".prow").dataset.f;
+    adopted[f] = !adopted[f];
+    b.classList.toggle("on", adopted[f]);
+    rowOf(f).querySelectorAll("[data-in]").forEach((el) => { el.disabled = !adopted[f]; });
+    syncRow(f);
+  }));
+  dlgContent.querySelectorAll("[data-in]").forEach((el) => el.addEventListener("input", () => {
+    const f = el.dataset.in;
+    value[f] = f === "est" ? (Number(el.value) || suggested.est) : el.value;
+    syncRow(f);
+  }));
+
+  dlgContent.querySelector("#btn-reject").addEventListener("click", () => { saveLocalState(); dlg.close(); });
+  dlgContent.querySelector("#btn-confirm").addEventListener("click", () => {
+    /* 只有确认才写入；改过的字段标 USER，此后再分析不覆盖 */
+    for (const f of ["category", "est", "load", "split"]) {
+      if (!adopted[f]) continue;
+      const origin = value[f] !== suggested[f] ? "USER" : "AI";
+      if (f === "est") { task.est = value.est * MIN; task.origins.est = origin; }
+      else if (f === "category") { task.category = value.category; task.origins.category = origin; }
+      else if (f === "load") { task.load = value.load; task.origins.load = origin; }
+      else { task.split = value.split; task.origins.split = origin; }
+    }
+    if (adopted.subtasks && p.subtasks) {
+      task.schedulingMode = "CHILDREN";
+      for (const subtask of p.subtasks) {
+        const child = addTask(subtask.title, task.dueAt, task.importance);
+        Object.assign(child, {
+          est: subtask.min * MIN,
+          category: task.category,
+          load: task.load,
+          split: "ATOMIC",
+          parentId: task.id,
+          origins: { est:"AI", category:"AI", load:"AI", split:"AI" },
+        });
+      }
+    }
+    lastSchedule = null;
+    saveLocalState();
+    dlg.close(); renderTasks(); solve();
+  });
+}
+
+/* ── AI 排程；返回结果仍需经过服务端的本地确定性硬约束校验 ── */
+let solveCount = 0, lastSignature = null;
+
+async function requestAiSchedule() {
+  const button = document.getElementById("btn-solve");
+  const meta = document.getElementById("solve-meta");
+  button.disabled = true;
+  meta.textContent = "SiliconFlow 正在生成…";
+  try {
+    const response = await fetch("/api/schedule", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({
+        nowMs: NOW,
+        settings: { workStart:"09:00", lunchStart:"12:00", lunchEnd:"13:00", workEnd:"18:00" },
+        tasks: tasks.filter((task) => !task.deleted).map((task) => ({
+          id: task.id,
+          dueAt: task.dueAt,
+          importance: task.importance,
+          status: task.status === "COMPLETED" ? "COMPLETED" : "PLANNED",
+          urgency: urgency(task.dueAt, task.est),
+          estimatedDurationMs: task.est || undefined,
+          cognitiveLoad: task.load || undefined,
+          splittability: task.split || undefined,
+          schedulingMode: task.schedulingMode,
+        })),
+      }),
+    });
+    if (!response.ok) throw new Error("AI_SCHEDULE_REQUEST_FAILED");
+    const result = await response.json();
+    if (!result || !result.draft || !Array.isArray(result.draft.blocks)) throw new Error("AI_SCHEDULE_RESPONSE_INVALID");
+    lastSchedule = result;
+    saveLocalState();
+    renderScheduleDraft(result, true);
+  } catch {
+    lastSchedule = null;
+    saveLocalState();
+    solve(true);
+    meta.textContent = "SiliconFlow 请求失败 · 已使用本地确定性降级";
+  } finally {
+    button.disabled = false;
+  }
+}
+
+function renderScheduleDraft(result, animate) {
+  const draft = result.draft;
+  const tl = document.getElementById("timeline");
+  const byId = new Map(tasks.map((task) => [String(task.id), task]));
+  tl.innerHTML = "";
+  for (const block of draft.blocks) {
+    const div = document.createElement("div");
+    div.className = "block" + (block.type === "BREAK" || block.type === "MEETING" ? " break" : block.type === "BUFFER" ? " buffer" : "");
+    const task = block.taskId ? byId.get(String(block.taskId)) : null;
+    const label = block.type === "BREAK" ? "午休 🔒" : block.type === "MEETING" ? "固定会议 🔒" : block.type === "BUFFER" ? "缓冲" : task?.title || "本地任务";
+    div.innerHTML = `<span class="t mono">${fmt(block.startAt)}–${fmt(block.endAt)}</span><span>${esc(label)}</span>`;
+    tl.appendChild(div);
+  }
+  for (const item of draft.unscheduled || []) {
+    const task = byId.get(String(item.taskId));
+    const div = document.createElement("div");
+    div.className = "warn";
+    div.textContent = `⚠ 「${task?.title || "本地任务"}」未完整排入：${item.reasonCode}，还需 ${Math.round(item.neededMs/MIN)} 分钟`;
+    tl.appendChild(div);
+  }
+  const taskBlocks = draft.blocks.filter((block) => block.type === "TASK");
+  if (taskBlocks.length) {
+    const finish = Math.max(...taskBlocks.map((block) => block.endAt));
+    const ok = (draft.unscheduled || []).length === 0 && finish <= WORK.end;
+    const banner = document.createElement("div");
+    banner.className = "banner" + (ok ? "" : " late");
+    banner.innerHTML = ok ? `✔ 预计 <span class="mono">${fmt(finish)}</span> 完成，可准点下班` : "⚠ 今日容量不足或存在 DDL 冲突";
+    tl.appendChild(banner);
+  }
+  const candidateIds = (draft.commitmentCandidateTaskIds || []).map(Number);
+  const names = candidateIds.map((id) => byId.get(String(id))?.title).filter(Boolean);
+  lastCommitCandidates = candidateIds;
+  const commitment = document.createElement("div");
+  commitment.className = "commit";
+  commitment.textContent = `建议今日承诺任务（仅完整排入，${names.length}）：${names.join("、") || "无"}`;
+  tl.appendChild(commitment);
+  const meta = document.getElementById("solve-meta");
+  meta.textContent = result.source === "AI"
+    ? `SiliconFlow · ${result.modelVersion || "模型"} 排序 · 本地硬约束排程通过`
+    : `AI 草案未通过 · 本地确定性降级 · ${result.fallbackReason || "FALLBACK"}`;
+  if (animate) { tl.classList.remove("resolved"); void tl.offsetWidth; tl.classList.add("resolved"); }
+  renderCommitment();
+}
+
+function solve(opts) {
+  const manual = opts === true;
+  const t0 = performance.now();
+  const tl = document.getElementById("timeline");
+  const active = tasks.filter((t) => !t.deleted && t.status !== "COMPLETED" && t.schedulingMode !== "CHILDREN");
+  const blocks = [{ type:"BREAK", s: WORK.lunchS, e: WORK.lunchE, label:"午休 🔒" }];
+  const unscheduled = [];
+  let slots = [{ s: Math.max(NOW, WORK.start), e: WORK.end }];
+  const cut = (b) => { slots = slots.flatMap((sl) => {
+    if (b.e <= sl.s || b.s >= sl.e) return [sl];
+    const out = []; if (b.s > sl.s) out.push({ s: sl.s, e: b.s }); if (b.e < sl.e) out.push({ s: b.e, e: sl.e }); return out;
+  }); };
+  cut({ s: WORK.lunchS, e: WORK.lunchE });
+
+  const IR = { CRITICAL:3, HIGH:2, MEDIUM:1, LOW:0 }, UR = { OVERDUE:3, URGENT:2, UPCOMING:1, NOT_URGENT:0 };
+  const order = [...active].sort((a, z) => {
+    const ma = a.est ? (a.dueAt - NOW < a.est ? 1 : 0) : 0, mz = z.est ? (z.dueAt - NOW < z.est ? 1 : 0) : 0;
+    if (ma !== mz) return mz - ma;
+    if (IR[a.importance] !== IR[z.importance]) return IR[z.importance] - IR[a.importance];
+    const ua = urgency(a.dueAt, a.est), uz = urgency(z.dueAt, z.est);
+    if (UR[ua] !== UR[uz]) return UR[uz] - UR[ua];
+    if (a.dueAt !== z.dueAt) return a.dueAt - z.dueAt;
+    return a.id - z.id; // 确定性 tie-breaker
+  });
+
+  const scheduledByTask = new Map();
+  let continuous = 0, lastWorkEnd = null;
+  for (const t of order) {
+    if (!t.est) { unscheduled.push({ t, need: 0, reason: "MISSING_ESTIMATE" }); continue; }
+    let remaining = t.est;
+    const splittable = t.split === "SPLITTABLE";
+    for (let i = 0; i < slots.length && remaining > 0; i++) {
+      const sl = slots[i];
+      if (lastWorkEnd !== null && sl.s > lastWorkEnd) continuous = 0;
+      const availableEnd = Math.min(sl.e, t.dueAt); // DDL 是硬约束
+      let cap = availableEnd - sl.s;
+      if (cap <= 0) continue;
+      if (continuous >= 50*MIN && cap > 10*MIN) {
+        blocks.push({ type:"BUFFER", s: sl.s, e: sl.s + 10*MIN, label:"缓冲" });
+        sl.s += 10*MIN; cap -= 10*MIN; continuous = 0;
+      }
+      const focusCap = splittable ? Math.max(0, 50*MIN - continuous) : cap;
+      const take = splittable ? Math.min(remaining, cap, focusCap || cap) : (cap >= remaining ? remaining : 0);
+      if (take < Math.min(remaining, splittable ? 25*MIN : remaining)) continue;
+      blocks.push({ type:"TASK", taskId:t.id, s: sl.s, e: sl.s + take, label: t.title });
+      sl.s += take; remaining -= take; continuous += take; lastWorkEnd = sl.s;
+      scheduledByTask.set(t.id, (scheduledByTask.get(t.id) || 0) + take);
+      i--;
+    }
+    if (remaining > 0) unscheduled.push({ t, need: remaining, reason: t.dueAt < WORK.end ? "DEADLINE_CONFLICT" : "NO_CAPACITY" });
+  }
+
+  blocks.sort((a, z) => a.s - z.s);
+  const taskBlocks = blocks.filter((b) => b.type === "TASK");
+
+  /* 结果签名：用于向用户证明“同输入同输出” */
+  const signature = blocks.map((b) => `${b.type}@${b.s}-${b.e}:${b.label}`).join("|")
+    + "#" + unscheduled.map((u) => `${u.t.id}:${u.need}`).join(",");
+  const identical = lastSignature !== null && signature === lastSignature;
+  lastSignature = signature;
+
+  tl.innerHTML = "";
+  if (!taskBlocks.length && !unscheduled.length) {
+    tl.innerHTML = '<div class="empty">没有待排任务</div>';
+    lastCommitCandidates = [];
+    renderCommitment();
+    reportSolve(manual, performance.now() - t0, identical);
+    return;
+  }
+  for (const b of blocks) {
+    const div = document.createElement("div");
+    div.className = "block" + (b.type === "BREAK" ? " break" : b.type === "BUFFER" ? " buffer" : "");
+    div.innerHTML = `<span class="t mono">${fmt(b.s)}–${fmt(b.e)}</span><span>${esc(b.label)}</span>`;
+    tl.appendChild(div);
+  }
+  for (const u of unscheduled) {
+    const div = document.createElement("div");
+    div.className = "warn";
+    div.textContent = u.reason === "MISSING_ESTIMATE"
+      ? `⚠ 「${u.t.title}」缺预计时长（未确认建议），未排入`
+      : u.reason === "DEADLINE_CONFLICT"
+        ? `⚠ DDL 前排不完：「${u.t.title}」还需 ${Math.round(u.need/MIN)} 分钟 —— 不会越过 DDL 或压缩时长`
+        : `⚠ 排不下：「${u.t.title}」还需 ${Math.round(u.need/MIN)} 分钟 —— 容量不足，不会偷偷压缩时长`;
+    tl.appendChild(div);
+  }
+  if (taskBlocks.length) {
+    const finish = Math.max(...taskBlocks.map((b) => b.e));
+    const ok = finish <= WORK.end && unscheduled.length === 0;
+    const div = document.createElement("div");
+    div.className = "banner" + (ok ? "" : " late");
+    div.innerHTML = ok ? `✔ 预计 <span class="mono">${fmt(finish)}</span> 完成，可准点下班` : `⚠ 今日容量不足或将超时，请调整任务范围`;
+    tl.appendChild(div);
+    const fullyScheduled = active.filter((t) => t.est && scheduledByTask.get(t.id) === t.est);
+    lastCommitCandidates = fullyScheduled.map((t) => t.id);
+    const names = fullyScheduled.map((t) => t.title);
+    const c = document.createElement("div");
+    c.className = "commit";
+    c.textContent = `建议今日承诺任务（仅完整排入，${names.length}）：${names.join("、") || "无"}`;
+    tl.appendChild(c);
+  } else {
+    lastCommitCandidates = [];
+  }
+  renderCommitment();
+  reportSolve(manual, performance.now() - t0, identical);
+  if (manual) { tl.classList.remove("resolved"); void tl.offsetWidth; tl.classList.add("resolved"); }
+}
+
+/* 手动求解时给出可见反馈：次数、耗时、与上次是否逐块一致 */
+function reportSolve(manual, ms, identical) {
+  const meta = document.getElementById("solve-meta");
+  if (!manual) { meta.textContent = "本地确定性预览 · 点击按钮请求 SiliconFlow 排程"; return; }
+  solveCount++;
+  meta.innerHTML = `第 <b class="mono">${solveCount}</b> 次生成/校验 · <span class="mono">${ms.toFixed(1)}ms</span> · `
+    + (identical ? '<b style="color:var(--teal-deep)">结果与上次逐块一致 ✓</b>' : '<b style="color:var(--orange)">结果已更新</b>');
+}
+document.getElementById("btn-solve").addEventListener("click", requestAiSchedule);
+
+renderTasks();
+if (lastSchedule?.draft) renderScheduleDraft(lastSchedule, false);
+else solve();
+</script>
+</body>
+</html>
