@@ -1,0 +1,728 @@
+.overlayStage {
+  position: relative;
+  width: 100%;
+  min-width: 920px;
+  height: 100%;
+  min-height: 720px;
+  overflow: hidden;
+  background: #dce9f0;
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
+  font-synthesis: none;
+}
+
+.petArtwork {
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.defaultPetStage {
+  background: transparent;
+}
+
+.desktopPetButton {
+  position: absolute;
+  right: 88px;
+  bottom: 70px;
+  display: grid;
+  width: 286px;
+  height: 250px;
+  place-items: end center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.desktopPetButton[aria-pressed='true'] {
+  filter: drop-shadow(0 0 0.8rem rgb(65 138 158 / 34%));
+}
+
+.defaultPet {
+  width: 270px;
+  height: 270px;
+}
+
+.friendStripStage {
+  background: transparent;
+}
+
+.friendStrip {
+  position: absolute;
+  right: 50px;
+  bottom: 80px;
+  display: block;
+  width: 696px;
+  align-items: flex-end;
+}
+
+.friendSeats {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.friendSeat {
+  display: grid;
+  width: 136px;
+  justify-items: center;
+  color: var(--color-primary-hover);
+  text-shadow:
+    1px 0 0 #fffdf8,
+    -1px 0 0 #fffdf8,
+    0 1px 0 #fffdf8,
+    0 -1px 0 #fffdf8,
+    2px 2px 0 rgb(75 43 34 / 22%);
+}
+
+.friendSeat strong {
+  margin-top: -10px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 22px;
+  white-space: nowrap;
+}
+
+.friendPet {
+  width: 156px;
+  height: 156px;
+}
+
+.friendPager {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  min-width: 190px;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  text-shadow:
+    1px 0 0 var(--color-border-strong),
+    -1px 0 0 var(--color-border-strong),
+    0 1px 0 var(--color-border-strong),
+    0 -1px 0 var(--color-border-strong),
+    2px 2px 0 rgb(75 43 34 / 45%);
+}
+
+.friendPager button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.friendPager button:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+.managementStage {
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding: 64px 28px 28px;
+}
+
+.friendsWindow {
+  width: min(1100px, calc(100vw - 56px));
+  height: min(820px, calc(100vh - 56px));
+  min-height: 680px;
+}
+
+.friendsWindowInner {
+  display: grid;
+  grid-template-rows: 112px 74px minmax(0, 1fr);
+  padding: 0 28px 24px;
+}
+
+.friendsHeader {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid #ead8be;
+}
+
+.friendsHeader > svg {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+}
+
+.friendsHeader h1,
+.friendsHeader p,
+.friendListSection h2,
+.friendActionsSection h2 {
+  margin: 0;
+}
+
+.friendsHeader h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.friendsHeader p {
+  margin-top: 3px;
+  color: #45413d;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+}
+
+.closeButton {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.friendCodeCard {
+  display: flex;
+  width: 500px;
+  align-self: center;
+  align-items: center;
+  gap: 24px;
+  border: 2px solid var(--color-border);
+  padding: 10px 12px 10px 16px;
+  background: var(--color-surface-soft);
+  box-shadow: 3px 3px 0 rgb(75 43 34 / 8%);
+}
+
+.friendCodeCard strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.friendCodeCard span {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.friendCodeCard button {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  border: 2px solid var(--color-border);
+  padding: 0 16px;
+  background: var(--color-surface-raised);
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 10%);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.friendsGrid {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 516px minmax(360px, 1fr);
+  border-top: 1px dotted #dbc9ac;
+}
+
+.friendListSection {
+  min-height: 0;
+  padding: 18px 26px 0 10px;
+  border-right: 1px dotted #dbc9ac;
+}
+
+.friendListSection h2,
+.friendActionsSection h2 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.friendListSection h2 span,
+.friendActionsSection h2 span {
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+.friendList {
+  margin-top: 8px;
+}
+
+.friendRow {
+  position: relative;
+  display: grid;
+  height: 54px;
+  grid-template-columns: minmax(165px, 1fr) 136px 76px;
+  align-items: center;
+  border-bottom: 1px solid #e3d4bd;
+}
+
+.selectedFriendRow {
+  background: color-mix(in srgb, var(--color-primary-soft) 20%, transparent);
+}
+
+.friendIdentity {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  gap: 14px;
+  border: 0;
+  padding: 0 8px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.friendIdentity strong,
+.requestRow strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.friendIdentity img,
+.requestRow img,
+.quickMenuHeader img {
+  width: 48px;
+  height: 48px;
+}
+
+.statusLabel,
+.hiddenProjectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 21px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.working {
+  color: var(--color-success);
+}
+
+.meeting,
+.slacking {
+  color: var(--color-primary);
+}
+
+.away,
+.clockedOut,
+.offline {
+  color: #8d918f;
+}
+
+.hiddenProjectionLabel {
+  color: var(--color-warning);
+}
+
+.rowMenuButton {
+  display: flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.rowMenuTriggerIcon {
+  display: grid;
+  width: 42px;
+  height: 36px;
+  place-items: center;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-raised);
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 8%);
+}
+
+.rowMenu {
+  position: absolute;
+  z-index: 5;
+  top: 48px;
+  right: 0;
+  width: 180px;
+  height: 94px;
+}
+
+.rowMenuInner {
+  display: grid;
+  padding: 6px;
+}
+
+.rowMenuInner button {
+  border: 0;
+  border-bottom: 1px solid #ecd7ba;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rowMenuInner button:last-child {
+  border-bottom: 0;
+  color: var(--color-danger);
+}
+
+.broadcastSummary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.broadcastSummary strong {
+  color: var(--color-success);
+}
+
+.privacyNotice {
+  margin: 12px 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.friendActionsSection {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  padding: 18px 8px 0 28px;
+  flex-direction: column;
+}
+
+.addFriendForm {
+  padding-bottom: 22px;
+  border-bottom: 1px dotted #dbc9ac;
+}
+
+.addFriendForm > div {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.addFriendForm input {
+  min-width: 0;
+  height: 44px;
+  flex: 1;
+  border: 2px solid var(--color-border);
+  border-radius: 0;
+  padding: 0 14px;
+  background: var(--color-surface-raised);
+  box-shadow: inset 3px 3px 0 rgb(75 43 34 / 5%);
+  font-size: 14px;
+}
+
+.addFriendForm button,
+.requestRow button,
+.selectedFriendActions button {
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.addFriendForm button {
+  flex: 0 0 138px;
+}
+
+.requestSection {
+  padding-top: 18px;
+}
+
+.requestRow {
+  display: grid;
+  min-height: 60px;
+  grid-template-columns: 54px minmax(90px, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #e3d4bd;
+}
+
+.requestRow button {
+  min-height: 38px;
+  min-width: 84px;
+  padding: 0 16px;
+}
+
+.emptyRequests {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.selectedFriendActions {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.selectedFriendActions p {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 16px 64px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 21px;
+}
+
+.selectedFriendActions p svg {
+  flex: 0 0 auto;
+}
+
+.selectedFriendActions > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.selectedFriendActions button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 8px;
+}
+
+.selectedFriendActions button:first-child {
+  min-width: 132px;
+}
+
+.selectedFriendActions button:last-child {
+  min-width: 172px;
+}
+
+.feedback {
+  position: absolute;
+  right: 8px;
+  bottom: -19px;
+  min-height: 18px;
+  margin: 0;
+  color: var(--color-primary-hover);
+  font-size: 13px;
+}
+
+.quickMenuStage {
+  background: transparent;
+}
+
+.quickMenuCluster {
+  position: absolute;
+  right: 16px;
+  bottom: 308px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.quickMenu {
+  width: 326px;
+  height: 424px;
+}
+
+.quickMenuInner {
+  display: grid;
+  grid-template-rows: 61px 1fr 35px;
+  padding: 0 14px 12px;
+}
+
+.quickMenuHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #d8bea0;
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.quickMenuHeader img {
+  width: 42px;
+  height: 42px;
+}
+
+.quickMenuHeader span {
+  color: var(--color-primary-hover);
+}
+
+.quickMenuItems {
+  display: grid;
+  grid-auto-rows: 54px;
+  padding-top: 8px;
+}
+
+.quickMenuItems button {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto auto;
+  align-items: center;
+  border: 0;
+  border-bottom: 1px solid #ecd7ba;
+  padding: 0 8px;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.quickMenuItems button span {
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.quickMenuItems .highlightedMenuItem {
+  border: 2px solid #e5b26d;
+  background: #fff0d9;
+  box-shadow: inset 0 -2px 0 rgb(179 112 41 / 10%);
+}
+
+.quickMenuItems .exitMenuItem {
+  color: var(--color-danger);
+}
+
+.exitHint {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.visibilitySubmenu {
+  width: 324px;
+  height: 124px;
+  margin-top: 168px;
+}
+
+.visibilitySubmenuInner {
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  padding: 16px;
+}
+
+.visibilitySubmenu label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+.visibilitySubmenu input {
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.pixelCheckbox {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  place-items: center;
+  border: 2px solid var(--color-border-strong);
+  background: var(--color-surface-raised);
+  box-shadow: inset 2px 2px 0 rgb(75 43 34 / 8%);
+  color: var(--color-border-strong);
+}
+
+.visibilitySubmenu label:has(input:focus-visible) .pixelCheckbox {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 48%, transparent);
+  outline-offset: 2px;
+}
+
+.quickMenuPetArea {
+  position: absolute;
+  right: 124px;
+  bottom: 135px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.quickMenuPet {
+  width: 205px;
+  height: 205px;
+}
+
+.taskBubble {
+  width: 188px;
+  height: 58px;
+  margin-bottom: 84px;
+  transform: translateX(32px);
+}
+
+.taskBubbleInner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.taskDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #9a7151;
+}
+
+@media (max-width: 1120px), (max-height: 760px) {
+  .overlayStage {
+    min-width: 820px;
+    min-height: 620px;
+  }
+
+  .friendsWindow {
+    width: min(1040px, calc(100vw - 36px));
+    height: min(720px, calc(100vh - 36px));
+    min-height: 620px;
+  }
+
+  .friendRow {
+    height: 49px;
+  }
+
+  .quickMenuCluster {
+    right: 246px;
+    bottom: 190px;
+    transform: scale(0.9);
+    transform-origin: bottom right;
+  }
+
+  .quickMenuPetArea {
+    right: 28px;
+    transform: scale(0.86);
+    transform-origin: bottom right;
+  }
+}
