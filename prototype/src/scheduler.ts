@@ -248,6 +248,99 @@ export function solveSchedule(input: ScheduleGenerationInput, preferredTaskOrder
   return buildDraft(input, blocks, unscheduled, warnings, scheduledByTask);
 }
 
+/**
+ * 用户拖动/上下移动只是改了任务先后顺序，不代表模型的排程智能失效——
+ * 不该借这个机会整份改跑 solveSchedule 的确定性启发式（50 分钟聚焦上限、强制缓冲块），
+ * 那会把 AI 好不容易给出的块形状换成完全不同的一份「确定性求解结果」，观感上等于回退到降级方案。
+ * 这里只把当前草案里每个任务已经决定的块时长（AI 可能已经把一个任务拆成几段）原样保留，
+ * 按新顺序重新塞回当天的空闲时段——只挪时间，不重新拆分、不新增缓冲块。
+ */
+export function reorderScheduleBlocks(
+  input: ScheduleGenerationInput,
+  currentBlocks: ScheduleBlock[],
+  preferredTaskOrder: string[],
+): ScheduleDraft {
+  const { tasks, settings, fixedEvents = [], nowMs } = input;
+  const dayStart = hm(nowMs, settings.workStart);
+  const lunchStart = hm(nowMs, settings.lunchStart);
+  const lunchEnd = hm(nowMs, settings.lunchEnd);
+  const dayEnd = hm(nowMs, settings.workEnd);
+  const blocks: ScheduleBlock[] = [];
+  let seq = 0;
+  const push = (block: Omit<ScheduleBlock, "blockId" | "sequence">) =>
+    blocks.push({ ...block, blockId: randomUUID(), sequence: ++seq });
+
+  push({ type: "BREAK", startAt: lunchStart, endAt: lunchEnd, lockedByUser: false });
+  const busy = [
+    { start: lunchStart, end: lunchEnd },
+    ...fixedEvents.map((event) => ({ start: event.startAt, end: event.endAt })),
+  ];
+  for (const event of fixedEvents) {
+    push({
+      type: event.type === "MEETING" ? "MEETING" : "BREAK",
+      startAt: event.startAt,
+      endAt: event.endAt,
+      lockedByUser: true,
+    });
+  }
+
+  let slots = [{ start: Math.max(nowMs, dayStart), end: dayEnd }];
+  for (const item of busy.sort((a, b) => a.start - b.start)) {
+    slots = slots.flatMap((slot) => {
+      if (item.end <= slot.start || item.start >= slot.end) return [slot];
+      const output: Array<{ start: number; end: number }> = [];
+      if (item.start > slot.start) output.push({ start: slot.start, end: item.start });
+      if (item.end < slot.end) output.push({ start: item.end, end: slot.end });
+      return output;
+    });
+  }
+
+  // 每个任务在当前草案里已经被切成几块、每块多长——原样保留成「工作单元」，只挪位置。
+  const unitsByTask = new Map<string, number[]>();
+  for (const block of currentBlocks) {
+    if (block.type !== "TASK" || !block.taskId) continue;
+    const list = unitsByTask.get(block.taskId) ?? [];
+    list.push(block.endAt - block.startAt);
+    unitsByTask.set(block.taskId, list);
+  }
+
+  const taskMap = new Map(eligibleTasks(tasks).map((task) => [task.id, task]));
+  const orderedTaskIds = preferredTaskOrder.filter((id) => unitsByTask.has(id));
+  for (const id of unitsByTask.keys()) {
+    if (!orderedTaskIds.includes(id)) orderedTaskIds.push(id);
+  }
+
+  const unscheduled: ScheduleDraft["unscheduled"] = [];
+  const scheduledByTask = new Map<string, number>();
+
+  for (const taskId of orderedTaskIds) {
+    const task = taskMap.get(taskId);
+    if (!task) continue;
+    for (const durationMs of unitsByTask.get(taskId) ?? []) {
+      let remaining = durationMs;
+      for (let index = 0; index < slots.length && remaining > 0; index++) {
+        const slot = slots[index];
+        const availableEnd = Math.min(slot.end, task.dueAt);
+        const capacity = availableEnd - slot.start;
+        if (capacity <= 0) continue;
+        const take = Math.min(remaining, capacity);
+        push({ type: "TASK", taskId, startAt: slot.start, endAt: slot.start + take, lockedByUser: false });
+        slot.start += take;
+        remaining -= take;
+        scheduledByTask.set(taskId, (scheduledByTask.get(taskId) ?? 0) + take);
+        index--;
+      }
+      if (remaining > 0) {
+        const reason: UnscheduledReason = task.dueAt < dayEnd ? "DEADLINE_CONFLICT" : "NO_CAPACITY";
+        unscheduled.push({ taskId, reasonCode: reason, neededMs: remaining });
+      }
+    }
+  }
+
+  const warnings = unscheduled.length ? ["CAPACITY_OR_DEADLINE_INSUFFICIENT_NO_COMPRESSION"] : [];
+  return buildDraft(input, blocks, unscheduled, warnings, scheduledByTask);
+}
+
 function finalizeProposal(input: ScheduleGenerationInput, proposal: ScheduleProposal): ScheduleDraft {
   const lunchStart = hm(input.nowMs, input.settings.lunchStart);
   const lunchEnd = hm(input.nowMs, input.settings.lunchEnd);

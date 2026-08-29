@@ -11,7 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TaskStore } from '@domain/store.js'
 import { applyProposal, type AcceptRequest } from '@domain/accept.js'
 import { baselineProposal } from '@domain/baseline.js'
-import { solveSchedule } from '@domain/scheduler.js'
+import { reorderScheduleBlocks, solveSchedule } from '@domain/scheduler.js'
 import { personalMultiplier, type CalibrationSample } from '@domain/calibration.js'
 import type {
   Importance,
@@ -421,12 +421,15 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
   )
 
   /**
-   * 拖动重排不自己算时间 —— 把新顺序作为 preferredTaskOrder 交回确定性求解器重排，
-   * 时间、午休、DDL 和"排不下"判定全部由逻辑层重新计算，不会出现时间标签错位。
+   * 拖动只是换任务先后顺序，不能借机整份改跑确定性求解器（那套 50 分钟聚焦上限、
+   * 强制缓冲块的启发式和 AI 的排法是两回事，跑一遍等于把 AI 草案换成另一份方案）。
+   * reorderScheduleBlocks 原样保留当前草案里每个任务已经决定的块时长，只按新顺序
+   * 重新塞回空闲时段——因此不经过 runLocalSchedule/solveSchedule。
    */
   const reorderBlock = useCallback(
     (draggedBlockId: string, targetBlockId: string) => {
       if (draggedBlockId === targetBlockId) return
+      if (!draft) return
       const from = blocks.findIndex((block) => block.id === draggedBlockId)
       const to = blocks.findIndex((block) => block.id === targetBlockId)
       if (from < 0 || to < 0) return
@@ -440,14 +443,16 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
       next.splice(to, 0, moved)
       const order = taskOrderFromBlocks(next)
       setPreferredOrder(order)
-      const result = runLocalSchedule(order)
+      const result = reorderScheduleBlocks({ tasks: store.list(), settings: WORK_SETTINGS, nowMs }, draft.blocks, order)
+      setDraft(result)
+      setScheduleAdjusted(true)
       setSelectedCommitments((current) => {
         const candidates = new Set(result.commitmentCandidateTaskIds)
         return new Set([...current].filter((id) => candidates.has(id)))
       })
-      setStatusMessage('已按你的顺序重排：任务先后由你决定，时间由确定性求解器重算，AI 草案未被丢弃。')
+      setStatusMessage('已按你的顺序重排：沿用 AI 草案原有的每块时长，只是换了先后和时间，AI 草案没有被丢弃。')
     },
-    [blocks, taskOrderFromBlocks, runLocalSchedule]
+    [blocks, taskOrderFromBlocks, draft, store, nowMs]
   )
 
   const toggleLock = useCallback((blockId: string) => {
