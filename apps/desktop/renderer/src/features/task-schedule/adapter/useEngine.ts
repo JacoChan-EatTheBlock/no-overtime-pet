@@ -156,6 +156,8 @@ export interface Engine {
   unscheduled: UiUnscheduled[]
   scheduleWarnings: string[]
   scheduleSource: 'AI' | 'BASELINE' | null
+  /** 草案在生成后被用户拖动/改时长重排过；来源仍是 scheduleSource。 */
+  scheduleAdjusted: boolean
   projectedFinishLabel: string | null
   hourRail: string[]
   commitmentCandidates: UiTask[]
@@ -193,6 +195,7 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
   const [analysis, setAnalysis] = useState<AnalysisState | null>(null)
   const [draft, setDraft] = useState<ScheduleDraft | null>(null)
   const [scheduleSource, setScheduleSource] = useState<'AI' | 'BASELINE' | null>(null)
+  const [scheduleAdjusted, setScheduleAdjusted] = useState(false)
   const [preferredOrder, setPreferredOrder] = useState<string[]>([])
   const [lockedBlockIds, setLockedBlockIds] = useState<Set<string>>(() => new Set())
   const [selectedCommitments, setSelectedCommitments] = useState<Set<string>>(() => new Set())
@@ -205,14 +208,32 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
     setTasks(store.list())
   }, [store, nowMs])
 
+  /** 当前草案里任务块的先后顺序。AI 排完后，这就是模型给的顺序。 */
+  const orderFromDraft = useCallback((source: ScheduleDraft | null): string[] => {
+    const order: string[] = []
+    for (const block of source?.blocks ?? []) {
+      if (block.type === 'TASK' && block.taskId && !order.includes(block.taskId)) order.push(block.taskId)
+    }
+    return order
+  }, [])
+
+  /**
+   * 本地确定性重排。默认继承**当前草案**的任务顺序，而不是 preferredOrder——
+   * 后者只在用户手动拖过之后才有值，之前是空数组，会让求解器从头按自己的启发式重排，
+   * 于是「+5 分钟」这种小调整会把 AI 排好的整天推翻。
+   *
+   * 也不再改写 scheduleSource：草案的来源仍然是 AI，只是时间被重算了，
+   * 用 scheduleAdjusted 单独表达「已按你的调整重排」。
+   */
   const runLocalSchedule = useCallback(
-    (order: string[] = preferredOrder) => {
-      const next = solveSchedule({ tasks: store.list(), settings: WORK_SETTINGS, nowMs }, order)
+    (order?: string[]) => {
+      const effective = order ?? orderFromDraft(draft)
+      const next = solveSchedule({ tasks: store.list(), settings: WORK_SETTINGS, nowMs }, effective)
       setDraft(next)
-      setScheduleSource('BASELINE')
+      setScheduleAdjusted(true)
       return next
     },
-    [store, nowMs, preferredOrder]
+    [store, nowMs, draft, orderFromDraft]
   )
 
   // 种子任务用本地确定性基线分析，开屏即有内容且不消耗 AI 调用；
@@ -235,6 +256,7 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
     const seeded = solveSchedule({ tasks: store.list(), settings: WORK_SETTINGS, nowMs }, [])
     setDraft(seeded)
     setScheduleSource('BASELINE')
+    setScheduleAdjusted(false)
     setSelectedCommitments(new Set(seeded.commitmentCandidateTaskIds))
     setCommittedIds(seeded.commitmentCandidateTaskIds)
     // 只在挂载时播种一次。
@@ -340,6 +362,7 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
       }
       setDraft(result.draft)
       setScheduleSource(result.source)
+      setScheduleAdjusted(false)
       setLockedBlockIds(new Set())
       setSelectedCommitments(new Set(result.draft.commitmentCandidateTaskIds))
       setStatusMessage(
@@ -349,6 +372,8 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
       )
     } catch {
       const local = runLocalSchedule([])
+      setScheduleSource('BASELINE')
+      setScheduleAdjusted(false)
       setLockedBlockIds(new Set())
       setSelectedCommitments(new Set(local.commitmentCandidateTaskIds))
       setStatusMessage('排程服务不可用，已用本地确定性求解器生成。')
@@ -420,7 +445,7 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
         const candidates = new Set(result.commitmentCandidateTaskIds)
         return new Set([...current].filter((id) => candidates.has(id)))
       })
-      setStatusMessage('已按你的顺序重排，时间由确定性求解器重算。')
+      setStatusMessage('已按你的顺序重排：任务先后由你决定，时间由确定性求解器重算，AI 草案未被丢弃。')
     },
     [blocks, taskOrderFromBlocks, runLocalSchedule]
   )
@@ -461,7 +486,7 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
         return new Set([...currentSet].filter((id) => candidates.has(id)))
       })
       setStatusMessage(
-        `「${task.title}」估计时长改为 ${durationLabel(toMinutes(nextMs))}，已重排；估计值来源标记为你本人。`
+        `「${task.title}」估计时长改为 ${durationLabel(toMinutes(nextMs))}，已沿用当前顺序重排；估计值来源标记为你本人。`
       )
     },
     [store, sync, runLocalSchedule]
@@ -542,8 +567,9 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
         return
       }
       if (analysis?.task.id === taskId) setAnalysis(null)
-      const nextOrder = preferredOrder.filter((id) => id !== taskId)
-      setPreferredOrder(nextOrder)
+      const baseOrder = preferredOrder.length ? preferredOrder : orderFromDraft(draft)
+      const nextOrder = baseOrder.filter((id) => id !== taskId)
+      setPreferredOrder(preferredOrder.filter((id) => id !== taskId))
       sync()
       const result = runLocalSchedule(nextOrder)
       setSelectedCommitments((current) => {
@@ -700,6 +726,7 @@ export function useEngine(initialScreen: Screen = '05-task-list'): Engine {
     unscheduled: draft ? toUiUnscheduled(draft, taskTitles) : [],
     scheduleWarnings: (draft?.warnings ?? []).map(warningLabel),
     scheduleSource,
+    scheduleAdjusted,
     projectedFinishLabel: draft?.projectedFinishAt ? new Date(draft.projectedFinishAt).toTimeString().slice(0, 5) : null,
     hourRail,
     commitmentCandidates,

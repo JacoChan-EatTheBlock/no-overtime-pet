@@ -703,7 +703,11 @@ function ScheduleScreen({ engine }: { engine: Engine }) {
           <div><h1>今日安排草案</h1><p>{engine.todayLabel}</p></div>
           <p className={styles.aiDraftHint}>
             <IconSparkles size={22} stroke={1.8} aria-hidden="true" />
-            {engine.scheduleSource === 'AI' ? 'AI 负责建议，最终安排由你确认。' : '模型未参与，本次由确定性求解器生成。'}
+            {engine.scheduleSource !== 'AI'
+              ? '模型未参与，本次由确定性求解器生成。'
+              : engine.scheduleAdjusted
+                ? 'AI 建议的顺序 + 你的调整，时间已重算。'
+                : 'AI 负责建议，最终安排由你确认。'}
           </p>
           <ScreenClose onClick={() => engine.navigate('05-task-list')} />
         </header>
@@ -777,6 +781,8 @@ function ScheduleScreen({ engine }: { engine: Engine }) {
           </section>
 
           <aside className={styles.commitmentPanel}>
+            {/* 承诺项和排不下的任务条数都随任务量变化，滚动它们，别把底部操作挤出窗口。 */}
+            <div className={styles.commitmentScroll}>
             <h2>今日承诺任务 <span>{engine.selectedCommitments.size}</span></h2>
             <div className={styles.commitmentList}>
               {engine.commitmentCandidates.map((task) => (
@@ -807,6 +813,7 @@ function ScheduleScreen({ engine }: { engine: Engine }) {
                 <IconAlertTriangle size={22} stroke={1.9} aria-hidden="true" />{warning}
               </div>
             ))}
+            </div>
             <Button
               variant="primary"
               fullWidth

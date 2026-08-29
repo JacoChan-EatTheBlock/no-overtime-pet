@@ -1143,8 +1143,20 @@
 
 .commitmentPanel {
   display: flex;
+  min-height: 0; /* 弹性子项默认不缩到内容高度以下，不清零则内部滚动不生效 */
   padding: 22px 18px;
   flex-direction: column;
+}
+
+/*
+ * 承诺项（可到 9 条以上）和排不下的任务都是变长列表，只让它们滚动；
+ * 「确认今日安排 / 返回修改任务 / 重新生成」必须始终留在面板底部可点。
+ */
+.commitmentScroll {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-right: 6px;
 }
 
 .commitmentPanel h2,
