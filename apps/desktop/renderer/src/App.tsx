@@ -1,8 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { LoginScreen } from './features/auth/LoginScreen'
-import { TaskListScreen, type TaskItem } from './features/tasks/TaskListScreen'
-import { TaskAIProposalScreen } from './features/tasks/TaskAIProposalCard'
-import { ScheduleScreen } from './features/schedule/ScheduleScreen'
+import { TaskScheduleFlow } from './features/task-schedule/TaskScheduleFlow'
+import { useEngine } from './features/task-schedule/adapter/useEngine'
 import { FriendsManagementScreen } from './features/pet-social-menu/PetSocialMenuScreens'
 import { ShopScreen } from './features/shop/ShopScreen'
 import { CustomizationScreen } from './features/customization/CustomizationScreen'
@@ -13,11 +12,13 @@ import styles from './App.module.css'
 /**
  * Screen IDs — each is a full-window PixelSurface panel with its own close button.
  * Navigation is stack-based: open a screen → close returns to previous.
+ *
+ * 'task-flow' 是任务与排程的 6 屏（气泡/待办/AI 建议/安排草案/跑路确认/跑路结果），
+ * 由 useEngine 驱动真实逻辑层，内部自己路由，所以在外层只占一个屏幕位。
+ * 旧的 features/tasks 与 features/schedule 组件仍保留在仓库里，未接入路由。
  */
 export type ScreenId =
-  | 'tasks'
-  | 'ai-proposal'
-  | 'schedule'
+  | 'task-flow'
   | 'friends'
   | 'shop'
   | 'customization'
@@ -26,46 +27,25 @@ export type ScreenId =
 
 export function App() {
   const [loggedIn, setLoggedIn] = useState(false)
-  const [screen, setScreen] = useState<ScreenId>('tasks')
-  const [proposalTask, setProposalTask] = useState<TaskItem | null>(null)
-
-  if (!loggedIn) {
-    return <LoginScreen onSuccess={() => setLoggedIn(true)} />
-  }
+  const [screen, setScreen] = useState<ScreenId>('task-flow')
+  const engine = useEngine('05-task-list')
 
   function openScreen(id: ScreenId): void {
     setScreen(id)
   }
 
-  function handleAIAnalysis(task: TaskItem): void {
-    setProposalTask(task)
-    setScreen('ai-proposal')
-  }
-
-  function handleProposalConfirm(): void {
-    setProposalTask(null)
-    setScreen('schedule')
+  if (!loggedIn) {
+    return <LoginScreen onSuccess={() => setLoggedIn(true)} />
   }
 
   const screens: Record<ScreenId, ReactNode> = {
-    tasks: (
-      <TaskListScreen
-        onClose={() => {}}
-        onNavigate={openScreen}
-        onAIAnalysis={handleAIAnalysis}
-      />
-    ),
-    'ai-proposal': (
-      <TaskAIProposalScreen
-        task={proposalTask}
-        onClose={() => setScreen('tasks')}
-        onConfirm={handleProposalConfirm}
-      />
-    ),
-    schedule: (
-      <ScheduleScreen
-        onClose={() => setScreen('tasks')}
-        onNavigate={openScreen}
+    'task-flow': (
+      <TaskScheduleFlow
+        engine={engine}
+        nav={{
+          openFriends: () => openScreen('friends'),
+          openSettings: () => openScreen('settings')
+        }}
       />
     ),
     friends: (
@@ -73,7 +53,7 @@ export function App() {
     ),
     shop: (
       <ShopScreen
-        onClose={() => setScreen('tasks')}
+        onClose={() => setScreen('task-flow')}
         onNavigate={openScreen}
       />
     ),
@@ -84,7 +64,7 @@ export function App() {
     ),
     wallet: (
       <WalletScreen
-        onClose={() => setScreen('tasks')}
+        onClose={() => setScreen('task-flow')}
         onNavigate={openScreen}
       />
     ),

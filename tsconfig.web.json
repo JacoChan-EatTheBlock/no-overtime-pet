@@ -18,8 +18,13 @@
     "jsx": "react-jsx",
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "paths": {
-      "@renderer/*": ["./apps/desktop/renderer/src/*"]
+      "@renderer/*": ["./apps/desktop/renderer/src/*"],
+      "@domain/*": ["./apps/desktop/shared/domain/*"]
     }
   },
-  "include": ["apps/desktop/renderer/src/**/*.ts", "apps/desktop/renderer/src/**/*.tsx"]
+  "include": [
+    "apps/desktop/renderer/src/**/*.ts",
+    "apps/desktop/renderer/src/**/*.tsx",
+    "apps/desktop/shared/domain/**/*.ts"
+  ]
 }

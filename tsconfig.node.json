@@ -14,6 +14,7 @@
     "vite.renderer.config.ts",
     "vitest.config.ts",
     "apps/desktop/main/**/*.ts",
-    "apps/desktop/preload/**/*.ts"
+    "apps/desktop/preload/**/*.ts",
+    "apps/desktop/shared/domain/**/*.ts"
   ]
 }

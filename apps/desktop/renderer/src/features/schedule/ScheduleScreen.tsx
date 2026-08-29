@@ -153,7 +153,7 @@ export function ScheduleScreen({ onClose, onNavigate }: ScheduleScreenProps) {
             <Button variant="primary" fullWidth onClick={onClose}>
               确认今日安排
             </Button>
-            <Button variant="secondary" fullWidth onClick={() => onNavigate('tasks')}>
+            <Button variant="secondary" fullWidth onClick={() => onNavigate('task-flow')}>
               返回修改任务
             </Button>
             <button type="button" className={styles.regenerateBtn}>

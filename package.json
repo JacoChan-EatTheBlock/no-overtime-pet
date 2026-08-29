@@ -2,7 +2,7 @@
   "name": "no-overtime-pet",
   "version": "0.1.0",
   "private": true,
-  "description": "\u4e0d\u8981\u52a0\u73ed macOS \u50cf\u7d20\u98ce\u5de5\u4f5c\u684c\u5ba0",
+  "description": "不要加班 macOS 像素风工作桌宠",
   "main": "./out/main/index.js",
   "type": "module",
   "scripts": {
@@ -15,10 +15,12 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.122.0",
     "@tabler/icons-react": "3.46.0",
+    "pixi.js": "^7.4.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "pixi.js": "^7.4.0"
+    "zod": "^4.5.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.9.1",
