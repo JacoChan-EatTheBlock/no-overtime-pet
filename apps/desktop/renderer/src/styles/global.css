@@ -15,6 +15,7 @@ body,
 body {
   overflow: hidden;
   background: #dce9f0;
+  -webkit-app-region: no-drag;
   color: var(--color-text);
   font-family: var(--font-ui);
   font-size: var(--text-body);

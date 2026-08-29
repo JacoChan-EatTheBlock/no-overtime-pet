@@ -203,66 +203,9 @@
   overflow: hidden;
 }
 
-.character {
+.animation {
   position: absolute;
-  right: 30px;
-  bottom: 23px;
-  width: 270px;
-  height: 270px;
-  object-fit: contain;
-}
-
-.coin {
-  position: absolute;
-  z-index: 2;
-  width: 42px;
-  height: 54px;
-  object-fit: contain;
-  animation: coin-fall 2.2s steps(8, end) infinite;
-}
-
-.coinOne {
-  top: 32px;
-  left: 66px;
-}
-
-.coinTwo {
-  top: 72px;
-  right: 80px;
-  animation-delay: -0.8s;
-}
-
-.coinThree {
-  top: 172px;
-  left: 142px;
-  animation-delay: -1.5s;
-}
-
-@keyframes coin-fall {
-  0% {
-    transform: translateY(-20px);
-    opacity: 0;
-  }
-
-  18% {
-    opacity: 1;
-  }
-
-  72% {
-    transform: translateY(86px);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateY(108px);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .coin {
-    animation: none;
-  }
+  inset: 0;
 }
 
 @media (max-width: 940px), (max-height: 740px) {

@@ -1,0 +1,285 @@
+/* ─── Window frame ─── */
+.window {
+  width: min(1120px, calc(100vw - 40px));
+  height: min(780px, calc(100vh - 40px));
+}
+
+.windowInner {
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  min-height: 0;
+  padding: 28px 32px 24px 36px;
+  gap: 28px;
+}
+
+/* ─── Left: Task list ─── */
+.listColumn {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid #e4cfb2;
+  padding-right: 28px;
+}
+
+.listHeader {
+  margin-bottom: 18px;
+}
+
+.listTitle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.titleIcon {
+  color: var(--color-primary);
+}
+
+.listTitle h1 {
+  margin: 0;
+  font-size: var(--text-title-1);
+  line-height: 1.2;
+}
+
+.dateLabel {
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+/* ─── Filter tabs (全部 / 今天 / 已完成) ─── */
+.filterTabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #d9c7aa;
+  margin-bottom: 20px;
+}
+
+.filterTabs button {
+  position: relative;
+  padding: 0 12px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filterTabs button::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  background: transparent;
+  content: '';
+}
+
+.activeFilterTab {
+  color: var(--color-primary) !important;
+}
+
+.activeFilterTab::after {
+  background: var(--color-primary) !important;
+}
+
+.tabCount {
+  margin-left: 6px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* ─── Task list ─── */
+.taskList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.taskItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #efe5d6;
+}
+
+.taskIcon {
+  flex-shrink: 0;
+}
+
+.iconUrgent {
+  color: var(--color-danger);
+}
+
+.iconNormal {
+  color: var(--color-primary);
+}
+
+.taskInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.taskInfo strong {
+  display: block;
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.taskTime {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+/* ─── Urgency badges ─── */
+.urgencyBadge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.urgencyUrgent {
+  background: #fce4e1;
+  color: var(--color-danger);
+}
+
+.urgencyApproaching {
+  background: #fef0d8;
+  color: #c17a1d;
+}
+
+.urgencyNormal {
+  background: #eef3ef;
+  color: #6b8a70;
+}
+
+/* ─── AI analyze button ─── */
+.aiButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface-raised);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.aiButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ─── Right: Create form ─── */
+.createColumn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.createPanel {
+  border: 1px dashed var(--color-border);
+  border-radius: 4px;
+  padding: 24px 22px;
+  background: var(--color-surface-soft);
+}
+
+.createHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  color: var(--color-text);
+}
+
+.createHeader h2 {
+  margin: 0;
+  font-size: var(--text-title-2);
+}
+
+.createForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.formLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.required {
+  color: var(--color-danger);
+}
+
+.formInput {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: #fff;
+  font-size: var(--text-body);
+}
+
+.dateInput,
+.prioritySelect {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: #fff;
+}
+
+.dateInput input,
+.prioritySelect select {
+  flex: 1;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  font-size: var(--text-body);
+  outline: none;
+}
+
+.aiHint {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ─── Capybara character ─── */
+.petCharacter {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  pointer-events: none;
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "characterId": "capybara-office-worker",
+  "assetVersion": "coin-hit-v1",
+  "canvas": {
+    "width": 192,
+    "height": 192
+  },
+  "scaleMode": "NEAREST",
+  "anchors": {
+    "head": {
+      "x": 96,
+      "y": 30
+    },
+    "keyboard": {
+      "x": 96,
+      "y": 164
+    },
+    "deskPlane": {
+      "x": 96,
+      "y": 188
+    }
+  },
+  "actions": {
+    "NANG_FEE_HEAD_HIT": {
+      "texture": "NANG_FEE_HEAD_HIT.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 16,
+      "columns": 4,
+      "fps": 10,
+      "loop": false,
+      "fallbackAction": "IDLE",
+      "eventFrames": {
+        "coinImpact": [
+          4
+        ],
+        "coinGone": [
+          9
+        ]
+      },
+      "contentHashSha256": "151fab8c2a51684f67132795bc7818d6ec5af484d78015d9e93e6f17679df243"
+    }
+  },
+  "preview": {
+    "file": "preview.gif",
+    "matte": "#281C30",
+    "note": "GIF is review-only; runtime uses the transparent sprite sheet and manifest."
+  }
+}

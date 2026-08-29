@@ -1,0 +1,10 @@
+# pnpm 11 reads settings from this file (the "pnpm" field in package.json and most
+# .npmrc keys are no longer used). Build-script permissions are a single allowBuilds
+# map. See https://pnpm.io/11.x/migration
+allowBuilds:
+  # electron must run its install script to fetch the platform binary.
+  electron: true
+  # esbuild ships its binary in the @esbuild/<platform> package, so its install
+  # script is not needed. Declaring it false keeps `pnpm install` from failing with
+  # ERR_PNPM_IGNORED_BUILDS, which otherwise blocks every `pnpm run <script>`.
+  esbuild: false

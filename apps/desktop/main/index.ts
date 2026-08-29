@@ -11,8 +11,8 @@ function createMainWindow(): void {
     minHeight: 700,
     show: false,
     frame: false,
-    transparent: true,
-    backgroundColor: '#00000000',
+    transparent: false,
+    backgroundColor: '#dce9f0',
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       contextIsolation: true,

@@ -1,0 +1,299 @@
+.window {
+  width: min(1120px, calc(100vw - 40px));
+  height: min(780px, calc(100vh - 40px));
+}
+
+.windowInner {
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 22px 28px;
+}
+
+/* ─── Header ─── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: var(--text-title-1);
+}
+
+.headerHint {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.closeBtn {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ─── Wardrobe tabs ─── */
+.wardrobeTabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+}
+
+.wardrobeTabs button {
+  padding: 8px 22px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  font-size: var(--text-body);
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.wardrobeTabs button:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+.wardrobeTabs button:last-child {
+  border-radius: 0 3px 3px 0;
+  border-left: 0;
+}
+
+.activeWTab {
+  background: var(--color-primary-soft) !important;
+  color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* ─── Body: 3 columns ─── */
+.body {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 18px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─── Left: Preview ─── */
+.previewColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.previewArea {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border: 1px solid #e4cfb2;
+  border-radius: 4px;
+  background: var(--color-surface-soft);
+  overflow: hidden;
+}
+
+.hatStack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.previewCharacter {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.actionTabs {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.actionTabs button {
+  padding: 6px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: transparent;
+  font-size: var(--text-small);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.activeAction {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* ─── Center: Hat grid ─── */
+.inventoryColumn {
+  overflow-y: auto;
+}
+
+.inventoryColumn h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: var(--text-body);
+}
+
+.hatCount {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.hatGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.hatCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: var(--color-surface-soft);
+  cursor: pointer;
+  text-align: center;
+  font-size: var(--text-small);
+}
+
+.hatCard:hover {
+  border-color: var(--color-primary);
+}
+
+.hatCard img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+/* ─── Right: Equipped list ─── */
+.equippedColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.equippedColumn h3 {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.equippedList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.equippedRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #efe5d6;
+  border-radius: 3px;
+  background: var(--color-surface-soft);
+}
+
+.hatNum {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  font-size: var(--text-small);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.equippedRow img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.hatName {
+  flex: 1;
+  font-size: var(--text-small);
+  font-weight: 500;
+}
+
+.moveBtn {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.moveBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.gripIcon {
+  color: var(--color-disabled);
+  cursor: grab;
+}
+
+.stackNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.clearBtn {
+  margin-top: 4px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-danger);
+  font-size: var(--text-body);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* ─── Capybara float ─── */
+.petFloat {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  pointer-events: none;
+}

@@ -1,0 +1,283 @@
+.window {
+  width: min(1120px, calc(100vw - 40px));
+  height: min(820px, calc(100vh - 40px));
+}
+
+.windowInner {
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 24px 32px;
+}
+
+/* ─── Header ─── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerIcon {
+  color: var(--color-primary);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: var(--text-title-1);
+}
+
+.dateLabel {
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.aiNote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.closeBtn {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* ─── Body: timeline + commitments ─── */
+.body {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 28px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─── Timeline ─── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.timelineGrid {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.hourLabel {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  padding: 8px 0;
+  width: 48px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding-left: 16px;
+  border-left: 2px dashed var(--color-border);
+}
+
+.block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: var(--text-body);
+}
+
+.work {
+  background: #e8f4ea;
+  border: 1px solid #c3dfc8;
+}
+
+.lunch {
+  background: #f0ebe0;
+  border: 1px solid #d8ccb5;
+  color: var(--color-text-muted);
+}
+
+.buffer {
+  background: var(--color-surface-soft);
+  border: 1px dashed var(--color-border);
+}
+
+.blockTime {
+  font-weight: 600;
+  font-size: var(--text-small);
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.blockTitle {
+  flex: 1;
+  font-weight: 500;
+}
+
+.blockActions {
+  display: flex;
+  gap: 10px;
+}
+
+.blockActions button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.blockActions button:hover {
+  color: var(--color-primary);
+}
+
+.estimateBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 16px;
+  border: 2px dashed var(--color-success);
+  border-radius: 4px;
+  background: #eef8f0;
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: var(--text-body);
+}
+
+/* ─── Commitments sidebar ─── */
+.commitments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commitments h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.commitBadge {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: var(--text-caption);
+  border-radius: 3px;
+}
+
+.overflowBadge {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: var(--text-caption);
+  border-radius: 3px;
+}
+
+.commitList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.commitList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-body);
+}
+
+.checkIcon {
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.overflowItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.overflowWarning {
+  margin: 0;
+  padding: 8px 12px;
+  background: #fef0d8;
+  border-radius: 3px;
+  font-size: var(--text-small);
+  color: #c17a1d;
+}
+
+.regenerateBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  cursor: pointer;
+}
+
+.regenerateBtn:hover {
+  color: var(--color-primary);
+}
+
+/* ─── Capybara ─── */
+.petCharacter {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  pointer-events: none;
+}

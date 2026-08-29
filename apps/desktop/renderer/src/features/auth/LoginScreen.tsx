@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type FormEvent } from 'react'
+import { useId, useState, type FormEvent } from 'react'
 import {
   IconEye,
   IconEyeOff,
@@ -10,13 +10,16 @@ import { Button } from '../../components/Button'
 import { FormField } from '../../components/FormField'
 import { PixelSurface } from '../../components/PixelSurface'
 import { PixelWindowHeader } from '../../components/PixelWindowHeader'
+import { LoginCoinAnimation } from './LoginCoinAnimation'
 import styles from './LoginScreen.module.css'
 
 type AuthMode = 'login' | 'register'
 
-const COIN_HIT_FRAME_COUNT = 16
+interface LoginScreenProps {
+  onSuccess?: () => void
+}
 
-export function LoginScreen() {
+export function LoginScreen({ onSuccess }: LoginScreenProps = {}) {
   const usernameId = useId()
   const passwordId = useId()
   const confirmationId = useId()
@@ -26,24 +29,6 @@ export function LoginScreen() {
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [statusMessage, setStatusMessage] = useState('')
-  const [characterFrame, setCharacterFrame] = useState(0)
-
-  useEffect(() => {
-    const prefersReducedMotion =
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    if (prefersReducedMotion) {
-      setCharacterFrame(4)
-      return undefined
-    }
-
-    const intervalId = window.setInterval(() => {
-      setCharacterFrame((currentFrame) => (currentFrame + 1) % COIN_HIT_FRAME_COUNT)
-    }, 120)
-
-    return () => window.clearInterval(intervalId)
-  }, [])
 
   function changeMode(nextMode: AuthMode): void {
     setMode(nextMode)
@@ -64,6 +49,7 @@ export function LoginScreen() {
     }
 
     setStatusMessage(mode === 'login' ? '登录演示已提交' : '注册演示已提交')
+    onSuccess?.()
   }
 
   return (
@@ -168,14 +154,7 @@ export function LoginScreen() {
           </section>
 
           <section className={styles.visualColumn} aria-label="金币砸脑壳装饰动画">
-            <img className={`${styles.coin} ${styles.coinOne} pixel-art`} src="/assets/capybara/coin.png" alt="" />
-            <img className={`${styles.coin} ${styles.coinTwo} pixel-art`} src="/assets/capybara/coin.png" alt="" />
-            <img className={`${styles.coin} ${styles.coinThree} pixel-art`} src="/assets/capybara/coin.png" alt="" />
-            <img
-              className={`${styles.character} pixel-art`}
-              src={`/assets/capybara/coin-hit/frame-${String(characterFrame).padStart(2, '0')}.png`}
-              alt="坐在电脑前工作的像素水豚"
-            />
+            <LoginCoinAnimation className={styles.animation} />
           </section>
         </div>
       </PixelSurface>

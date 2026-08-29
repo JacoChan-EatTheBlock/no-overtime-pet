@@ -1,0 +1,288 @@
+.window {
+  width: min(1060px, calc(100vw - 40px));
+  height: min(820px, calc(100vh - 40px));
+}
+
+.windowInner {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.content {
+  position: relative;
+  padding: 28px 36px 24px;
+  overflow-y: auto;
+}
+
+/* ─── Header ─── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.aiIcon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  background: var(--color-primary-soft);
+  border-radius: 50%;
+  color: var(--color-primary);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: var(--text-title-1);
+}
+
+.header p {
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.closeBtn {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: var(--color-surface-soft);
+}
+
+/* ─── Task info ─── */
+.taskInfo {
+  margin-bottom: 20px;
+}
+
+.taskTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.taskTitleRow h2 {
+  margin: 0;
+  font-size: var(--text-title-2);
+}
+
+.proposalBadge {
+  padding: 3px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface-soft);
+  font-size: var(--text-caption);
+  font-weight: 600;
+}
+
+.sectionLabel {
+  margin: 0 0 8px;
+  color: var(--color-primary);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.userFields {
+  display: flex;
+  gap: 24px;
+  padding: 12px 18px;
+  border: 1px solid #e4cfb2;
+  border-radius: 4px;
+  background: var(--color-surface-soft);
+  font-size: var(--text-body);
+}
+
+.userFields span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── AI suggestion fields ─── */
+.aiSection {
+  margin-bottom: 20px;
+  padding: 20px 22px;
+  border: 1px solid #d9e8e0;
+  border-radius: 4px;
+  background: #f3f8f5;
+}
+
+.aiSectionTitle {
+  margin: 0 0 16px;
+  color: var(--color-primary);
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.fieldList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fieldRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0ede4;
+}
+
+.fieldRow:last-child {
+  border-bottom: 0;
+}
+
+.fieldIcon {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.fieldLabel {
+  width: 90px;
+  flex-shrink: 0;
+  font-weight: 600;
+  font-size: var(--text-body);
+}
+
+.fieldValue {
+  flex: 1;
+  font-size: var(--text-body);
+}
+
+.fieldRange {
+  margin-left: 12px;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.fieldActions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.adoptBtn {
+  min-height: 34px !important;
+  padding: 0 16px !important;
+  font-size: var(--text-small) !important;
+}
+
+.modifyBtn {
+  min-height: 34px !important;
+  padding: 0 16px !important;
+  font-size: var(--text-small) !important;
+}
+
+.referenceNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.confidence {
+  margin-left: auto;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ─── Subtasks ─── */
+.subtaskSection {
+  margin-bottom: 24px;
+}
+
+.subtaskSection h3 {
+  margin: 0 0 12px;
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.subtaskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.subtaskRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #efe5d6;
+}
+
+.subtaskNum {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface-soft);
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+.subtaskTitle {
+  flex: 1;
+  font-size: var(--text-body);
+}
+
+.subtaskDuration {
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+/* ─── Footer ─── */
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px solid #e4cfb2;
+}
+
+.ghostAction {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: auto;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  cursor: pointer;
+}
+
+.ghostAction:hover {
+  color: var(--color-primary);
+}
+
+/* ─── Capybara ─── */
+.petCharacter {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  pointer-events: none;
+}
