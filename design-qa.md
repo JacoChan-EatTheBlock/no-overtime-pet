@@ -74,3 +74,47 @@
 - Not verified: real Apple Silicon font rasterization, packaged Electron window behavior, backend persistence, live AI analysis, cross-process IPC, or system desktop/taskbar integration. These are outside this UI-only task.
 
 final result: passed
+
+---
+
+# Task Schedule Standalone HTML Design QA
+
+## Comparison target
+
+- Product references: the same six authoritative task and schedule images listed above.
+- Standalone implementation: `apps/desktop/renderer/src/features/task-schedule-html/`.
+- Final implementation screenshots: `design/qa/task-schedule-html/final/`.
+- Same-viewport reference/implementation pairs: `design/qa/task-schedule-html/comparisons-final/`.
+- Equal-size product-window crops: `design/qa/task-schedule-html/focused-final/`.
+- Six-screen review matrix: `design/qa/task-schedule-html/contact-final.png`.
+
+## Viewport and normalization
+
+- CSS viewport and implementation capture: 1487 × 1058, device scale factor 1.
+- References were normalized to the same 1487 × 1058 comparison canvas only where their source PNG was one pixel narrower or taller.
+- Each full-view comparison places the reference on the left and the standalone HTML render on the right.
+- Windows wallpaper, desktop icons, taskbar and native window chrome are intentionally absent from the HTML render; they are outside the app-owned UI and outside the current macOS MVP boundary.
+
+## Findings and fixes
+
+- Pass 1 [P1]: generic headline glyphs made the task, AI, schedule and success screens feel like a conventional web UI. Fixed by extracting the authoritative pixel clipboard, robot, calendar and success artwork and preserving pixel rendering.
+- Pass 1 [P2]: flat surface fill and a smooth speech-bubble tail weakened the reference's pixel character. Fixed with a warm radial surface, stepped frame geometry, hard shadows and a stepped tail.
+- Pass 2 [P1]: the success mark flexed vertically and collided with the heading. Fixed with a non-shrinking success-art slot and rebalanced display-title spacing.
+- Pass 3 [P2]: the schedule timeline panel started too far left and enclosed the hour labels, unlike the reference. Fixed by reserving the reference's external hour gutter and matching the timeline/commitment column widths.
+- Pass 4 [P2]: the success heading color and stroke density were lighter than the reference. Fixed with the measured dark blue-black title color, controlled CJK font stack, weight and sub-pixel stroke.
+- Final review: no actionable P0, P1 or P2 mismatch remains at the formal viewport.
+
+## Primary interactions and console
+
+- Browser-verified: completed-task filtering returns 2 visible tasks; cancel prevents an empty task submission; form data reaches the AI page through query parameters.
+- Browser-verified: reject all marks 7 suggestions, re-analyse restores all 7, edit reveals the inline editor, and confirm enters the schedule page.
+- Browser-verified: commitment checkbox count changes from 5 to 4; duration adjustment publishes the expected Mock status.
+- Browser-verified: two task completions reach 5/5 and disable the completion action; clock-out adjustment and successful settlement status both update.
+- Browser console at the end of the full flow: 0 errors, 0 warnings.
+
+## Residual validation boundaries
+
+- Verified: all six standalone HTML states, same-viewport and equal-size product-window comparisons, core Mock interactions, local navigation, typography and app-owned pixel artwork.
+- Not verified: real Apple Silicon/PingFang rasterization, packaged Electron transparency, backend persistence, live AI, scheduling services, or OS desktop/taskbar integration.
+
+final result: passed

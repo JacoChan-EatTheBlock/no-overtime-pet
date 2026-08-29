@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>今日安排草案｜不要加班</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="screen-stage page-07" data-screen="07-schedule-draft">
+    <section class="pixel-frame schedule-window" aria-label="今日安排草案">
+      <div class="pixel-inner">
+        <header class="schedule-header">
+          <div class="heading-icon"><img class="pixel-source-icon" src="assets/pixel-source/calendar.png" alt="" aria-hidden="true"></div>
+          <div><h1>今日安排草案</h1><p>8月29日 · 星期六</p></div>
+          <p class="ai-draft-hint"><span class="icon i-sparkles" style="--icon-size:22px" aria-hidden="true"></span>AI 负责建议，最终安排由你确认。</p>
+          <button class="icon-button" type="button" aria-label="关闭" data-link="05-task-list.html"><span class="icon i-x" style="--icon-size:28px" aria-hidden="true"></span></button>
+        </header>
+
+        <div class="schedule-content">
+          <section class="schedule-timeline" aria-label="可拖动日程时间轴">
+            <div class="timeline-hours" aria-hidden="true"><span>09:00</span><span>10:00</span><span>11:00</span><span>12:00</span><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span><span>17:00</span><span>18:00</span><span>18:30</span></div>
+
+            <article class="schedule-block" style="min-height:74px" draggable="true" data-block="email">
+              <span class="block-time">09:00–10:20</span><strong>查收邮件与消息</strong><span class="block-actions"><span><span class="icon i-arrows-move"></span>拖动</span><button type="button" data-action="toggle-lock"><span class="icon i-lock-open"></span><span>锁定</span></button><button type="button" data-action="adjust-duration"><span class="icon i-clock"></span>调整时长</button></span>
+            </article>
+            <article class="schedule-block" style="min-height:60px" draggable="true" data-block="review">
+              <span class="block-time">10:20–11:10</span><strong>整理产品评审材料</strong><span class="block-actions"><span><span class="icon i-arrows-move"></span>拖动</span><button type="button" data-action="toggle-lock"><span class="icon i-lock-open"></span><span>锁定</span></button><button type="button" data-action="adjust-duration"><span class="icon i-clock"></span>调整时长</button></span>
+            </article>
+            <article class="schedule-block" style="min-height:58px" draggable="true" data-block="requirements">
+              <span class="block-time">11:10–12:00</span><strong>撰写需求文档</strong><span class="block-actions"><span><span class="icon i-arrows-move"></span>拖动</span><button type="button" data-action="toggle-lock"><span class="icon i-lock-open"></span><span>锁定</span></button><button type="button" data-action="adjust-duration"><span class="icon i-clock"></span>调整时长</button></span>
+            </article>
+            <article class="schedule-block break-block" style="min-height:56px" data-block="lunch">
+              <span class="block-time">12:00–13:00</span><strong>午休</strong><span class="block-actions"><span><span class="icon i-lock"></span>锁定</span></span>
+            </article>
+            <article class="schedule-block" style="min-height:100px" draggable="true" data-block="development">
+              <span class="block-time">13:00–15:00</span><strong>开发与自测</strong><span class="block-actions"><span><span class="icon i-arrows-move"></span>拖动</span><button type="button" data-action="toggle-lock"><span class="icon i-lock-open"></span><span>锁定</span></button><button type="button" data-action="adjust-duration"><span class="icon i-clock"></span>调整时长</button></span>
+            </article>
+            <article class="schedule-block" style="min-height:76px" draggable="true" data-block="fix">
+              <span class="block-time">15:00–16:30</span><strong>问题修复与优化</strong><span class="block-actions"><span><span class="icon i-arrows-move"></span>拖动</span><button type="button" data-action="toggle-lock"><span class="icon i-lock-open"></span><span>锁定</span></button><button type="button" data-action="adjust-duration"><span class="icon i-clock"></span>调整时长</button></span>
+            </article>
+            <article class="schedule-block" style="min-height:114px" draggable="true" data-block="wrap">
+              <span class="block-time">16:30–18:10</span><strong>整理今日工作</strong><span class="block-actions"><span><span class="icon i-arrows-move"></span>拖动</span><button type="button" data-action="toggle-lock"><span class="icon i-lock-open"></span><span>锁定</span></button><button type="button" data-action="adjust-duration"><span class="icon i-clock"></span>调整时长</button></span>
+            </article>
+            <div class="finish-estimate"><span class="icon i-circle-check-filled" aria-hidden="true"></span>预计 18:10 完成，可准点下班</div>
+          </section>
+
+          <aside class="commitment-panel">
+            <h2>今日承诺任务 <span class="count-badge" data-commitment-count>5</span></h2>
+            <div class="commitment-list">
+              <label><input type="checkbox" checked>查收邮件与消息</label>
+              <label><input type="checkbox" checked>整理产品评审材料</label>
+              <label><input type="checkbox" checked>撰写需求文档</label>
+              <label><input type="checkbox" checked>开发与自测</label>
+              <label><input type="checkbox" checked>问题修复与优化</label>
+            </div>
+            <hr>
+            <h3>排不下的任务 <span class="count-badge">1</span></h3>
+            <p class="unscheduled-task"><span class="icon i-clock" aria-hidden="true"></span><strong>准备周一例会</strong> · 还需 45分钟</p>
+            <div class="capacity-warning"><span class="icon i-alert-triangle" aria-hidden="true"></span>今日容量不足，不会偷偷压缩时长。</div>
+            <button class="btn btn-primary btn-block" type="button" data-link="01-task-bubble.html">确认今日安排</button>
+            <button class="btn btn-block" type="button" data-link="05-task-list.html">返回修改任务</button>
+            <button class="btn btn-block" type="button" data-action="regenerate"><span class="icon i-refresh" aria-hidden="true"></span>重新生成</button>
+            <p class="screen-status" role="status" data-status></p>
+          </aside>
+        </div>
+      </div>
+    </section>
+    <img class="pet pixel-art" src="../../../public/assets/capybara/idle.png" alt="坐在电脑前工作的像素水豚">
+  </main>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>跑路确认｜不要加班</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="screen-stage page-12" data-screen="12-clockout-confirm">
+    <section class="pixel-frame clockout-dialog" aria-label="跑路确认">
+      <div class="pixel-inner">
+        <h1>现在跑路？</h1>
+        <p class="clockout-time"><span class="icon i-clock" aria-hidden="true"></span>18:27 · 距离下班 3分钟</p>
+        <div class="progress-label">承诺任务　<strong>3/5</strong></div>
+        <div class="progress-segments" role="progressbar" aria-label="承诺任务完成进度" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3"><span class="is-complete"></span><span class="is-complete"></span><span class="is-complete"></span><span></span><span></span></div>
+        <ul class="incomplete-tasks"><li>问题修复与优化</li><li>整理今日工作</li></ul>
+        <div class="clockout-messages">
+          <p class="safe-message"><span class="icon i-circle-check" aria-hidden="true"></span>你仍然可以下班。</p>
+          <p class="warning-message"><span class="icon i-alert-triangle" aria-hidden="true"></span>今天会记录为「任务未完成」，不会获得准点奖励。</p>
+          <p><span class="icon i-info-circle" aria-hidden="true"></span>系统不会阻止你，也不会评价你。</p>
+        </div>
+        <div class="clockout-buttons"><button class="btn btn-danger" type="button" data-link="13-clockout-success.html"><span class="icon i-run" aria-hidden="true"></span>照样跑路</button><button class="btn btn-primary" type="button" data-link="01-task-bubble.html">回去完成</button></div>
+        <button class="adjust-commitment" type="button" data-action="adjust-commitment"><span class="icon i-settings" aria-hidden="true"></span><span><strong>调整承诺任务</strong><small>需记录取消原因和资格影响</small></span><span class="icon i-chevron-right" aria-hidden="true"></span></button>
+        <p class="screen-status" role="status" data-status></p>
+      </div>
+    </section>
+    <img class="pet pixel-art" src="../../../public/assets/capybara/idle.png" alt="坐在电脑前工作的像素水豚">
+  </main>
+</body>
+</html>

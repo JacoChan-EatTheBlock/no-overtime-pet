@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>今天的待办｜不要加班</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="screen-stage page-05" data-screen="05-task-list">
+    <section class="pixel-frame task-window" aria-label="待办列表与新建">
+      <div class="pixel-inner">
+        <section class="task-list-column">
+          <header class="page-heading">
+            <div class="heading-icon"><img class="pixel-source-icon" src="assets/pixel-source/clipboard.png" alt="" aria-hidden="true"></div>
+            <div><h1>今天的待办</h1><p>8月29日 · 星期六</p></div>
+            <span class="icon i-help-circle" aria-hidden="true"></span>
+          </header>
+
+          <div class="task-tabs" role="tablist" aria-label="筛选任务">
+            <button type="button" role="tab" aria-selected="true" data-filter="all">全部　7</button>
+            <button type="button" role="tab" aria-selected="false" data-filter="today">今天　5</button>
+            <button type="button" role="tab" aria-selected="false" data-filter="completed">已完成　2</button>
+          </div>
+
+          <div class="task-rows" aria-live="polite">
+            <article class="task-row" data-task data-today="true" data-completed="true">
+              <span class="icon i-alert-circle urgent-icon" aria-hidden="true"></span>
+              <div><h2>整理产品评审材料</h2><p>10:20 – 11:10</p></div><span class="urgency-chip urgent">紧急</span>
+            </article>
+            <article class="task-row" data-task data-today="true" data-completed="true">
+              <span class="icon i-alert-circle upcoming-icon" aria-hidden="true"></span>
+              <div><h2>撰写需求文档</h2><p>11:10 – 12:10</p></div><span class="urgency-chip upcoming">即将到期</span>
+            </article>
+            <article class="task-row" data-task data-today="true" data-completed="false">
+              <span class="icon i-alert-circle normal-icon" aria-hidden="true"></span>
+              <div><h2>回复客户邮件</h2><p>14:00 – 14:30</p></div><span class="urgency-chip normal">不紧急</span>
+            </article>
+            <article class="task-row" data-task data-today="true" data-completed="false">
+              <span class="icon i-alert-circle normal-icon" aria-hidden="true"></span>
+              <div><h2>准备周一例会</h2><p>15:00 – 16:00</p></div><span class="urgency-chip normal">不紧急</span>
+            </article>
+            <article class="task-row" data-task data-today="true" data-completed="false">
+              <span class="icon i-alert-circle normal-icon" aria-hidden="true"></span>
+              <div><h2>更新项目排期</h2><p>16:30 – 17:30</p></div><span class="urgency-chip normal">不紧急</span>
+            </article>
+          </div>
+        </section>
+
+        <form class="create-task-panel" data-task-form>
+          <h2><span class="icon i-pencil" aria-hidden="true"></span>新增待办</h2>
+          <label class="field" for="new-task-title">要做什么 *
+            <span class="field-control"><input id="new-task-title" name="title" value="梳理上线风险" required maxlength="120"></span>
+          </label>
+          <label class="field" for="new-task-due">DDL *
+            <span class="field-control"><span class="icon i-calendar" aria-hidden="true"></span><input id="new-task-due" name="dueAt" value="8月29日 17:30" required></span>
+          </label>
+          <label class="field" for="new-task-importance">重要性 *
+            <span class="field-control"><span class="icon i-flag" aria-hidden="true"></span><select id="new-task-importance" name="importance"><option>低</option><option>中</option><option selected>高</option><option>最高</option></select></span>
+          </label>
+          <p class="auto-analysis-hint">创建后将直接进入 AI 建议确认</p>
+          <button class="btn btn-primary btn-block" type="submit">创建并进入 AI 分析</button>
+          <button class="btn btn-block" type="button" data-action="clear-task-form">取消</button>
+        </form>
+      </div>
+    </section>
+    <img class="pet pixel-art" src="../../../public/assets/capybara/idle.png" alt="坐在电脑前工作的像素水豚">
+  </main>
+</body>
+</html>

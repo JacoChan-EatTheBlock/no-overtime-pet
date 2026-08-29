@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>今日任务气泡｜不要加班</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="screen-stage page-01" data-screen="01-task-bubble" data-completed="3">
+    <section class="pixel-frame task-bubble" aria-label="今日任务气泡">
+      <div class="pixel-inner">
+        <header class="bubble-header">
+          <h1>今天，8月29日</h1>
+          <div class="header-actions">
+            <button class="icon-button" type="button" aria-label="好友"><span class="icon i-users" style="--icon-size:27px" aria-hidden="true"></span></button>
+            <button class="icon-button" type="button" aria-label="设置"><span class="icon i-settings" style="--icon-size:27px" aria-hidden="true"></span></button>
+          </div>
+        </header>
+
+        <div class="now-label" data-current-label>正在进行</div>
+        <h2 class="current-task" data-current-task>整理产品评审材料</h2>
+        <p class="current-time" data-current-time>10:20–11:10</p>
+
+        <div class="bubble-buttons">
+          <button class="btn btn-primary" type="button" data-action="complete-task">完成这项</button>
+          <button class="btn" type="button" data-link="07-schedule-draft.html">重新安排</button>
+        </div>
+
+        <div class="progress-label">承诺任务　<strong data-progress-text>3/5</strong></div>
+        <div class="progress-segments" role="progressbar" aria-label="承诺任务完成进度" aria-valuemin="0" aria-valuemax="5" aria-valuenow="3" data-progress>
+          <span class="is-complete"></span><span class="is-complete"></span><span class="is-complete"></span><span></span><span></span>
+        </div>
+
+        <div class="next-task"><strong data-next-task>11:10　撰写需求文档</strong></div>
+
+        <footer class="bubble-footer">
+          <div><span class="icon i-clock" style="--icon-size:25px" aria-hidden="true"></span><span>距离下班<br><strong data-clockout-distance>4小时12分</strong></span></div>
+          <div><span class="icon i-flag" style="--icon-size:25px" aria-hidden="true"></span><span>窝囊费<br><strong>¥86.40</strong></span></div>
+          <button class="btn btn-danger" type="button" data-link="12-clockout-confirm.html">跑路</button>
+        </footer>
+      </div>
+    </section>
+    <span class="bubble-tail" aria-hidden="true"></span>
+    <img class="pet pixel-art" src="../../../public/assets/capybara/idle.png" alt="坐在电脑前工作的像素水豚">
+  </main>
+</body>
+</html>

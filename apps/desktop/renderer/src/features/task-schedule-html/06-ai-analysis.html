@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 分析建议｜不要加班</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="screen-stage page-06" data-screen="06-ai-analysis">
+    <section class="pixel-frame analysis-window" aria-label="AI 分析建议">
+      <div class="pixel-inner">
+        <header class="analysis-header">
+          <div class="robot-badge has-source-art"><img class="pixel-source-icon" src="assets/pixel-source/robot-sparkles.png" alt="" aria-hidden="true"></div>
+          <div><h1>AI 分析建议</h1><p>这是建议，确认后才会写入任务。</p></div>
+          <button class="icon-button" type="button" aria-label="关闭" data-link="05-task-list.html"><span class="icon i-x" style="--icon-size:28px" aria-hidden="true"></span></button>
+        </header>
+
+        <section class="analysis-task-heading">
+          <span class="icon i-file-text" aria-hidden="true"></span><h2 data-analysis-title>整理产品评审材料</h2><span class="suggestion-chip">建议</span>
+        </section>
+        <p class="your-input-label">你填写的</p>
+        <div class="user-input-summary">
+          <span><span class="icon i-calendar" aria-hidden="true"></span>DDL　<strong data-analysis-due>8月29日 17:00</strong></span>
+          <span><span class="icon i-flag" aria-hidden="true"></span>重要性　<strong data-analysis-importance>高</strong></span>
+        </div>
+
+        <section class="suggestion-panel">
+          <h3>AI 分析建议（不会修改你的设置）</h3>
+          <div class="suggestion-row" data-suggestion="category"><span class="icon i-category" aria-hidden="true"></span><strong>任务类型</strong><span>文档与评审</span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+          <div class="suggestion-row" data-suggestion="duration"><span class="icon i-clock" aria-hidden="true"></span><strong>预计时长</strong><span>50分钟　<span style="color:#557481">40–70分钟</span></span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+          <div class="suggestion-row" data-suggestion="load"><span class="icon i-brain" aria-hidden="true"></span><strong>认知负荷</strong><span>中</span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+          <div class="suggestion-row" data-suggestion="split"><span class="icon i-puzzle" aria-hidden="true"></span><strong>可拆分性</strong><span>可拆分</span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+
+          <div class="inline-editor" data-inline-editor>
+            <label>任务类型<input value="文档与评审"></label><label>预计分钟<input type="number" min="5" max="2400" value="50"></label><label>认知负荷<select><option>低</option><option selected>中</option><option>高</option></select></label><label>可拆分性<select><option>不可拆分</option><option selected>可拆分</option><option>需确认</option></select></label>
+          </div>
+
+          <div class="confidence-row"><span><span class="icon i-info-circle" aria-hidden="true"></span>参考了 4 个相似任务；你的历史速度比目录基线快约 12%。</span><strong>置信度　中</strong></div>
+          <h3 class="subtask-title">建议的子任务（可选）</h3>
+          <div class="subtask-row" data-suggestion="sub-1"><span class="subtask-index">1</span><strong>整理反馈</strong><span>15分钟</span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+          <div class="subtask-row" data-suggestion="sub-2"><span class="subtask-index">2</span><strong>合并修改</strong><span>25分钟</span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+          <div class="subtask-row" data-suggestion="sub-3"><span class="subtask-index">3</span><strong>最终检查</strong><span>10分钟</span><button class="btn btn-primary small-btn" type="button" data-decision="accept">已采用</button><button class="btn small-btn" type="button" data-decision="edit">修改</button></div>
+        </section>
+
+        <footer class="analysis-actions">
+          <button class="btn btn-ghost" type="button" data-action="reanalyse"><span class="icon i-refresh" style="--icon-size:22px" aria-hidden="true"></span>重新分析</button>
+          <p class="screen-status" role="status" data-status></p>
+          <button class="btn" type="button" data-action="reject-all">全部拒绝</button>
+          <button class="btn btn-primary" type="button" data-link="07-schedule-draft.html">确认建议</button>
+        </footer>
+      </div>
+    </section>
+    <img class="pet pixel-art" src="../../../public/assets/capybara/idle.png" alt="坐在电脑前工作的像素水豚">
+  </main>
+</body>
+</html>
