@@ -702,16 +702,35 @@ function ScheduleScreen({ engine }: { engine: Engine }) {
           <div className={styles.headingIcon}><IconCalendar size={38} stroke={1.8} aria-hidden="true" /></div>
           <div><h1>今日安排草案</h1><p>{engine.todayLabel}</p></div>
           <p className={styles.aiDraftHint}>
-            <IconSparkles size={22} stroke={1.8} aria-hidden="true" />
-            {engine.scheduleSource !== 'AI'
-              ? '模型未参与，本次由确定性求解器生成。'
-              : engine.scheduleAdjusted
-                ? 'AI 建议的顺序 + 你的调整，时间已重算。'
-                : 'AI 负责建议，最终安排由你确认。'}
+            {engine.busy ? (
+              <>
+                <IconBrain size={22} stroke={1.8} className={styles.thinkingIcon} aria-hidden="true" />
+                模型推理中，请稍候…
+              </>
+            ) : (
+              <>
+                <IconSparkles size={22} stroke={1.8} aria-hidden="true" />
+                {engine.scheduleSource !== 'AI'
+                  ? '模型未参与，本次由确定性求解器生成。'
+                  : engine.scheduleAdjusted
+                    ? 'AI 建议的顺序 + 你的调整，时间已重算。'
+                    : 'AI 负责建议，最终安排由你确认。'}
+              </>
+            )}
           </p>
           <ScreenClose onClick={() => engine.navigate('05-task-list')} />
         </header>
 
+        {engine.busy ? (
+          <div className={styles.scheduleLoading} role="status" aria-live="polite">
+            <div className={styles.thinkingBadge}>
+              <IconBrain size={40} stroke={1.6} aria-hidden="true" />
+            </div>
+            <p className={styles.thinkingTitle}>模型推理中…</p>
+            <p className={styles.thinkingSubtitle}>AI 正在权衡 DDL、午休和你的历史速度，草案马上就好。</p>
+            <div className={styles.thinkingDots} aria-hidden="true"><span /><span /><span /></div>
+          </div>
+        ) : (
         <div className={styles.scheduleContent}>
           <section className={styles.scheduleTimeline} aria-label="可拖动日程时间轴">
             <div className={styles.timelineHours} aria-hidden="true">
@@ -829,6 +848,7 @@ function ScheduleScreen({ engine }: { engine: Engine }) {
             <p className={styles.scheduleStatus} role="status">{engine.statusMessage}</p>
           </aside>
         </div>
+        )}
       </PixelSurface>
       <PetCompanion />
     </section>
