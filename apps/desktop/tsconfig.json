@@ -8,20 +8,16 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true
   },
   "include": [
     "src/**/*"
   ],
-  "references": [
-    {
-      "path": "../../packages/contracts"
-    },
-    {
-      "path": "../../packages/domain"
-    },
-    {
-      "path": "../../packages/asset-runtime"
-    }
+  "exclude": [
+    "dist",
+    "node_modules"
   ]
 }

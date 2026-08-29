@@ -7,7 +7,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev:desktop": "turbo run dev --filter=@not/desktop",
+    "dev:desktop": "pnpm --filter @not/desktop dev",
     "dev:api": "turbo run dev --filter=@not/api",
     "dev:realtime": "turbo run dev --filter=@not/realtime",
     "build": "turbo run build",
@@ -15,7 +15,8 @@
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "build:desktop": "pnpm --filter @not/desktop build"
   },
   "devDependencies": {
     "turbo": "^2.1.0",

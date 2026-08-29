@@ -4,10 +4,15 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  root: 'src/renderer',
+  root: resolve(__dirname, 'src/renderer'),
   base: './',
+  server: {
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: true,
+  },
   build: {
-    outDir: '../../dist/renderer',
+    outDir: resolve(__dirname, 'dist/renderer'),
     emptyOutDir: true,
   },
   resolve: {

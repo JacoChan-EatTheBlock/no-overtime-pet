@@ -1,10 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { join } from 'path';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: [
+        join(__dirname, '../../../.env.local'),  // monorepo root
+        join(__dirname, '../../../.env'),
+        '.env.local',
+        '.env',
+      ],
+    }),
 
     // PostgreSQL via Supabase (cloud)
     TypeOrmModule.forRootAsync({
@@ -14,19 +24,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         url: config.getOrThrow('DATABASE_URL'),
         ssl: { rejectUnauthorized: false },
         autoLoadEntities: true,
-        synchronize: false, // 使用迁移，不自动同步
+        synchronize: false,
         logging: config.get('NODE_ENV') === 'development',
       }),
     }),
 
-    // TODO: Import feature modules
-    // AuthModule,
-    // TasksModule,
-    // FriendsModule,
-    // EconomyModule,
-    // SchedulingModule,
-    // WorkdayModule,
-    // ShopModule,
+    // Feature modules
+    AuthModule,
   ],
 })
 export class AppModule {}
