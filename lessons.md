@@ -14,6 +14,85 @@
 
 ---
 
+## 2026-08-29：macOS 首发不等于产品 UI 必须原生化换肤
+
+### 问题现象
+
+在讨论基于新版 PRD 开始 UI 实现时，容易把“macOS 是首发平台”理解成需要把现有暖色像素界面改成 macOS 原生设置页风格，导致视觉方向被不必要地重做。
+
+### 导致原因
+
+没有把产品自有视觉与操作系统架构边界明确分开。参考图同时包含产品窗口和 Windows 壁纸、任务栏、系统托盘等展示环境，容易误把平台迁移和产品换肤当成同一件事。
+
+### 修正内容
+
+保留现有暖米白面板、青绿色主色、深棕像素描边、桌宠气泡、商店卡片和排排坐等产品视觉。Windows 系统背景不进入实现；Electron main、preload、菜单栏、透明窗口、权限和发行能力仍严格按 macOS 要求设计。28 张参考图按 v2 修订和新版 PRD 归并为 19 个正式界面，统一使用代码化令牌、共享组件和同视口视觉 QA。
+
+### 防止规则
+
+- 平台切换只改变系统能力、窗口行为、权限与发行要求，除非 Magnus 明确要求，不自动触发产品自有 UI 换肤。
+- 还原参考图时先划分产品自有表面与系统展示环境；不得实现 Windows 壁纸、任务栏或系统托盘来冒充应用 UI。
+- v2 修订图覆盖同编号旧稿；新版 PRD 删除的邮箱验证码、逐条 AI 分析、活动纠正、拉黑、设备管理和数据导出等入口不得因旧图存在而恢复。
+- 全套 UI 必须先确定统一令牌和组件，再拆分对话；分对话不得各自发明颜色、切角、按钮或表单样式。
+
+### 关联文件
+
+- `docs/ui/UI_RECONSTRUCTION_SPEC.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
+- `docs/prd/18-macos-platform-distribution.md`
+
+### 验证方式
+
+- 检查正式 UI 中仍使用现有像素视觉语言，且没有 macOS 原生化换肤。
+- 检查 renderer 不包含 Windows 壁纸、任务栏或系统托盘模拟。
+- 检查 19 个正式界面均指向唯一权威参考图，v2 修订和新版 PRD 删除项已落实。
+- 在同一产品 UI 裁剪范围内比较参考图与实现截图，修复 P0/P1/P2 差异。
+
+---
+
+## 2026-08-29：路演视觉必须按完整 PPT 页面设计
+
+### 问题现象
+
+首轮为路演各页生成了独立像素插画素材，但画面偏通用游戏概念图，没有延续项目现有的米白像素窗口、深色阶梯描边、青绿色控件和桌宠比例，也没有形成可直接展示的 PPT 信息层级。
+
+### 导致原因
+
+把“生成每页 PPT 使用的图片”理解成了“生成可放入 PPT 的插画”，没有先区分装饰素材与完整演示页面，也没有把现有 UI 视觉稿作为权威风格参考。
+
+### 修正内容
+
+后续路演视觉改为直接生成 16:9 完整页面图片，在同一画面内完成标题、正文层级、像素窗口边框、角色和留白，并以项目现有视觉稿的配色、控件和角色比例为基准。
+
+### 防止规则
+
+- 用户要求“对应 PPT 照片”时，默认生成完整 16:9 页面，而不是孤立插画素材。
+- 每轮先生成一页风格基准稿并取得确认，再批量延展其余页面。
+- 路演页必须同时满足项目视觉一致性和远距离阅读层级，不能只满足“有像素风”。
+- 现有 Windows 视觉稿只用于 UI 风格参考，最终路演不得把 Windows 桌面当成 macOS 产品证据；即使没有任务栏，Windows 11 波纹壁纸等可识别系统图案也不得作为页面底图。
+
+### 关联文件
+
+- `design/roadshow-ppt/slide-01-cover-v2.png`
+- `design/roadshow-ppt/slide-02-problem-v1.png`
+- `design/roadshow-ppt/slide-03-product-loop-v1.png`
+- `design/roadshow-ppt/slide-04-demo-v1.png`
+- `design/roadshow-ppt/slide-05-differentiation-v1.png`
+- `design/roadshow-ppt/slide-06-closing-v1.png`
+- `design/image2-ui-v1/06-ai-proposal-review.png`
+- `design/image2-ui-v1/07-schedule-commitment.png`
+- `design/image2-ui-v1/13-clockout-success.png`
+
+### 验证方式
+
+- 页面为完整 16:9 构图，标题和副标题在投影距离下可读。
+- 米白像素面板、深色阶梯描边、青绿色强调和桌宠比例与项目视觉稿一致。
+- 像素面板外层使用纯色雾蓝灰，页面中不存在 Windows 任务栏、Windows 标志或 Windows 11 波纹壁纸。
+- 页面不存在 Windows 任务栏或 Windows 标志。
+
+---
+
 ## 2026-08-29：不能把常见 SaaS 功能默认塞进桌宠产品
 
 ### 问题现象
@@ -507,3 +586,152 @@ MVP 改为 macOS 首发、Apple Silicon `arm64` 优先、Windows 延后。首发
 - Input Monitoring、Accessibility、Screen Recording 分别验证允许、拒绝和撤销路径。
 - 更新前后 Keychain 会话、SQLite、登录项、权限状态和 bundle identity 连续。
 - 全文检查确认“Windows 首发”只作为已被替代的历史决定或未来平台出现。
+
+---
+
+## 2026-08-29：视觉上的棋盘格不等于素材具有真实透明通道
+
+### 问题现象
+
+“抱鱼摸鱼”关键帧看起来带透明棋盘格，但文件实际所有像素的 Alpha 都是 255；如果直接进入视频管线，棋盘格会被当成角色画面的一部分，后续无法得到干净的透明 GIF 和 Sprite Sheet。
+
+### 导致原因
+
+图像模型把透明棋盘格画进了 RGB 内容，而不是输出真实透明通道；只凭预览观感判断透明性，没有先检查 Alpha 范围和透明区 RGB。
+
+### 修正内容
+
+生成前只移除与画布边界连通的高亮中性棋盘格区域，避免误删鱼眼、键盘和角色内部的浅色像素；随后把完全透明像素的 RGB 统一清零，再合成到纯绿输入画布。两项动作各使用一次性提交锁与独立任务 ID，产出后统一去绿幕、固定桌面锚点并生成 8 帧透明资源。
+
+### 防止规则
+
+- 所有声称透明的输入和输出都必须检查 Alpha 最小值、透明像素数量、四角 Alpha 和透明区 RGB，不能只看棋盘格预览。
+- 背景提取只能处理从画布边界连通的背景区域，不得按颜色全局删除角色、道具或键盘内部的浅色像素。
+- 每个付费动作独立写入 `submission-intent.lock` 和 `provider-task.json`；命令包装失败时先检查锁和任务 ID，再决定是否提交尚未创建的动作。
+- GIF 逐帧解码后仍须验证透明角落；正式客户端继续使用透明 Sprite Sheet 与 Manifest。
+
+### 关联文件
+
+- `design/pet-action-prototypes/tools/generate_capybara_action_gifs.py`
+- `design/pet-action-prototypes/capybara/type-both-v1/preflight.json`
+- `design/pet-action-prototypes/capybara/type-both-v1/qa.json`
+- `design/pet-action-prototypes/capybara/slack-secretly-v1/preflight.json`
+- `design/pet-action-prototypes/capybara/slack-secretly-v1/qa.json`
+
+### 验证方式
+
+- 两套关键帧预检均包含透明边距，且透明像素 RGB 全部为零。
+- 两个 GIF 均可解码为 8 帧，每帧四角 Alpha 都为零。
+- 两张 Sprite Sheet 均为 768×384 RGBA，分别对应 4 列×2 行。
+- `TYPE_BOTH` 和 `SLACK_SECRETLY` 的结构检查与首尾循环轮廓检查均通过。
+
+---
+
+## 2026-08-29：业务状态与可叠加特效必须分层，避免组合素材爆炸
+
+### 问题现象
+
+旧动作契约要求每个角色交付 11 个动作；加入“疯狂敲键盘时金币流出”等场景后，如果继续把金币烘焙进角色动作，3 个角色会迅速产生大量重复组合素材。
+
+### 导致原因
+
+把正常上班、摸鱼和敲键盘等角色基础状态，与金币流入、金币流出等经济反馈放进同一个 `PetAction` 维度，没有区分角色动画层和本地特效层。
+
+### 修正内容
+
+MVP 收缩为四个业务组：正常上班、摸鱼、疯狂敲键盘和金币流。`PetAction` 只保留 `WORK_NORMAL / SLACKING / TYPE_FRENZY`；金币流拆成 `COIN_OUT / COIN_IN_GLOW` 两个本地 `PetEffect`。首批水豚、鹈鹕、暹罗猫只需 9 套角色动作，再共享 2 套金币特效。
+
+### 防止规则
+
+- 角色姿势或肢体变化使用 `PetAction`；不改变角色基础动作的视觉反馈优先使用独立 `PetEffect`。
+- `PetEffect` 通过 `bodyCenter`、`ground`、`backGlow` 等语义锚点定位，不得为不同角色复制同一金币纹理。
+- 运行时允许特效叠加在任意基础动作上，不创建 `TYPE_FRENZY + COIN_OUT` 等组合 actionId。
+- 金币特效只由已确认账本记录触发并按账本 ID 去重，不进入好友活动投影。
+- 评估资产量时分别计算角色动作和共享特效；MVP 基线固定为 9 加 2，而不是 3 乘 11。
+
+### 关联文件
+
+- `docs/prd/01-shared-contracts.md`
+- `docs/prd/08-pet-actions.md`
+- `docs/prd/11-asset-pipeline-contract.md`
+- `docs/prd/datasets/character-action-manifest.example.json`
+- `docs/prd/datasets/pet-effect-manifest.example.json`
+
+### 验证方式
+
+- 共享 `PetAction` 枚举只包含三个基础动作，`PetEffect` 只包含两个金币特效。
+- 三个角色的 Manifest 各自只要求三个基础动作。
+- `COIN_IN_GLOW` Manifest 同时声明角色后层金光和角色前层金币轨道。
+- 好友 WebSocket 事件只接受 `PetAction`，不包含 `PetEffect` 或账本记录 ID。
+
+---
+
+## 2026-08-29：动画画面通过不等于 Manifest 契约通过
+
+### 问题现象
+
+9 套角色动画完成透明化、循环和人工画面检查后，生成器仍把 `fallbackAction` 写成旧值 `IDLE`；该值已不属于当前 `PetAction` 枚举，若直接接入会让资源包与 PRD 契约不一致。
+
+### 导致原因
+
+后处理管线只检查了帧数、透明度、纹理尺寸、循环轮廓和文件哈希，没有把 Manifest 的枚举值与当前共享契约一起纳入整包验收。
+
+### 修正内容
+
+将生成器和 9 份角色动作 Manifest 的回退动作统一改为 `WORK_NORMAL`；新增整包记录和 QA 汇总，对 9 套角色动作、2 套共享特效的 ID、纹理尺寸、哈希、透明区、回退动作、轨道层级和文件数量进行统一检查。
+
+### 防止规则
+
+- 单个动画的图像 QA 与整包契约 QA 必须分开执行，二者都通过才能交付。
+- `actionId`、`effectId`、`fallbackAction`、锚点名和图层名必须来自当前 PRD 共享枚举，不允许沿用历史自由文本。
+- 每次批量生成后必须验证整包恰好包含 9 套角色动作和 2 套共享特效，禁止把组合预览重复计入正式资源。
+- GIF 只用于评审；正式资源索引必须指向 Sprite Sheet、轨道纹理与 Manifest。
+
+### 关联文件
+
+- `design/pet-action-prototypes/tools/generate_capybara_action_gifs.py`
+- `design/pet-action-prototypes/tools/generate_coin_flow_effects.py`
+- `design/pet-action-prototypes/qa/pet-action-pack-v1/asset-pack-manifest.prototype.json`
+- `design/pet-action-prototypes/qa/pet-action-pack-v1/qa-report.json`
+
+### 验证方式
+
+- 整包 QA 共执行 110 项自动检查，失败项为 0。
+- 9 份角色 Manifest 的 `fallbackAction` 均为 `WORK_NORMAL`。
+- 2 份特效 Manifest 的金币轨道均位于角色前层，`COIN_IN_GLOW` 的金光轨道只位于角色后层。
+- 总览索引恰好登记 3 个角色 × 3 个动作，以及 2 套共享特效。
+
+---
+
+## 2026-08-29：独立交付包必须从目标目录重新验证
+
+### 问题现象
+
+把核心动画从生成目录复制到命名更清晰的交付目录时，动作和特效子目录被重新命名；如果只验证源目录，重命名后的相对路径、预览文件名或漏复制的 Sprite Sheet 仍可能让交付包不可独立使用。
+
+### 导致原因
+
+生成目录同时包含源视频、绿幕输入、任务锁和正式成品，不适合作为客户端交付目录；复制成品时又不能假设原 Manifest 的所有辅助路径在新结构中仍然成立。
+
+### 修正内容
+
+使用明确的文件白名单复制 9 套角色动作和 2 套共享特效，保留原始生成目录；为独立包建立新的 `asset-pack-manifest.json` 和 `README.md`，修正特效预览相对路径，并直接从交付目录执行路径、纹理哈希、帧数、透明 GIF 和中间文件排除检查。
+
+### 防止规则
+
+- 发布包采用复制快照，不移动或重命名生成管线的原始证据目录。
+- 交付目录只允许核心成品白名单，默认排除 MP4、绿幕输入、提示词、Provider 任务文件和提交锁。
+- 目录结构或文件名变化后，必须更新对应 Manifest 相对路径。
+- 验证命令必须以交付目录为根执行，不能用源目录检查结果代替。
+
+### 关联文件
+
+- `design/deliverables/no-overtime-pet-core-animation-pack-v1/README.md`
+- `design/deliverables/no-overtime-pet-core-animation-pack-v1/asset-pack-manifest.json`
+- `design/deliverables/no-overtime-pet-core-animation-pack-v1/qa/package-integrity.json`
+
+### 验证方式
+
+- 独立包共包含 3 个角色、9 套角色动作、2 套共享特效和 11 个核心 GIF。
+- 从交付目录执行 68 项完整性检查，失败项为 0。
+- 包内 MP4、`seedance-input.png` 和 `submission-intent.lock` 数量均为 0。

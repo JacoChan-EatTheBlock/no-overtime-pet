@@ -1,0 +1,13 @@
+{
+  "providerTaskId": "cgt-20260829125916-w5jjq",
+  "submittedAt": "2026-08-29T04:59:16.791186+00:00",
+  "characterId": "capybara-office-worker",
+  "actionId": "TYPE_FRENZY",
+  "derivedFromActionId": "TYPE_BOTH",
+  "sourceReuse": true,
+  "model": "doubao-seedance-2-0-260128",
+  "durationSeconds": 4,
+  "resolution": "720p",
+  "ratio": "1:1",
+  "paidSubmissionLimit": 0
+}

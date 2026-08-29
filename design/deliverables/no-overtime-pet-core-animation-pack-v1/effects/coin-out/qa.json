@@ -1,0 +1,20 @@
+{
+  "effectId": "COIN_OUT",
+  "passed": true,
+  "checks": {
+    "frameCount": true,
+    "coinSheetDivisible": true,
+    "coinLastFrameInvisible": true,
+    "transparentPreviewFrames": true,
+    "sharedTrackContainsNoCharacterPixels": true,
+    "frontCoinLayer": true,
+    "backGlowLayer": true,
+    "threeCharacterOverlayPreviews": true
+  },
+  "manualReview": [
+    "coin direction and disappearance read correctly",
+    "coin remains in front of all three characters",
+    "golden glow, when present, remains behind all three characters",
+    "the original platformer-style coin has no branded symbol or licensed character feature"
+  ]
+}

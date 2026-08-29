@@ -1,0 +1,31 @@
+{
+  "preparedAt": "2026-08-29T06:05:40.837757+00:00",
+  "actionId": "WORK_NORMAL",
+  "source": {
+    "file": "keyframe-source.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "3bdfd958374bcc380ea387dcef58cf1d976d95ee9d8d6e76a178e575ec643a06"
+  },
+  "transparentKeyframe": {
+    "file": "keyframe-transparent.png",
+    "extraction": "border-connected-neutral-checkerboard",
+    "foregroundBox": [
+      64,
+      236,
+      1190,
+      1131
+    ],
+    "transparentPixels": 948653,
+    "transparentRgbZero": true,
+    "sha256": "b28a0f9049220ff82b55d7993260739a4800507c897b43fe02b6311bd4bfa008"
+  },
+  "seedanceInput": {
+    "file": "seedance-input.png",
+    "width": 768,
+    "height": 768,
+    "background": "#00FF66",
+    "sha256": "1c6699323ebc501f387f873ca6152c7d5fc535bfb4e28d5e62539248a6d2d003"
+  },
+  "motionPromptSha256": "925e7d98058b61f1ac725dcda0bcb841eb2d23fba9b01309d75cfd20462a4ca4"
+}

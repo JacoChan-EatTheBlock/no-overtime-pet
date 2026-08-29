@@ -8,124 +8,45 @@
   "anchors": {
     "feet": { "x": 64, "y": 116 },
     "head": { "x": 64, "y": 34 },
+    "bodyCenter": { "x": 64, "y": 70 },
+    "ground": { "x": 64, "y": 116 },
+    "backGlow": { "x": 64, "y": 66 },
     "keyboard": { "x": 64, "y": 88 }
   },
   "actions": {
-    "IDLE": {
-      "texture": "actions/IDLE.webp",
+    "WORK_NORMAL": {
+      "texture": "actions/WORK_NORMAL.webp",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 8,
       "fps": 8,
       "loop": true,
       "loopStartFrame": 0,
-      "fallbackAction": "IDLE",
+      "fallbackAction": "WORK_NORMAL",
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
-    "TYPE_LEFT": {
-      "texture": "actions/TYPE_LEFT.webp",
+    "SLACKING": {
+      "texture": "actions/SLACKING.webp",
       "frameWidth": 128,
       "frameHeight": 128,
-      "frameCount": 4,
-      "fps": 18,
-      "loop": false,
-      "fallbackAction": "TYPE_BOTH",
-      "eventFrames": { "deskHit": [2] },
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "TYPE_RIGHT": {
-      "texture": "actions/TYPE_RIGHT.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 4,
-      "fps": 18,
-      "loop": false,
-      "fallbackAction": "TYPE_BOTH",
-      "eventFrames": { "deskHit": [2] },
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "TYPE_BOTH": {
-      "texture": "actions/TYPE_BOTH.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 6,
-      "fps": 18,
+      "frameCount": 8,
+      "fps": 8,
       "loop": true,
       "loopStartFrame": 0,
-      "fallbackAction": "IDLE",
-      "eventFrames": { "deskHit": [1, 4] },
+      "fallbackAction": "WORK_NORMAL",
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
-    "MOUSE_MOVE": {
-      "texture": "actions/MOUSE_MOVE.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 6,
-      "fps": 12,
-      "loop": true,
-      "fallbackAction": "IDLE",
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "MOUSE_CLICK": {
-      "texture": "actions/MOUSE_CLICK.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 3,
-      "fps": 12,
-      "loop": false,
-      "fallbackAction": "MOUSE_MOVE",
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "MEETING_DAZE": {
-      "texture": "actions/MEETING_DAZE.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 10,
-      "fps": 8,
-      "loop": true,
-      "fallbackAction": "IDLE",
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "READ": {
-      "texture": "actions/READ.webp",
+    "TYPE_FRENZY": {
+      "texture": "actions/TYPE_FRENZY.webp",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 8,
-      "fps": 8,
-      "loop": true,
-      "fallbackAction": "IDLE",
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "SLACK_SECRETLY": {
-      "texture": "actions/SLACK_SECRETLY.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 12,
-      "fps": 10,
-      "loop": true,
-      "fallbackAction": "IDLE",
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "AWAY_DISAPPEAR": {
-      "texture": "actions/AWAY_DISAPPEAR.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 8,
-      "fps": 12,
-      "loop": false,
-      "fallbackAction": "IDLE",
-      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
-    },
-    "CELEBRATE": {
-      "texture": "actions/CELEBRATE.webp",
-      "frameWidth": 128,
-      "frameHeight": 128,
-      "frameCount": 16,
       "fps": 16,
-      "loop": false,
-      "fallbackAction": "IDLE",
+      "loop": true,
+      "loopStartFrame": 0,
+      "fallbackAction": "WORK_NORMAL",
+      "eventFrames": { "deskHit": [1, 3, 5, 7] },
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     }
   }
 }
-

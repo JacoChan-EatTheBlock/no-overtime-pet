@@ -1,0 +1,283 @@
+.stage {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 700px;
+  place-items: center;
+  padding: 28px;
+}
+
+.window {
+  width: 920px;
+  height: 720px;
+}
+
+.windowInner {
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+}
+
+.content {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 1.2fr 0.88fr;
+  padding: 46px 38px 38px 42px;
+}
+
+.formColumn {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  flex-direction: column;
+  border-right: 1px solid #e4cfb2;
+  padding-right: 54px;
+}
+
+.heading {
+  margin-bottom: 48px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.titleRow h1 {
+  margin: 0;
+  font-size: var(--text-display);
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.runIcon {
+  width: 30px;
+  height: 30px;
+  color: var(--color-danger);
+  stroke-width: 2.5;
+}
+
+.heading p {
+  margin: 20px 0 0;
+  font-size: var(--text-body-large);
+  font-weight: 500;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #d9c7aa;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.tabs button {
+  position: relative;
+  min-width: 96px;
+  padding: 0 10px 14px;
+  border: 0;
+  background: transparent;
+  color: #55585b;
+  font-size: var(--text-body-large);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabs button::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  background: transparent;
+  content: '';
+}
+
+.tabs .activeTab {
+  color: var(--color-primary-hover);
+}
+
+.tabs .activeTab::after {
+  background: var(--color-primary);
+}
+
+.form {
+  display: grid;
+  gap: 29px;
+}
+
+.submitButton {
+  min-height: 56px;
+  margin-top: 2px;
+  font-size: var(--text-body-large);
+}
+
+.passwordToggle {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #4d555b;
+  cursor: pointer;
+}
+
+.status {
+  min-height: 20px;
+  margin: -10px 0 0;
+  color: var(--color-danger);
+  font-size: var(--text-small);
+}
+
+.privacyLine {
+  position: absolute;
+  right: 54px;
+  bottom: -10px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+  white-space: nowrap;
+}
+
+.privacyLine button {
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary-hover);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stage[data-ui-state='register'] .heading {
+  margin-bottom: 18px;
+}
+
+.stage[data-ui-state='register'] .titleRow h1 {
+  font-size: 48px;
+}
+
+.stage[data-ui-state='register'] .heading p {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.stage[data-ui-state='register'] .tabs {
+  margin-bottom: 18px;
+}
+
+.stage[data-ui-state='register'] .form {
+  gap: 12px;
+}
+
+.stage[data-ui-state='register'] .form > label {
+  gap: 6px;
+}
+
+.stage[data-ui-state='register'] .form > label > span:first-child {
+  font-size: 16px;
+}
+
+.stage[data-ui-state='register'] .form > label > span:last-child {
+  min-height: 48px;
+}
+
+.stage[data-ui-state='register'] .form input {
+  height: 44px;
+  font-size: 18px;
+}
+
+.stage[data-ui-state='register'] .submitButton {
+  min-height: 48px;
+}
+
+.visualColumn {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.character {
+  position: absolute;
+  right: 30px;
+  bottom: 23px;
+  width: 270px;
+  height: 270px;
+  object-fit: contain;
+}
+
+.coin {
+  position: absolute;
+  z-index: 2;
+  width: 42px;
+  height: 54px;
+  object-fit: contain;
+  animation: coin-fall 2.2s steps(8, end) infinite;
+}
+
+.coinOne {
+  top: 32px;
+  left: 66px;
+}
+
+.coinTwo {
+  top: 72px;
+  right: 80px;
+  animation-delay: -0.8s;
+}
+
+.coinThree {
+  top: 172px;
+  left: 142px;
+  animation-delay: -1.5s;
+}
+
+@keyframes coin-fall {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  72% {
+    transform: translateY(86px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(108px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin {
+    animation: none;
+  }
+}
+
+@media (max-width: 940px), (max-height: 740px) {
+  .stage {
+    min-height: 620px;
+    padding: 18px;
+  }
+
+  .window {
+    width: min(920px, calc(100vw - 36px));
+    height: min(720px, calc(100vh - 36px));
+    min-height: 620px;
+  }
+
+  .content {
+    padding: 24px 28px 30px;
+  }
+}

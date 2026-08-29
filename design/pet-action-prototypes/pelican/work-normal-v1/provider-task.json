@@ -1,0 +1,11 @@
+{
+  "providerTaskId": "cgt-20260829141627-kfp6g",
+  "submittedAt": "2026-08-29T06:16:28.160300+00:00",
+  "characterId": "pelican-office-worker",
+  "actionId": "WORK_NORMAL",
+  "model": "doubao-seedance-2-0-260128",
+  "durationSeconds": 4,
+  "resolution": "720p",
+  "ratio": "1:1",
+  "paidSubmissionLimit": 1
+}

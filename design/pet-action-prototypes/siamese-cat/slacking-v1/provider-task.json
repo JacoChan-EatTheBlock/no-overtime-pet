@@ -1,0 +1,11 @@
+{
+  "providerTaskId": "cgt-20260829142906-97x9k",
+  "submittedAt": "2026-08-29T06:29:07.102580+00:00",
+  "characterId": "siamese-cat-office-worker",
+  "actionId": "SLACKING",
+  "model": "doubao-seedance-2-0-260128",
+  "durationSeconds": 4,
+  "resolution": "720p",
+  "ratio": "1:1",
+  "paidSubmissionLimit": 1
+}

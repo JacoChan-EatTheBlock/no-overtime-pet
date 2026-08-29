@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-用低延迟像素动画把用户真实工作状态转成桌宠动作；键盘输入时呈现类似 Bongo Cat 的拍键盘机制，并让好友看到同类聚合动作。
+用少量、明确、可复用的像素动画把用户状态转成桌宠表现；高频键盘输入时呈现类似 Bongo Cat 的拍键盘机制，并让好友看到同类聚合动作。金币流入和流出作为可叠加特效，不与角色基础动作烘焙成组合素材。
 
 ## 2. 版权与实现边界
 
@@ -10,20 +10,24 @@
 
 ## 3. 动作状态机
 
-动作分为三层优先级：
+MVP 固定为四个业务组：
 
 ```text
-一次性动作：CELEBRATE
-短动作：TYPE_LEFT / TYPE_RIGHT / TYPE_BOTH / MOUSE_CLICK
-持续动作：MEETING_DAZE / READ / SLACK_SECRETLY / IDLE / AWAY_DISAPPEAR
+正常上班：WORK_NORMAL
+摸鱼：SLACKING
+疯狂敲键盘：TYPE_FRENZY
+金币流：COIN_FLOW，包含 COIN_OUT / COIN_IN_GLOW 两个可叠加特效
 ```
 
-优先级建议：
+其中只有前三项属于 `PetAction`；`COIN_OUT` 与 `COIN_IN_GLOW` 属于独立 `PetEffect`，不会替换当前角色动作。
 
-1. 关键一次性动作播放到不可中断点；
-2. 本地输入短动作可打断普通持续动作；
-3. `AWAY_DISAPPEAR` 覆盖所有普通动作；
-4. 无有效状态回到 `IDLE`。
+状态规则：
+
+1. 高频输入达到阈值时，`TYPE_FRENZY` 可覆盖 `WORK_NORMAL` 或 `SLACKING`；
+2. 高频输入停止并经过防抖窗口后，根据最近可靠活动状态回到 `WORK_NORMAL` 或 `SLACKING`；
+3. 无有效状态统一回到 `WORK_NORMAL`；
+4. `AWAY/OFFLINE` 由 `PresenceStatus` 和窗口可见性处理，不新增角色动作素材；
+5. 金币特效在当前 `PetAction` 上独立播放，结束后不触发基础动作切换。
 
 ## 4. 输入到动作映射
 
@@ -39,41 +43,55 @@ interface PetActionIntent {
 
 ### 4.1 拍键盘
 
-- 每次按键只在本地内存触发手部选择，不读取字符。
-- 左右手可按伪随机或交替算法选择，不映射真实键位，防止旁观推断输入内容。
-- 高频输入时合并为连续敲击循环；不为每个键创建网络事件。
-- 300ms 内多次输入可提升 `intensity`，切换更快循环。
+- 每次按键只更新本地计数窗口，不读取字符或真实键位。
+- 单次或低频输入保持 `WORK_NORMAL`；连续输入达到版本化频率阈值后切换 `TYPE_FRENZY`。
+- `TYPE_FRENZY` 内部使用预制的双爪交替循环，不为左右手分别建立 actionId，也不为每个键创建网络事件。
+- 300ms 内多次输入可提升 `intensity`，用于调整同一循环的播放速度，不新增组合动作素材。
 - 本地动作目标延迟 P95 ≤ 100ms。
 
 ### 4.2 其他映射
 
 | 信号 | 动作 |
 |---|---|
-| 鼠标连续移动 | `MOUSE_MOVE` |
-| 鼠标点击聚合 | `MOUSE_CLICK` |
-| 会议状态 | `MEETING_DAZE`，戴耳机发呆 |
-| 阅读/工作浏览 | `READ` |
-| 娱乐浏览/视频 | `SLACK_SECRETLY` |
-| 离开 | `AWAY_DISAPPEAR` |
-| 完成最后承诺任务且准点跑路 | `CELEBRATE` |
+| 一般键鼠输入、会议、阅读、工作浏览 | `WORK_NORMAL` |
+| 高频连续键盘输入 | `TYPE_FRENZY` |
+| 娱乐浏览/视频 | `SLACKING`，角色抱鱼摸鱼 |
+| 离开、空闲、未知 | 基础动作回到 `WORK_NORMAL`；可见性由 `PresenceStatus` 处理 |
+
+### 4.3 金币叠加特效
+
+```ts
+interface PetEffectIntent {
+  effect: PetEffect;
+  sourceLedgerEntryId: EntityId;
+  triggeredAt: UTCTimestamp;
+}
+```
+
+| 已确认账本变化 | 特效 |
+|---|---|
+| 窝囊费扣减或购买支出 | `COIN_OUT`：金币从 `bodyCenter` 出现，落向 `ground` 并消失 |
+| 窝囊费入账、奖励或退款 | `COIN_IN_GLOW`：金币落入 `bodyCenter`，随后在 `backGlow` 播放角色后方金光 |
+
+- 特效只能由服务端已确认的账本记录触发，使用 `sourceLedgerEntryId` 去重；失败、待处理或回滚中的写入不得播放。
+- 短时间内同方向的多笔记录可聚合为一次表现，防止持续计提造成动画刷屏。
+- 金币特效不进入 `PetAction`、不覆盖当前角色动作、不向好友广播，也不生成 `TYPE_FRENZY + COIN_*` 等组合资源。
 
 ## 5. 动画资源契约
 
 每个角色必须支持最小动作集：
 
 ```text
-IDLE, TYPE_LEFT, TYPE_RIGHT, TYPE_BOTH,
-MOUSE_MOVE, MOUSE_CLICK, MEETING_DAZE,
-READ, SLACK_SECRETLY, AWAY_DISAPPEAR, CELEBRATE
+WORK_NORMAL, SLACKING, TYPE_FRENZY
 ```
 
 若角色缺动作：
 
 ```text
-指定动作 → 同族 fallbackAction → IDLE
+指定动作 → 同族 fallbackAction → WORK_NORMAL
 ```
 
-动画由 Sprite Sheet/WebP Sheet + Manifest 描述。运行时不生成动画，也不依赖 GIF 解码作为正式播放方式。详细格式见 `11-asset-pipeline-contract.md`。
+首发 3 个角色共交付 9 套角色动作；`COIN_OUT` 与 `COIN_IN_GLOW` 各交付 1 套跨角色共享特效，总计 11 套核心动画资产。动画由 Sprite Sheet/WebP Sheet + Manifest 描述。运行时不生成动画，也不依赖 GIF 解码作为正式播放方式。详细格式见 `11-asset-pipeline-contract.md`。
 
 ### 5.1 登录页装饰动画位
 
@@ -107,13 +125,13 @@ interface ActionAggregate {
 }
 ```
 
-只发送主动作和强度。好友客户端用同一动作包自行播放，不发送每一帧、每次按键或输入频率精确值。
+只发送主动作和强度。好友客户端用同一动作包自行播放，不发送每一帧、每次按键或输入频率精确值。`PetEffect` 不进入该摘要，不得通过好友事件暴露个人账本变化。
 
 ## 8. 帽子叠加渲染
 
-- 角色 Manifest 暴露头部锚点；每顶帽子暴露底部连接锚点和顶部叠加锚点。
+- 角色 Manifest 暴露头部、身体中心、地面和背后金光锚点；每顶帽子暴露底部连接锚点和顶部叠加锚点。
 - 第 1 顶帽子底锚点对齐角色头锚点；第 N 顶底锚点对齐第 N-1 顶顶部锚点。
-- 渲染顺序：角色后层 → 角色 → 帽子从低到高 → 前景特效。
+- 渲染顺序：后景特效 → 角色 → 帽子从低到高 → 前景特效。`COIN_IN_GLOW` 的金光在角色后方，金币在角色前方。
 - 帽子堆叠超出窗口时，场景应自动缩放或提供纵向滚动视口，不能改变装备数据。
 - 帽子玩法不设置固定装备硬上限；静止帽子层可合成为缓存纹理，动作变化时只更新角色锚点与合成层位置。
 - 不得因视口或性能限制静默丢弃数组顶部或底部的帽子。
@@ -130,16 +148,18 @@ interface ActionAggregate {
 
 ## 10. 验收条件
 
-1. 任意键盘输入可触发拍键盘，但日志和网络包无法还原按键。
-2. 高频输入合并为动画循环，不创建事件风暴。
-3. 好友能在 3 秒内看到对应敲键盘动作。
-4. 缺少某动作资产时安全降级至 fallback 或 `IDLE`。
+1. 持续高频键盘输入可在 P95 100ms 内触发 `TYPE_FRENZY`，但日志和网络包无法还原按键。
+2. 低频输入保持 `WORK_NORMAL`；高频输入合并为单个动画循环，不创建事件风暴。
+3. 好友能在 3 秒内看到对应的聚合 `TYPE_FRENZY` 动作。
+4. 缺少某动作资产时安全降级至 fallback 或 `WORK_NORMAL`。
 5. 切动作时角色脚底锚点不明显跳动。
 6. 帽子按正确锚点逐层叠高，顺序稳定；超高帽子塔不会丢层。
 7. Retina 内建屏和非 Retina 外接屏之间移动窗口时仍保持像素清晰，角色逻辑尺寸和锚点不漂移。
 8. 登录页“金币砸脑壳”动画可循环播放，且缺失时降级为同位置静态水豚关键帧，不影响登录。
 9. Dock 位于底部、左侧、右侧及自动隐藏时，桌宠不会被系统区域永久遮挡或落到不可操作位置。
 10. 多显示器、Spaces 与 Stage Manager 切换后，桌宠窗口的可见性、置顶和点击穿透状态符合选定策略。
+11. `COIN_OUT` 可叠加在任意基础动作上，从身体中心落地消失；`COIN_IN_GLOW` 可叠加在任意基础动作上，金币进入身体后只在角色后层发光。
+12. 同一 `sourceLedgerEntryId` 不会重复播放金币特效，好友事件中不存在 `PetEffect` 或账本标识。
 
 ## 11. 待确认项
 

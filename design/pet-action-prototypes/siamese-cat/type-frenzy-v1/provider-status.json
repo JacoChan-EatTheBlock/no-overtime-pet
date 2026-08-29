@@ -1,0 +1,10 @@
+{
+  "providerTaskId": "cgt-20260829142357-6td6z",
+  "checkedAt": "2026-08-29T06:27:41.822812+00:00",
+  "status": "succeeded",
+  "usage": {
+    "completion_tokens": 87300,
+    "total_tokens": 87300
+  },
+  "error": null
+}

@@ -1,0 +1,31 @@
+{
+  "preparedAt": "2026-08-29T04:57:16.218683+00:00",
+  "actionId": "SLACK_SECRETLY",
+  "source": {
+    "file": "keyframe-source.png",
+    "width": 1179,
+    "height": 1334,
+    "sha256": "90c09ae2acfbd4bb6c1e320ce7e1863661e483d50291b2af4651fb047b22e307"
+  },
+  "transparentKeyframe": {
+    "file": "keyframe-transparent.png",
+    "extraction": "border-connected-neutral-checkerboard",
+    "foregroundBox": [
+      81,
+      253,
+      1121,
+      1141
+    ],
+    "transparentPixels": 943690,
+    "transparentRgbZero": true,
+    "sha256": "fdf1cd192ea704cbb21762fe54fa098b68beb5349bc228183eeaaf8c3ce2774a"
+  },
+  "seedanceInput": {
+    "file": "seedance-input.png",
+    "width": 768,
+    "height": 768,
+    "background": "#00FF66",
+    "sha256": "09e25b0052da507aafb1601db0d2ccdb0b990eacbaf37fa9f3150116a45c9959"
+  },
+  "motionPromptSha256": "5b6a219fa1cf298a58e4070fbbed6db6c2d051b3e07bb395f97fe042ef558fe8"
+}

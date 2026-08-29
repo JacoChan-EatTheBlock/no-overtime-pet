@@ -1,0 +1,31 @@
+{
+  "preparedAt": "2026-08-29T06:05:38.582213+00:00",
+  "actionId": "SLACKING",
+  "source": {
+    "file": "keyframe-source.png",
+    "width": 1366,
+    "height": 1151,
+    "sha256": "0d34de35e79aa589a2483ae4cb9d223c34ee1bf1e92b3844a71cf31c019077e4"
+  },
+  "transparentKeyframe": {
+    "file": "keyframe-transparent.png",
+    "extraction": "border-connected-neutral-checkerboard",
+    "foregroundBox": [
+      13,
+      36,
+      1340,
+      1105
+    ],
+    "transparentPixels": 712866,
+    "transparentRgbZero": true,
+    "sha256": "188d579fd4092ec1a5b8bd33e79130febb6d99ee264aa7dc5055c931c2d8d7bc"
+  },
+  "seedanceInput": {
+    "file": "seedance-input.png",
+    "width": 768,
+    "height": 768,
+    "background": "#00FF66",
+    "sha256": "875c178872cb487a0c022d506ba342f0dc590ee5401642945ea8e0be629b75b7"
+  },
+  "motionPromptSha256": "2213a63806b58e19e79f0b3b081a2740b09e1d9e6de5c09af90b4eb9d3804393"
+}

@@ -2,12 +2,14 @@
 .AppleDouble
 .LSOverride
 Thumbs.db
+Desktop.ini
 
 node_modules/
 dist/
 build/
 out/
 coverage/
+*.tsbuildinfo
 
 .env
 .env.*
@@ -23,4 +25,5 @@ __pycache__/
 
 *.p12
 *.pfx
+*.cer
 *.provisionprofile

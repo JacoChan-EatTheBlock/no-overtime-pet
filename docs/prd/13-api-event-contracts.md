@@ -353,6 +353,8 @@ interface PetActionUpdatedPayload {
 }
 ```
 
+该事件只允许 `WORK_NORMAL`、`SLACKING`、`TYPE_FRENZY`。`COIN_OUT` 与 `COIN_IN_GLOW` 属于本机 `PetEffect`，由已确认账本记录触发，不得进入 WebSocket 好友广播。
+
 ### 13.3 `appearance.updated`
 
 ```ts

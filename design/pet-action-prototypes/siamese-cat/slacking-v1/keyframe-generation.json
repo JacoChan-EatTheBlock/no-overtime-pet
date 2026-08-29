@@ -1,0 +1,8 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "purpose": "SLACKING identity-preserving keyframe",
+  "prompt": "Edit the supplied pixel-art Siamese cat office worker into the same seated office pose while holding exactly one medium blue-green fish horizontally with both paws. Preserve the exact cream-and-dark-brown Siamese markings, cyan eyes, tired expression, teal necktie, curled tail, chair, wooden desk, keyboard, mouse, proportions, palette and crisp pixel-art style. Add only a subtle guilty sideways glance. Use a true transparent background. No extra fish, no extra limbs, no water, no bubbles, no coin, no glow, no text, no logo, no watermark and no scene background.",
+  "sourceAsset": "../identity-source.png",
+  "outputAsset": "../slacking-keyframe.png",
+  "reviewStatus": "approved-for-prototype-animation-input"
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "characterId": "capybara-office-worker",
+  "assetVersion": "type-both-v1",
+  "canvas": {
+    "width": 192,
+    "height": 192
+  },
+  "scaleMode": "NEAREST",
+  "anchors": {
+    "deskPlane": {
+      "x": 96,
+      "y": 188
+    }
+  },
+  "actions": {
+    "TYPE_BOTH": {
+      "texture": "TYPE_BOTH.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "columns": 4,
+      "rows": 2,
+      "fps": 16,
+      "loop": true,
+      "fallbackAction": "IDLE",
+      "contentHashSha256": "6621085039698a18a3be27a17df1b1a6723e691afefd4041c7e075e71cb00dc9"
+    }
+  },
+  "preview": {
+    "file": "preview.gif",
+    "transparent": true,
+    "note": "GIF is review-only; runtime uses the transparent sprite sheet and manifest."
+  }
+}

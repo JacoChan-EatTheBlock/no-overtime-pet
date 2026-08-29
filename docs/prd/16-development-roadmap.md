@@ -156,7 +156,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 | Social/Realtime | 好友、网关、排排坐 | contracts、public projection |
 | Asset Tooling | 离线导出和 QA | Manifest Schema |
 
-并行工作包不得各自复制 `PetAction`、`TaskStatus` 或金额公式。
+并行工作包不得各自复制 `PetAction`、`PetEffect`、`TaskStatus` 或金额公式。
 
 ## 12. 合并顺序
 

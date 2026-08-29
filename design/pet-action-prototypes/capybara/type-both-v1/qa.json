@@ -1,0 +1,164 @@
+{
+  "processedAt": "2026-08-29T05:02:14.761195+00:00",
+  "actionId": "TYPE_BOTH",
+  "structuralPass": true,
+  "loopShapePass": true,
+  "manualReviewRequired": true,
+  "manualReviewItems": [
+    "both paws alternate clearly over the keyboard",
+    "the action reads as rapid typing rather than waving",
+    "capybara identity, teal tie, desk, chair, keyboard, and mouse stay stable",
+    "first and last frames form a natural loop"
+  ],
+  "sourceVideo": {
+    "frameCount": 97,
+    "selectedIndices": [
+      0,
+      14,
+      27,
+      41,
+      55,
+      69,
+      82,
+      96
+    ],
+    "sha256": "6b63c07329acdcd22f6c33c7f528ef91b145e0eecc0abbcb4b3ccfc243298d6f"
+  },
+  "output": {
+    "frameCount": 8,
+    "frameSize": [
+      192,
+      192
+    ],
+    "sheetSize": [
+      768,
+      384
+    ],
+    "sheetSha256": "6621085039698a18a3be27a17df1b1a6723e691afefd4041c7e075e71cb00dc9",
+    "gifSha256": "f3c38b0b098e8b17c73f5a41b2d68d186d7166a8b53346afb9e24a43bb446994",
+    "cornerAlpha": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "transparentRgbZero": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "greenSpillPixelCounts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "foregroundBoxes": [
+      [
+        3,
+        43,
+        189,
+        188
+      ],
+      [
+        3,
+        43,
+        189,
+        188
+      ],
+      [
+        3,
+        43,
+        189,
+        188
+      ],
+      [
+        3,
+        43,
+        189,
+        188
+      ],
+      [
+        3,
+        43,
+        189,
+        188
+      ],
+      [
+        3,
+        44,
+        189,
+        188
+      ],
+      [
+        3,
+        43,
+        189,
+        188
+      ],
+      [
+        3,
+        44,
+        189,
+        188
+      ]
+    ],
+    "loopShape": {
+      "maskIoU": 0.9862,
+      "foregroundAreaRatio": 0.9991
+    }
+  }
+}

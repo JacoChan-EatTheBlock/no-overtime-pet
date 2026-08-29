@@ -62,9 +62,12 @@ type ActivityCategory =
   | "MEDIA_LEISURE" | "IDLE" | "AWAY" | "UNKNOWN";
 type PublicWorkStatus = "WORKING" | "MEETING" | "SLACKING" | "IDLE" | "AWAY" | "OFFLINE";
 type PetAction =
-  | "IDLE" | "TYPE_LEFT" | "TYPE_RIGHT" | "TYPE_BOTH"
-  | "MOUSE_MOVE" | "MOUSE_CLICK" | "MEETING_DAZE"
-  | "READ" | "SLACK_SECRETLY" | "AWAY_DISAPPEAR" | "CELEBRATE";
+  | "WORK_NORMAL"
+  | "SLACKING"
+  | "TYPE_FRENZY";
+type PetEffect =
+  | "COIN_OUT"
+  | "COIN_IN_GLOW";
 
 type FriendRelationStatus = "NONE" | "PENDING_OUT" | "PENDING_IN" | "ACCEPTED";
 type PresenceStatus = "ONLINE" | "IDLE" | "AWAY" | "OFFLINE";
@@ -79,7 +82,7 @@ type LedgerEntryType =
 type PurchaseStatus = "PENDING" | "SUCCEEDED" | "FAILED" | "REFUNDED";
 ```
 
-新增枚举值必须让旧客户端安全降级到 `UNKNOWN`、默认动作或通用文案。
+`PetAction` 是可广播的角色基础动作；`PetEffect` 是本机叠加特效，不进入好友活动投影。新增枚举值必须让旧客户端安全降级到 `UNKNOWN`、`WORK_NORMAL` 或通用文案。
 
 ## 4. 时间与工作日
 

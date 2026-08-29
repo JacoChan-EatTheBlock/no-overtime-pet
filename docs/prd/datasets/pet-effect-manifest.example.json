@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "1.0",
+  "effectId": "COIN_IN_GLOW",
+  "assetVersion": "1.0.0",
+  "scaleMode": "NEAREST",
+  "durationMs": 1000,
+  "tracks": [
+    {
+      "trackId": "golden-glow",
+      "layer": "BEHIND_CHARACTER",
+      "texture": "tracks/golden-glow.webp",
+      "frameWidth": 128,
+      "frameHeight": 128,
+      "frameCount": 8,
+      "fps": 8,
+      "loop": false,
+      "attachTo": "backGlow",
+      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "trackId": "coin",
+      "layer": "IN_FRONT_OF_CHARACTER",
+      "texture": "tracks/coin.webp",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frameCount": 8,
+      "fps": 8,
+      "loop": false,
+      "motion": {
+        "from": "CANVAS_TOP_CENTER",
+        "to": "bodyCenter",
+        "easing": "EASE_IN"
+      },
+      "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "effectId": "COIN_IN_GLOW",
+  "assetVersion": "coin-in-glow-v1",
+  "scaleMode": "NEAREST",
+  "durationMs": 667,
+  "tracks": [
+    {
+      "trackId": "golden-glow",
+      "layer": "BEHIND_CHARACTER",
+      "texture": "tracks/golden-glow.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "fps": 12,
+      "loop": false,
+      "attachTo": "backGlow",
+      "contentHashSha256": "cf89f20e2d742a58ca020cfc4b77db2abb1a34bc06e25ff3cd92be5f2e09e0e5"
+    },
+    {
+      "trackId": "coin",
+      "layer": "IN_FRONT_OF_CHARACTER",
+      "texture": "tracks/coin.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frameCount": 8,
+      "fps": 12,
+      "loop": false,
+      "motion": {
+        "from": "CANVAS_TOP_CENTER",
+        "to": "bodyCenter",
+        "easing": "EASE_IN"
+      },
+      "contentHashSha256": "18213f5ad590719019019f5cb3d315d7cb09ca38c4e7fb5a6c984d52d2db3e66"
+    }
+  ],
+  "eventFrames": {
+    "bodyContact": [
+      6
+    ],
+    "glowPeak": [
+      6
+    ],
+    "disappear": [
+      7
+    ]
+  },
+  "preview": {
+    "file": "preview.gif",
+    "transparent": true,
+    "runtimeAsset": false,
+    "characterOverlays": {
+      "capybara": "overlay-previews/capybara.gif",
+      "pelican": "overlay-previews/pelican.gif",
+      "siamese-cat": "overlay-previews/siamese-cat.gif"
+    }
+  }
+}

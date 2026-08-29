@@ -113,7 +113,7 @@ interface AppearanceLoadout extends ContractHeader {
 
 ## 7. 帽子叠加
 
-帽子 Manifest 必须提供 `bottomAttach` 与 `topAttach` 锚点。装备预览使用真实角色动作至少检查 `IDLE`、`TYPE_BOTH`、`CELEBRATE` 三种状态。
+帽子 Manifest 必须提供 `bottomAttach` 与 `topAttach` 锚点。装备预览使用真实角色动作检查 `WORK_NORMAL`、`SLACKING`、`TYPE_FRENZY` 三种状态，并额外检查 `COIN_IN_GLOW` 后景金光不会错误覆盖帽子层。
 
 `[已确认]` 帽子可持续向上叠加，不设置固定装备数量硬上限。实现可缓存静态帽子层并使用自动缩放/滚动视口，但不得静默少渲染已装备帽子。
 
@@ -149,7 +149,7 @@ interface AppearanceLoadout extends ContractHeader {
 
 ## 11. 待确认项
 
-`[待确认: SHOP-001]` MVP 商品数量和价格梯度。建议 3 个默认角色、6 个可买角色、20 顶帽子。  
+`[已确认: SHOP-001]` MVP 首批角色固定为水豚、鹈鹕、暹罗猫 3 个；角色的免费/付费解锁分配和首批帽子数量仍由内容排期确认。
 `[待确认: SHOP-002]` 是否显示定价对应时长。建议详情页可解释，钱包页不显示第二余额。  
 `[待确认: HAT-STACK-001]` 超高帽子塔的缩放、滚动和缓存阈值，不涉及装备数量硬上限。  
 `[待确认: SHOP-003]` 限时商品是否进入 MVP。建议不进入。

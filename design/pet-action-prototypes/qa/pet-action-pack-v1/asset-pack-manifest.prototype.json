@@ -1,0 +1,109 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "packId": "pet-action-pack-v1",
+  "platformTarget": "macOS Apple Silicon MVP",
+  "runtimeIntegrationIncluded": false,
+  "status": "PROTOTYPE_QA_PASSED",
+  "characters": [
+    {
+      "characterId": "capybara-office-worker",
+      "identityTexture": "capybara/identity-source.png",
+      "actions": {
+        "WORK_NORMAL": {
+          "root": "capybara/work-normal-v1",
+          "manifest": "capybara/work-normal-v1/character-action-manifest.prototype.json",
+          "previewGif": "capybara/work-normal-v1/preview.gif",
+          "contactSheet": "capybara/work-normal-v1/contact-sheet.png"
+        },
+        "SLACKING": {
+          "root": "capybara/slacking-v1",
+          "manifest": "capybara/slacking-v1/character-action-manifest.prototype.json",
+          "previewGif": "capybara/slacking-v1/preview.gif",
+          "contactSheet": "capybara/slacking-v1/contact-sheet.png"
+        },
+        "TYPE_FRENZY": {
+          "root": "capybara/type-frenzy-v1",
+          "manifest": "capybara/type-frenzy-v1/character-action-manifest.prototype.json",
+          "previewGif": "capybara/type-frenzy-v1/preview.gif",
+          "contactSheet": "capybara/type-frenzy-v1/contact-sheet.png"
+        }
+      }
+    },
+    {
+      "characterId": "pelican-office-worker",
+      "identityTexture": "pelican/identity-source.png",
+      "actions": {
+        "WORK_NORMAL": {
+          "root": "pelican/work-normal-v1",
+          "manifest": "pelican/work-normal-v1/character-action-manifest.prototype.json",
+          "previewGif": "pelican/work-normal-v1/preview.gif",
+          "contactSheet": "pelican/work-normal-v1/contact-sheet.png"
+        },
+        "SLACKING": {
+          "root": "pelican/slacking-v1",
+          "manifest": "pelican/slacking-v1/character-action-manifest.prototype.json",
+          "previewGif": "pelican/slacking-v1/preview.gif",
+          "contactSheet": "pelican/slacking-v1/contact-sheet.png"
+        },
+        "TYPE_FRENZY": {
+          "root": "pelican/type-frenzy-v1",
+          "manifest": "pelican/type-frenzy-v1/character-action-manifest.prototype.json",
+          "previewGif": "pelican/type-frenzy-v1/preview.gif",
+          "contactSheet": "pelican/type-frenzy-v1/contact-sheet.png"
+        }
+      }
+    },
+    {
+      "characterId": "siamese-cat-office-worker",
+      "identityTexture": "siamese-cat/identity-source.png",
+      "actions": {
+        "WORK_NORMAL": {
+          "root": "siamese-cat/work-normal-v1",
+          "manifest": "siamese-cat/work-normal-v1/character-action-manifest.prototype.json",
+          "previewGif": "siamese-cat/work-normal-v1/preview.gif",
+          "contactSheet": "siamese-cat/work-normal-v1/contact-sheet.png"
+        },
+        "SLACKING": {
+          "root": "siamese-cat/slacking-v1",
+          "manifest": "siamese-cat/slacking-v1/character-action-manifest.prototype.json",
+          "previewGif": "siamese-cat/slacking-v1/preview.gif",
+          "contactSheet": "siamese-cat/slacking-v1/contact-sheet.png"
+        },
+        "TYPE_FRENZY": {
+          "root": "siamese-cat/type-frenzy-v1",
+          "manifest": "siamese-cat/type-frenzy-v1/character-action-manifest.prototype.json",
+          "previewGif": "siamese-cat/type-frenzy-v1/preview.gif",
+          "contactSheet": "siamese-cat/type-frenzy-v1/contact-sheet.png"
+        }
+      }
+    }
+  ],
+  "effects": [
+    {
+      "effectId": "COIN_OUT",
+      "root": "effects/coin-out-v1",
+      "manifest": "effects/coin-out-v1/effect-manifest.prototype.json",
+      "previewGif": "effects/coin-out-v1/preview-transparent.gif",
+      "contactSheet": "effects/coin-out-v1/contact-sheet-alpha.png"
+    },
+    {
+      "effectId": "COIN_IN_GLOW",
+      "root": "effects/coin-in-glow-v1",
+      "manifest": "effects/coin-in-glow-v1/effect-manifest.prototype.json",
+      "previewGif": "effects/coin-in-glow-v1/preview-transparent.gif",
+      "contactSheet": "effects/coin-in-glow-v1/contact-sheet-alpha.png"
+    }
+  ],
+  "generationBudget": {
+    "builtInImageGenerationTasks": 2,
+    "paidSeedanceTasks": 7,
+    "reusedExistingSeedanceSourceVideos": 2,
+    "automaticRetries": 0
+  },
+  "review": {
+    "masterContactSheet": "qa/pet-action-pack-v1/11-asset-contact-sheet.png",
+    "assistantVisualQa": "PASS",
+    "userFinalVisualApproval": "PENDING",
+    "commercialReleaseStatus": "BLOCKED_PENDING_ASSET_LICENSE_REVIEW"
+  }
+}

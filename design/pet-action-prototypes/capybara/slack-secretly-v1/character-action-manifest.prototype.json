@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "characterId": "capybara-office-worker",
+  "assetVersion": "slack-secretly-v1",
+  "canvas": {
+    "width": 192,
+    "height": 192
+  },
+  "scaleMode": "NEAREST",
+  "anchors": {
+    "deskPlane": {
+      "x": 96,
+      "y": 188
+    }
+  },
+  "actions": {
+    "SLACK_SECRETLY": {
+      "texture": "SLACK_SECRETLY.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "columns": 4,
+      "rows": 2,
+      "fps": 8,
+      "loop": true,
+      "fallbackAction": "IDLE",
+      "contentHashSha256": "b1486b13a65e668434c95e850e66c9ec1e5b61887b85531b8deb61d49d03f204"
+    }
+  },
+  "preview": {
+    "file": "preview.gif",
+    "transparent": true,
+    "note": "GIF is review-only; runtime uses the transparent sprite sheet and manifest."
+  }
+}

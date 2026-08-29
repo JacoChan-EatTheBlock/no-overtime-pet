@@ -63,7 +63,7 @@ interface FriendSceneMember {
 - `friend.relation.revoked`
 - `friend.visibility.updated`
 
-每个用户流使用递增 `sequence`；客户端丢弃旧序号。事件带短 TTL，过期后回退到 `IDLE/OFFLINE`，防止角色永远卡在敲键盘。
+每个用户流使用递增 `sequence`；客户端丢弃旧序号。动作事件带短 TTL，过期后回退到 `WORK_NORMAL`；在线可见性仍由 `PresenceStatus` 的 `IDLE/AWAY/OFFLINE` 决定，防止角色永远卡在敲键盘。
 
 ## 6. 更新频率与聚合
 
@@ -88,7 +88,8 @@ interface FriendSceneMember {
 - 实时服务断开：保留角色外观，状态显示“暂时失联”，不伪装在线。
 - 资源缺失：显示默认角色和默认帽子占位。
 - 场景帧率不足：降低远端角色帧率，优先保持本地桌宠低延迟。
-- 好友客户端版本旧：未知动作降级 `IDLE`，未知装扮不渲染但不崩溃。
+- 好友客户端版本旧：未知动作降级 `WORK_NORMAL`，未知装扮不渲染但不崩溃。
+- `COIN_OUT` 和 `COIN_IN_GLOW` 是本地账本特效，不进入好友快照或 WebSocket 事件。
 
 ## 9. 验收条件
 

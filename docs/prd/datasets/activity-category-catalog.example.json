@@ -41,17 +41,17 @@
     "UNKNOWN": "IDLE"
   },
   "petProjection": {
-    "TYPING": "TYPE_BOTH",
-    "MEETING": "MEETING_DAZE",
-    "READING": "READ",
-    "DESIGNING": "MOUSE_MOVE",
-    "CODING": "TYPE_BOTH",
-    "BROWSING_WORK": "READ",
-    "BROWSING_LEISURE": "SLACK_SECRETLY",
-    "MEDIA_LEISURE": "SLACK_SECRETLY",
-    "IDLE": "IDLE",
-    "AWAY": "AWAY_DISAPPEAR",
-    "UNKNOWN": "IDLE"
+    "TYPING": "TYPE_FRENZY",
+    "MEETING": "WORK_NORMAL",
+    "READING": "WORK_NORMAL",
+    "DESIGNING": "WORK_NORMAL",
+    "CODING": "WORK_NORMAL",
+    "BROWSING_WORK": "WORK_NORMAL",
+    "BROWSING_LEISURE": "SLACKING",
+    "MEDIA_LEISURE": "SLACKING",
+    "IDLE": "WORK_NORMAL",
+    "AWAY": "WORK_NORMAL",
+    "UNKNOWN": "WORK_NORMAL"
   },
   "sensitiveApplicationCategories": [
     "PASSWORD_MANAGER",
@@ -60,4 +60,3 @@
     "PRIVATE_BROWSING"
   ]
 }
-

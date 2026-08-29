@@ -1,0 +1,165 @@
+{
+  "processedAt": "2026-08-29T06:34:00.344117+00:00",
+  "characterId": "pelican-office-worker",
+  "actionId": "SLACKING",
+  "structuralPass": true,
+  "loopShapePass": true,
+  "manualReviewRequired": true,
+  "manualReviewItems": [
+    "the character continuously hugs exactly one fish",
+    "the fish tail wiggle and guilty eye glance are subtle but readable",
+    "identity, teal tie, desk, chair, keyboard, and mouse stay stable",
+    "first and last frames form a natural loop"
+  ],
+  "sourceVideo": {
+    "frameCount": 97,
+    "selectedIndices": [
+      0,
+      14,
+      27,
+      41,
+      55,
+      69,
+      82,
+      96
+    ],
+    "sha256": "fbe025c74dd84c23712aca57f76461bcd44bcb197c503dd26b70b82280360aeb"
+  },
+  "output": {
+    "frameCount": 8,
+    "frameSize": [
+      192,
+      192
+    ],
+    "sheetSize": [
+      768,
+      384
+    ],
+    "sheetSha256": "d3d92a9fa30275f0310ff4511a71d2093d16163f75759bad52bb9389b7b93606",
+    "gifSha256": "0db5baa6c6ad40b4462a8dec7bfa41f672ba26d48a7b66394a29c8514f2db4cc",
+    "cornerAlpha": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "transparentRgbZero": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "greenSpillPixelCounts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "foregroundBoxes": [
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ],
+      [
+        6,
+        43,
+        186,
+        188
+      ]
+    ],
+    "loopShape": {
+      "maskIoU": 0.9952,
+      "foregroundAreaRatio": 1.0035
+    }
+  }
+}

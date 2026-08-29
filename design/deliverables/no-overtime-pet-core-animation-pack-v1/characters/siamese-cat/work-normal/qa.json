@@ -1,0 +1,165 @@
+{
+  "processedAt": "2026-08-29T06:34:04.665721+00:00",
+  "characterId": "siamese-cat-office-worker",
+  "actionId": "WORK_NORMAL",
+  "structuralPass": true,
+  "loopShapePass": true,
+  "manualReviewRequired": true,
+  "manualReviewItems": [
+    "the character reads as calmly working rather than frozen or typing frantically",
+    "the blink and breathing motion remain restrained",
+    "identity, teal tie, desk, chair, keyboard, and mouse stay stable",
+    "first and last frames form a natural loop"
+  ],
+  "sourceVideo": {
+    "frameCount": 97,
+    "selectedIndices": [
+      0,
+      14,
+      27,
+      41,
+      55,
+      69,
+      82,
+      96
+    ],
+    "sha256": "d704bffac6a36576284a26a73aed1986144534aa78af968ff53ff4dd31a11ad6"
+  },
+  "output": {
+    "frameCount": 8,
+    "frameSize": [
+      192,
+      192
+    ],
+    "sheetSize": [
+      768,
+      384
+    ],
+    "sheetSha256": "33c8a6b73b3607de23a20128e4052afbbaf7fb2b95c2a85401b94a9d8a40f4f6",
+    "gifSha256": "50c1ead35f4f15d0dc0c4572f2ce5e9c8ccc1b6e990dc3077cbfef7d0995e86c",
+    "cornerAlpha": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "transparentRgbZero": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "greenSpillPixelCounts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "foregroundBoxes": [
+      [
+        4,
+        43,
+        187,
+        188
+      ],
+      [
+        4,
+        42,
+        187,
+        188
+      ],
+      [
+        4,
+        43,
+        187,
+        188
+      ],
+      [
+        4,
+        44,
+        187,
+        188
+      ],
+      [
+        4,
+        43,
+        187,
+        188
+      ],
+      [
+        4,
+        43,
+        187,
+        188
+      ],
+      [
+        4,
+        44,
+        187,
+        188
+      ],
+      [
+        4,
+        44,
+        187,
+        188
+      ]
+    ],
+    "loopShape": {
+      "maskIoU": 0.9794,
+      "foregroundAreaRatio": 0.993
+    }
+  }
+}
