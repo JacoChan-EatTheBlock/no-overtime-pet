@@ -1,0 +1,1051 @@
+.stage {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-width: 980px;
+  min-height: 760px;
+  place-items: center;
+  overflow: auto;
+  padding: 28px;
+  background: #dce9f0;
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+}
+
+.walletWindow {
+  width: 1012px;
+  height: 908px;
+}
+
+.shopWindow {
+  width: 1164px;
+  height: 754px;
+}
+
+.wardrobeWindow {
+  width: 1216px;
+  height: 796px;
+}
+
+.walletInner,
+.shopInner,
+.wardrobeInner {
+  background: var(--color-surface-soft);
+  color: #17191b;
+}
+
+.walletInner {
+  display: grid;
+  grid-template-rows: 74px 136px minmax(0, 1fr) 218px 54px;
+  gap: 14px;
+  padding: 22px 28px 18px;
+}
+
+.shopInner,
+.wardrobeInner {
+  display: grid;
+  grid-template-rows: 86px minmax(0, 1fr);
+}
+
+.walletHeader,
+.shopHeader,
+.wardrobeHeader,
+.headerMeta,
+.titleWithIcon,
+.ledgerHeading h2,
+.poolMeta,
+.poolEstimate,
+.walletFooter,
+.shopCategories button,
+.stackHint {
+  display: flex;
+  align-items: center;
+}
+
+.walletHeader,
+.shopHeader,
+.wardrobeHeader {
+  justify-content: space-between;
+}
+
+.titleWithIcon {
+  gap: 13px;
+}
+
+.titleWithIcon img {
+  width: 64px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.titleWithIcon h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: 0.5px;
+}
+
+.headerMeta {
+  gap: 18px;
+  font-size: 17px;
+}
+
+.headerMeta > strong {
+  font-size: 20px;
+}
+
+.mockBadge {
+  padding: 5px 9px;
+  border: 1px solid #b88956;
+  background: #f7dfbd;
+  color: #6e4525;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.squareIconButton,
+.closeButton {
+  display: grid;
+  place-items: center;
+  border: 2px solid #bda98b;
+  background: var(--color-surface-raised);
+  box-shadow:
+    inset 0 -4px 0 rgb(75 43 34 / 11%),
+    3px 3px 0 rgb(75 43 34 / 12%);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+  cursor: pointer;
+}
+
+.squareIconButton {
+  width: 46px;
+  height: 46px;
+}
+
+.closeButton {
+  width: 48px;
+  height: 48px;
+}
+
+.squareIconButton:hover,
+.closeButton:hover {
+  background: var(--color-surface-soft);
+}
+
+.balanceHero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 -3px 0 rgb(75 43 34 / 5%);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+}
+
+.balanceHero > div {
+  display: flex;
+  min-width: 0;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px 32px;
+}
+
+.balanceHero > div:first-child {
+  border-right: 1px dashed var(--color-border);
+}
+
+.balanceHero span {
+  font-size: 19px;
+  font-weight: 650;
+}
+
+.balanceHero strong {
+  margin-top: 4px;
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 2px;
+}
+
+.todayEarned {
+  display: grid !important;
+  grid-template-columns: 64px 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+.todayEarned > strong,
+.todayEarned div strong {
+  color: var(--color-primary-hover);
+  font-size: 41px;
+}
+
+.walletColumns {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 1fr 1.06fr;
+  gap: 16px;
+}
+
+.walletCard,
+.ledgerCard {
+  min-width: 0;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-raised);
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 5%);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+}
+
+.walletCard {
+  padding: 16px 22px;
+}
+
+.walletCard h2,
+.ledgerCard h2,
+.shopDetail h2,
+.inventoryPanel h2,
+.equippedPanel h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.timelineLabels {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: end;
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+.timelineLabels span {
+  display: flex;
+  flex-direction: column;
+}
+
+.timelineLabels span:nth-child(2) {
+  align-items: center;
+}
+
+.timelineLabels span:last-child {
+  align-items: flex-end;
+}
+
+.timelineLabels strong {
+  margin-top: 2px;
+  font-size: 18px;
+}
+
+.workdayTimeline {
+  position: relative;
+  height: 44px;
+  margin: 5px 10px 0;
+}
+
+.workdayTimeline::before {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: #aaa59c;
+  content: '';
+}
+
+.timelineProgress {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 48%;
+  height: 4px;
+  background: var(--color-primary-hover);
+}
+
+.timelineStart,
+.timelineEnd,
+.timelinePause {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.timelineStart {
+  left: -2px;
+}
+
+.timelineEnd {
+  right: -2px;
+  border-color: #99958d;
+  background: #a6a29a;
+}
+
+.timelinePause {
+  display: grid;
+  top: 2px;
+  left: calc(48% - 20px);
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 3px solid var(--color-primary-hover);
+  background: var(--color-surface-raised);
+  color: var(--color-primary-hover);
+}
+
+.clockoutCountdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 28px;
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.clockoutCountdown strong {
+  color: var(--color-primary-hover);
+}
+
+.poolTotal {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  margin: 7px 0 2px;
+}
+
+.poolTotal img {
+  width: 82px;
+  height: 72px;
+  object-fit: contain;
+}
+
+.poolTotal strong {
+  font-size: 43px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.poolMeta,
+.poolEstimate {
+  gap: 10px;
+  min-height: 30px;
+  font-size: 16px;
+}
+
+.poolEstimate strong {
+  color: var(--color-primary-hover);
+}
+
+.eligibilityList {
+  display: grid;
+  gap: 7px;
+  margin: 6px 0 0;
+  padding: 8px 0 0;
+  border-top: 1px solid #ead8be;
+  list-style: none;
+}
+
+.eligibilityList li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.successIcon {
+  color: var(--color-success);
+}
+
+.walletCard > p {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.ledgerCard {
+  padding: 9px 16px;
+}
+
+.ledgerHeading {
+  display: flex;
+  height: 36px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ead8be;
+}
+
+.ledgerHeading h2 {
+  gap: 10px;
+  font-size: 20px;
+}
+
+.ledgerHeading button {
+  border: 0;
+  background: transparent;
+  color: var(--color-primary-hover);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ledgerRows {
+  display: grid;
+}
+
+.ledgerRow {
+  display: grid;
+  min-height: 38px;
+  grid-template-columns: 30px 1fr 220px 100px;
+  align-items: center;
+  border-bottom: 1px solid #ead8be;
+  font-size: 15.5px;
+  font-weight: 500;
+}
+
+.ledgerRow:last-child {
+  border-bottom: 0;
+}
+
+.ledgerRow time {
+  color: var(--color-text-muted);
+}
+
+.ledgerRow > strong {
+  justify-self: end;
+}
+
+.positiveAmount {
+  color: var(--color-primary-hover);
+}
+
+.negativeAmount {
+  color: var(--color-danger);
+}
+
+.walletFooter {
+  justify-content: center;
+  gap: 28px;
+}
+
+.walletFooter button {
+  display: flex;
+  min-height: 45px;
+  align-items: center;
+  gap: 9px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.walletFooter p {
+  width: 515px;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.shopHeader,
+.wardrobeHeader {
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 25px 0 36px;
+}
+
+.shopBody {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 168px minmax(0, 1fr) 330px;
+  gap: 14px;
+  padding: 16px;
+}
+
+.shopCategories,
+.shopGrid,
+.shopDetail,
+.previewPanel,
+.inventoryPanel,
+.equippedPanel {
+  min-width: 0;
+  min-height: 0;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-raised);
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 5%);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+}
+
+.shopCategories {
+  display: flex;
+  padding: 12px 10px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shopCategories button {
+  min-height: 68px;
+  gap: 13px;
+  border: 0;
+  border-bottom: 1px solid #e7d5bc;
+  background: transparent;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.shopCategories button img {
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+}
+
+.shopCategories .activeCategory {
+  border: 2px solid #2c7280;
+  background: var(--color-primary);
+  box-shadow: inset 0 -4px 0 rgb(26 83 94 / 25%);
+  color: #fffdf8;
+  padding-left: 10px;
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+}
+
+.categoryHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: auto;
+  padding: 10px 4px 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.categoryHint svg {
+  flex: 0 0 auto;
+}
+
+.shopGrid {
+  display: grid;
+  overflow-y: auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 267px;
+  gap: 12px;
+  padding: 12px;
+}
+
+.shopItemCard {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 150px auto auto;
+  align-items: center;
+  justify-items: center;
+  gap: 6px;
+  padding: 18px 10px 12px;
+  border: 2px solid #d6bc99;
+  background: var(--color-surface-soft);
+  box-shadow:
+    inset 0 -4px 0 rgb(75 43 34 / 7%),
+    2px 2px 0 rgb(75 43 34 / 8%);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+  cursor: pointer;
+}
+
+.shopItemCard:hover,
+.selectedItemCard {
+  border-color: var(--color-primary);
+}
+
+.selectedItemCard {
+  box-shadow: inset 0 0 0 1px var(--color-primary), inset 0 -3px 0 rgb(75 43 34 / 7%);
+}
+
+.shopItemCard img {
+  max-width: 155px;
+  max-height: 142px;
+  object-fit: contain;
+}
+
+.shopItemCard > strong {
+  align-self: end;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.itemPrice,
+.ownedLabel {
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.ownedLabel {
+  color: var(--color-primary-hover);
+}
+
+.rarityBadge {
+  position: absolute;
+  z-index: 1;
+  top: 8px;
+  left: 8px;
+  padding: 4px 9px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  clip-path: polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px, 4px 4px);
+}
+
+.rarityCOMMON {
+  background: var(--color-success);
+}
+
+.rarityUNCOMMON {
+  background: #788f58;
+}
+
+.rarityRARE {
+  background: #4b79ae;
+}
+
+.rarityEPIC {
+  background: #8659b6;
+}
+
+.shopDetail {
+  display: flex;
+  padding: 23px 18px 16px;
+  flex-direction: column;
+}
+
+.shopDetail h2 {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.shopDetail > p {
+  margin: 12px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.workTimeExplanation {
+  margin-top: 10px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.productPreview {
+  position: relative;
+  min-height: 295px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.previewCharacter {
+  position: absolute;
+  right: 25px;
+  bottom: 3px;
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+}
+
+.previewHat {
+  position: absolute;
+  z-index: 2;
+  top: 40px;
+  left: 50%;
+  max-width: 168px;
+  max-height: 135px;
+  object-fit: contain;
+  transform: translateX(-50%);
+}
+
+.shopDetail > button {
+  margin-top: 10px;
+  border-radius: 0;
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+}
+
+.shopStatus {
+  min-height: 39px;
+  color: var(--color-text-muted);
+  font-size: 12px !important;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(29 32 35 / 42%);
+}
+
+.purchaseDialog {
+  width: 470px;
+  border: 3px solid var(--color-border-strong);
+  background: var(--color-surface-soft);
+  box-shadow: 9px 11px 0 rgb(64 42 35 / 22%);
+  padding: 28px 32px;
+  text-align: center;
+}
+
+.dialogIcon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  margin: 0 auto 10px;
+  border: 2px solid var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.purchaseDialog h2 {
+  margin: 8px 0;
+  font-size: 25px;
+}
+
+.purchaseDialog p {
+  margin: 10px 0;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.purchaseDialog > strong {
+  display: block;
+  margin: 12px 0;
+  font-size: 31px;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.wardrobeBody {
+  display: grid;
+  min-height: 0;
+  grid-template-columns: 320px minmax(0, 1fr) 360px;
+  gap: 14px;
+  padding: 14px;
+}
+
+.previewPanel,
+.inventoryPanel,
+.equippedPanel {
+  padding: 12px;
+}
+
+.wardrobeTabs {
+  display: grid;
+  height: 48px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.wardrobeTabs button,
+.actionTabs button {
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-soft);
+  font-weight: 800;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 0 100%, 0 4px);
+  cursor: pointer;
+}
+
+.wardrobeTabs button {
+  font-size: 18px;
+}
+
+.wardrobeTabs .activeWardrobeTab,
+.wardrobeTabs button[aria-selected='true'],
+.actionTabs button[aria-pressed='true'] {
+  border-color: #2c7280;
+  background: var(--color-primary);
+  color: #fffdf8;
+}
+
+.characterStage {
+  position: relative;
+  height: 498px;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-top: 0;
+  background: var(--color-surface-soft);
+}
+
+.wardrobeCharacter {
+  position: absolute;
+  right: 29px;
+  bottom: 9px;
+  width: 238px;
+  height: 238px;
+  object-fit: contain;
+}
+
+.hatTower {
+  position: absolute;
+  z-index: 2;
+  right: 55px;
+  bottom: 189px;
+  display: flex;
+  width: 190px;
+  min-height: 240px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.hatTower img {
+  width: 145px;
+  height: 82px;
+  object-fit: contain;
+  margin-bottom: -34px;
+}
+
+.hatTower img:first-child {
+  margin-bottom: -30px;
+}
+
+.stageCompanion {
+  position: absolute;
+  z-index: 3;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.walletCompanion {
+  bottom: calc(50% - 438px);
+  left: calc(50% + 474px);
+  width: 225px;
+  height: 225px;
+}
+
+.compactCompanion {
+  bottom: 112px;
+  left: calc(50% + 585px);
+  width: 138px;
+  height: 138px;
+}
+
+.actionTabs {
+  display: grid;
+  height: 44px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.inventoryPanel,
+.equippedPanel {
+  overflow: auto;
+}
+
+.inventoryPanel h2,
+.equippedPanel h2 {
+  min-height: 41px;
+  padding: 4px 0 12px;
+}
+
+.inventoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.appearanceCard {
+  display: grid;
+  min-width: 0;
+  min-height: 206px;
+  grid-template-rows: 126px auto auto;
+  align-items: center;
+  justify-items: center;
+  gap: 5px;
+  padding: 8px;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-soft);
+  box-shadow:
+    inset 0 -4px 0 rgb(75 43 34 / 7%),
+    2px 2px 0 rgb(75 43 34 / 7%);
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+  cursor: pointer;
+}
+
+.appearanceCard:hover,
+.selectedAppearanceCard {
+  border-color: var(--color-primary);
+}
+
+.appearanceCard img {
+  max-width: 130px;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.appearanceCard strong {
+  overflow: hidden;
+  max-width: 100%;
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.appearanceCard span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.characterInventory {
+  display: grid;
+  width: 145px;
+}
+
+.characterInventory .appearanceCard img {
+  max-width: 122px;
+  max-height: 122px;
+}
+
+.equippedList {
+  display: grid;
+  gap: 7px;
+}
+
+.equippedRow {
+  display: grid;
+  min-height: 57px;
+  grid-template-columns: 25px 55px minmax(0, 1fr) 28px 28px 24px;
+  align-items: center;
+  gap: 5px;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-soft);
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 5%);
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+  padding: 4px 7px;
+}
+
+.equippedRow > strong {
+  font-size: 20px;
+}
+
+.equippedRow img {
+  width: 52px;
+  height: 43px;
+  object-fit: contain;
+}
+
+.equippedRow > span {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.equippedRow button {
+  display: grid;
+  width: 26px;
+  height: 28px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.equippedRow button:disabled {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.dragHandle {
+  color: var(--color-text-muted);
+  cursor: grab;
+}
+
+.stackHint {
+  gap: 6px;
+  margin: 8px 0 12px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.wardrobeActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.walletFooter > button,
+.equippedPanel > button,
+.wardrobeActions button,
+.dialogActions button {
+  border-radius: 0;
+  font-weight: 800;
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, calc(100% - 5px) 2px, 100% 2px, 100% calc(100% - 5px), calc(100% - 2px) calc(100% - 5px), calc(100% - 2px) 100%, 5px 100%, 5px calc(100% - 2px), 0 calc(100% - 2px), 0 5px, 2px 5px, 2px 2px, 5px 2px);
+}
+
+.wardrobeStatus {
+  min-height: 34px;
+  margin: 8px 0 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.currentCharacterRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+  padding: 12px;
+}
+
+.currentCharacterRow img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.currentCharacterRow div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.currentCharacterRow span {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 1240px), (max-height: 940px) {
+  .stage {
+    min-width: 900px;
+    min-height: 700px;
+    padding: 18px;
+  }
+
+  .walletWindow,
+  .shopWindow,
+  .wardrobeWindow {
+    transform: scale(0.88);
+  }
+
+  .stageCompanion {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .walletWindow,
+  .shopWindow,
+  .wardrobeWindow {
+    scroll-behavior: auto;
+  }
+}
