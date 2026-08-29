@@ -24,6 +24,18 @@ interface LoginScreenProps {
   onSuccess?: (user: User) => void
 }
 
+/**
+ * 临时测试账号——跳过真实登录接口，直接在本地构造一个 User 交给 onSuccess。
+ * 不写 token，不落 localStorage，只在当前这次运行里生效；apps/api 没起来的时候用这个绕开登录界面。
+ * 后面接了真的账号体系应该删掉这个按钮。
+ */
+const DEV_TEST_USER: User = {
+  id: 'dev-test-user',
+  username: 'dev-tester',
+  displayName: '临时测试账号',
+  friendCode: 'DEV0000',
+}
+
 /** 将 API 错误码映射为用户友好的中文消息 */
 function friendlyError(err: unknown): string {
   if (err instanceof ApiRequestError) {
@@ -220,6 +232,9 @@ export function LoginScreen({ onSuccess }: LoginScreenProps = {}) {
             <footer className={styles.privacyLine}>
               <IconLock size={18} stroke={1.8} aria-hidden="true" />
               <span>好友只能看到模糊状态，看不到任务内容</span>
+              <button type="button" className={styles.devBypassLink} onClick={() => onSuccess?.(DEV_TEST_USER)}>
+                跳过登录（测试账号）
+              </button>
               <button type="button">隐私说明</button>
             </footer>
           </section>

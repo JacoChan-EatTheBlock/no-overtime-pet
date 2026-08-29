@@ -167,6 +167,16 @@
   cursor: pointer;
 }
 
+/* 临时测试账号入口——塞进已有的隐私说明这一行里，不额外占垂直空间（原来单独起一行会跟
+   绝对定位的 .privacyLine 叠在一起）。样式明显跟"隐私说明"区分开，提醒这是开发期间的临时东西。 */
+.privacyLine .devBypassLink {
+  margin-left: 0;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  text-decoration: underline dashed;
+  text-underline-offset: 3px;
+}
+
 /* --- Loading overlay --- */
 
 .stage[data-loading] .submitButton {
