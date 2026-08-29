@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0",
+  "catalogVersion": "safe-status-zh-CN-2026-08-29.example",
+  "locale": "zh-CN",
+  "templates": {
+    "WORKING": [
+      { "key": "working.keyboard_magic", "text": "正在对键盘施法" },
+      { "key": "working.deadline_wrestling", "text": "正在和工作摔跤" }
+    ],
+    "MEETING": [
+      { "key": "meeting.soul_out", "text": "戴着耳机灵魂出窍" },
+      { "key": "meeting.nodding", "text": "正在进行战略性点头" }
+    ],
+    "SLACKING": [
+      { "key": "slacking.escape", "text": "正在进行短暂的精神出逃" },
+      { "key": "slacking.secret", "text": "屏幕前有一些小动作" }
+    ],
+    "IDLE": [
+      { "key": "idle.shell", "text": "工位上只剩一具空壳" }
+    ],
+    "AWAY": [
+      { "key": "away.gone", "text": "人没了" }
+    ],
+    "OFFLINE": [
+      { "key": "offline.lost", "text": "暂时失联" }
+    ]
+  },
+  "forbiddenDynamicFields": [
+    "applicationName",
+    "windowTitle",
+    "url",
+    "taskTitle",
+    "salary",
+    "walletBalance",
+    "rawModelExplanation"
+  ]
+}
+

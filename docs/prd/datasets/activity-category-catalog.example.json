@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "1.0",
+  "policyVersion": "activity-policy-2026-08-29.example",
+  "sampling": {
+    "featureWindowMs": 1000,
+    "macroDecisionWindowCount": 2,
+    "awayAfterIdleMs": 180000,
+    "reliableStateTtlMs": 30000,
+    "visionLongestEdgePx": 1024
+  },
+  "visionGate": {
+    "enabledOnlyWithExplicitConsent": true,
+    "invokeBelowConfidence": 0.72,
+    "invokeOnSignalConflict": true,
+    "rawImageRetentionMs": 0,
+    "allowedLabels": [
+      "TYPING",
+      "MEETING",
+      "READING",
+      "DESIGNING",
+      "CODING",
+      "BROWSING_WORK",
+      "BROWSING_LEISURE",
+      "MEDIA_LEISURE",
+      "IDLE",
+      "AWAY",
+      "UNKNOWN"
+    ]
+  },
+  "publicProjection": {
+    "TYPING": "WORKING",
+    "MEETING": "MEETING",
+    "READING": "WORKING",
+    "DESIGNING": "WORKING",
+    "CODING": "WORKING",
+    "BROWSING_WORK": "WORKING",
+    "BROWSING_LEISURE": "SLACKING",
+    "MEDIA_LEISURE": "SLACKING",
+    "IDLE": "IDLE",
+    "AWAY": "AWAY",
+    "UNKNOWN": "IDLE"
+  },
+  "petProjection": {
+    "TYPING": "TYPE_BOTH",
+    "MEETING": "MEETING_DAZE",
+    "READING": "READ",
+    "DESIGNING": "MOUSE_MOVE",
+    "CODING": "TYPE_BOTH",
+    "BROWSING_WORK": "READ",
+    "BROWSING_LEISURE": "SLACK_SECRETLY",
+    "MEDIA_LEISURE": "SLACK_SECRETLY",
+    "IDLE": "IDLE",
+    "AWAY": "AWAY_DISAPPEAR",
+    "UNKNOWN": "IDLE"
+  },
+  "sensitiveApplicationCategories": [
+    "PASSWORD_MANAGER",
+    "PAYMENT",
+    "SYSTEM_SECURITY",
+    "PRIVATE_BROWSING"
+  ]
+}
+

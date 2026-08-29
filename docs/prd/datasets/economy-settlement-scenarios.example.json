@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.1",
+  "policyVersion": "overtime-pool-cny-1.1.0-example",
+  "currency": "CNY",
+  "poolAccountingUnit": "MONEY_MINOR",
+  "scenarios": [
+    {
+      "id": "high-wage-donor-low-wage-single-recipient",
+      "pool": {
+        "carriedInMinor": 0,
+        "contributions": [
+          {
+            "userRef": "A",
+            "amountMinor": 5000,
+            "sourceForfeitedEquivalentMs": 1800000,
+            "dailySalaryMinor": 80000,
+            "standardPaidMs": 28800000
+          }
+        ]
+      },
+      "recipients": [
+        {
+          "userRef": "B",
+          "eligible": true,
+          "dailySalaryMinor": 40000,
+          "standardPaidMs": 28800000
+        }
+      ],
+      "expected": {
+        "totalPoolMinor": 5000,
+        "equalShareMinor": 5000,
+        "awardsMinor": { "B": 5000 },
+        "creditedEquivalentMs": { "B": 3600000 },
+        "carriedOutRemainderMinor": 0,
+        "conservationDifferenceMinor": 0
+      }
+    },
+    {
+      "id": "three-equal-money-recipients-different-wages",
+      "pool": {
+        "carriedInMinor": 0,
+        "contributions": [
+          {
+            "userRef": "A",
+            "amountMinor": 6000,
+            "sourceForfeitedEquivalentMs": 2160000,
+            "dailySalaryMinor": 80000,
+            "standardPaidMs": 28800000
+          }
+        ]
+      },
+      "recipients": [
+        { "userRef": "B", "eligible": true, "dailySalaryMinor": 80000, "standardPaidMs": 28800000 },
+        { "userRef": "C", "eligible": true, "dailySalaryMinor": 40000, "standardPaidMs": 28800000 },
+        { "userRef": "D", "eligible": true, "dailySalaryMinor": 120000, "standardPaidMs": 28800000 }
+      ],
+      "expected": {
+        "totalPoolMinor": 6000,
+        "equalShareMinor": 2000,
+        "awardsMinor": { "B": 2000, "C": 2000, "D": 2000 },
+        "creditedEquivalentMs": { "B": 720000, "C": 1440000, "D": 480000 },
+        "carriedOutRemainderMinor": 0,
+        "conservationDifferenceMinor": 0
+      }
+    },
+    {
+      "id": "cny-cent-remainder",
+      "pool": {
+        "carriedInMinor": 0,
+        "contributions": [
+          {
+            "userRef": "A",
+            "amountMinor": 1001,
+            "sourceForfeitedEquivalentMs": 360360,
+            "dailySalaryMinor": 80000,
+            "standardPaidMs": 28800000
+          }
+        ]
+      },
+      "recipients": [
+        { "userRef": "B", "eligible": true, "dailySalaryMinor": 80000, "standardPaidMs": 28800000 },
+        { "userRef": "C", "eligible": true, "dailySalaryMinor": 40000, "standardPaidMs": 28800000 }
+      ],
+      "expected": {
+        "totalPoolMinor": 1001,
+        "equalShareMinor": 500,
+        "awardsMinor": { "B": 500, "C": 500 },
+        "creditedEquivalentMs": { "B": 180000, "C": 360000 },
+        "carriedOutRemainderMinor": 1,
+        "conservationDifferenceMinor": 0
+      }
+    }
+  ]
+}

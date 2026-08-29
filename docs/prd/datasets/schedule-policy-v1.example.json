@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0",
+  "policyVersion": "schedule-policy-1.0.0-example",
+  "priorityOrder": [
+    "USER_LOCKED_START",
+    "IN_PROGRESS",
+    "DEADLINE_FEASIBILITY",
+    "IMPORTANCE",
+    "URGENCY",
+    "EARLIER_DUE_AT",
+    "COGNITIVE_FIT",
+    "CONTEXT_SWITCH_REDUCTION",
+    "STABLE_TASK_ID"
+  ],
+  "importanceWeight": {
+    "LOW": 1,
+    "MEDIUM": 2,
+    "HIGH": 4,
+    "CRITICAL": 8
+  },
+  "urgencyWeight": {
+    "NOT_URGENT": 0,
+    "UPCOMING": 2,
+    "URGENT": 5,
+    "OVERDUE": 8
+  },
+  "blocks": {
+    "defaultFocusMs": 3000000,
+    "defaultBreakMs": 600000,
+    "minimumSplittableBlockMs": 1500000,
+    "maximumContinuousFocusMs": 7200000,
+    "bufferRatio": 0.1
+  },
+  "hardConstraints": [
+    "NO_PAST_BLOCK",
+    "NO_LUNCH_OVERLAP",
+    "NO_FIXED_EVENT_OVERLAP",
+    "NO_WORK_END_OVERFLOW",
+    "PRESERVE_USER_LOCKS"
+  ],
+  "softAutoActivation": {
+    "defaultEnabled": false,
+    "allowedChanges": ["UNLOCKED_FUTURE_BLOCK_ORDER"],
+    "requiresConfirmation": [
+      "TASK_SCOPE",
+      "DEADLINE",
+      "USER_LOCK",
+      "COMMITMENT_SET",
+      "ESTIMATED_DURATION"
+    ]
+  }
+}
+

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "1.0",
+  "catalogVersion": "task-category-2026-08-29.example",
+  "locale": "zh-CN",
+  "categories": [
+    {
+      "id": "WRITING",
+      "displayName": "写作",
+      "baseEstimateMs": 5400000,
+      "estimateRangeMs": { "low": 1800000, "high": 14400000 },
+      "defaultCognitiveLoad": "HIGH",
+      "defaultSplittability": "SPLITTABLE",
+      "keywordsForEvaluationOnly": ["文案", "报告", "稿件", "PRD"]
+    },
+    {
+      "id": "CODING",
+      "displayName": "编码",
+      "baseEstimateMs": 7200000,
+      "estimateRangeMs": { "low": 1800000, "high": 28800000 },
+      "defaultCognitiveLoad": "HIGH",
+      "defaultSplittability": "SPLITTABLE",
+      "keywordsForEvaluationOnly": ["接口", "代码", "修复", "开发"]
+    },
+    {
+      "id": "DESIGN",
+      "displayName": "设计",
+      "baseEstimateMs": 7200000,
+      "estimateRangeMs": { "low": 1800000, "high": 28800000 },
+      "defaultCognitiveLoad": "HIGH",
+      "defaultSplittability": "REQUIRES_REVIEW",
+      "keywordsForEvaluationOnly": ["页面", "原型", "视觉", "动效"]
+    },
+    {
+      "id": "RESEARCH",
+      "displayName": "调研",
+      "baseEstimateMs": 5400000,
+      "estimateRangeMs": { "low": 1800000, "high": 21600000 },
+      "defaultCognitiveLoad": "HIGH",
+      "defaultSplittability": "SPLITTABLE",
+      "keywordsForEvaluationOnly": ["调研", "资料", "分析", "对比"]
+    },
+    {
+      "id": "COMMUNICATION",
+      "displayName": "沟通",
+      "baseEstimateMs": 1800000,
+      "estimateRangeMs": { "low": 300000, "high": 7200000 },
+      "defaultCognitiveLoad": "MEDIUM",
+      "defaultSplittability": "ATOMIC",
+      "keywordsForEvaluationOnly": ["沟通", "回复", "同步", "确认"]
+    },
+    {
+      "id": "MEETING",
+      "displayName": "会议",
+      "baseEstimateMs": 3600000,
+      "estimateRangeMs": { "low": 900000, "high": 14400000 },
+      "defaultCognitiveLoad": "MEDIUM",
+      "defaultSplittability": "ATOMIC",
+      "keywordsForEvaluationOnly": ["会议", "评审", "会", "访谈"]
+    },
+    {
+      "id": "ADMIN",
+      "displayName": "行政杂务",
+      "baseEstimateMs": 1800000,
+      "estimateRangeMs": { "low": 300000, "high": 7200000 },
+      "defaultCognitiveLoad": "LOW",
+      "defaultSplittability": "SPLITTABLE",
+      "keywordsForEvaluationOnly": ["报销", "填表", "整理", "提交"]
+    },
+    {
+      "id": "REVIEW",
+      "displayName": "审阅",
+      "baseEstimateMs": 3600000,
+      "estimateRangeMs": { "low": 900000, "high": 14400000 },
+      "defaultCognitiveLoad": "HIGH",
+      "defaultSplittability": "REQUIRES_REVIEW",
+      "keywordsForEvaluationOnly": ["审阅", "检查", "验收", "review"]
+    },
+    {
+      "id": "LEARNING",
+      "displayName": "学习",
+      "baseEstimateMs": 3600000,
+      "estimateRangeMs": { "low": 900000, "high": 14400000 },
+      "defaultCognitiveLoad": "HIGH",
+      "defaultSplittability": "SPLITTABLE",
+      "keywordsForEvaluationOnly": ["学习", "课程", "阅读", "练习"]
+    },
+    {
+      "id": "OTHER",
+      "displayName": "其他",
+      "baseEstimateMs": 3600000,
+      "estimateRangeMs": { "low": 300000, "high": 28800000 },
+      "defaultCognitiveLoad": "MEDIUM",
+      "defaultSplittability": "REQUIRES_REVIEW",
+      "keywordsForEvaluationOnly": []
+    }
+  ],
+  "personalization": {
+    "minimumHighConfidenceSamples": 5,
+    "multiplierClamp": { "min": 0.5, "max": 3.0 },
+    "sourceWeights": {
+      "EXPLICIT_TIMER": 1.0,
+      "USER_CONFIRMED": 0.8,
+      "ACTIVITY_INFERRED": 0.4
+    }
+  }
+}
+

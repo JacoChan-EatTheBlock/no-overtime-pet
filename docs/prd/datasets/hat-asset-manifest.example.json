@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "1.0",
+  "hatId": "coffee-cup-001",
+  "assetVersion": "1.0.0",
+  "texture": "texture.webp",
+  "frameWidth": 32,
+  "frameHeight": 32,
+  "scaleMode": "NEAREST",
+  "anchors": {
+    "bottomAttach": { "x": 16, "y": 28 },
+    "topAttach": { "x": 16, "y": 4 }
+  },
+  "compatibleCharacterTags": ["small-head", "standard-head"],
+  "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}
+

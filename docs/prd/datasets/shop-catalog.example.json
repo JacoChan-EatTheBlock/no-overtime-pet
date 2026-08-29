@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.0",
+  "catalogVersion": "shop-2026-08-29.example",
+  "currencyModel": "NANG_FEE_TIME_NORMALIZED",
+  "items": [
+    {
+      "id": "019d46f0-0000-7000-8000-000000000001",
+      "sku": "character-office-cat-001",
+      "type": "CHARACTER",
+      "displayNameKey": "shop.character.office_cat",
+      "descriptionKey": "shop.character.office_cat.desc",
+      "requiredWorkMs": 28800000,
+      "rarity": "COMMON",
+      "assetId": "019d46f0-0000-7000-8000-000000000101",
+      "assetVersion": "1.0.0",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "019d46f0-0000-7000-8000-000000000002",
+      "sku": "hat-coffee-001",
+      "type": "HAT",
+      "displayNameKey": "shop.hat.coffee",
+      "descriptionKey": "shop.hat.coffee.desc",
+      "requiredWorkMs": 7200000,
+      "rarity": "COMMON",
+      "assetId": "019d46f0-0000-7000-8000-000000000102",
+      "assetVersion": "1.0.0",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "019d46f0-0000-7000-8000-000000000003",
+      "sku": "hat-deadline-rocket-001",
+      "type": "HAT",
+      "displayNameKey": "shop.hat.deadline_rocket",
+      "descriptionKey": "shop.hat.deadline_rocket.desc",
+      "requiredWorkMs": 43200000,
+      "rarity": "RARE",
+      "assetId": "019d46f0-0000-7000-8000-000000000103",
+      "assetVersion": "1.0.0",
+      "status": "ACTIVE"
+    }
+  ],
+  "invariants": {
+    "fixedMonetaryPriceForbidden": true,
+    "userTradingForbidden": true,
+    "cashTopUpForbidden": true
+  }
+}
+
