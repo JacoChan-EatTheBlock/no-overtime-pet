@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>不要加班 · 好友管理</title>
+    <link rel="stylesheet" href="pet-social-menu.css" />
+  </head>
+  <body data-page="08-friends-management">
+    <main class="stage stage-08" data-ui-screen="08-friends-management" data-state="sharing-selected">
+      <section class="pixel-frame friends-window" aria-labelledby="friends-title">
+        <div class="pixel-inner friends-window-inner">
+          <header class="friends-header">
+            <img class="icon" src="icons/users.svg" alt="" />
+            <div>
+              <h1 id="friends-title">好友</h1>
+              <p>只有互相接受后，才能看到桌宠状态。</p>
+            </div>
+            <button class="close-button" type="button" aria-label="关闭好友管理" data-close-window>
+              <img class="icon" src="icons/x.svg" alt="" />
+            </button>
+          </header>
+
+          <section class="friend-code-card" aria-label="我的好友码">
+            <strong>我的好友码</strong>
+            <span>C7P4-K8M2</span>
+            <button type="button" data-copy-code>
+              <img class="icon" src="icons/copy.svg" alt="" />
+              复制
+            </button>
+          </section>
+
+          <div class="friends-grid">
+            <section class="friend-list-section" aria-labelledby="friend-list-title">
+              <h2 id="friend-list-title">我的好友 <span>8</span></h2>
+              <div class="friend-list" data-friend-list></div>
+              <div class="broadcast-summary">
+                <img class="icon" src="icons/eye.svg" alt="" />
+                我的活动广播：<strong>已开启</strong>
+              </div>
+              <p class="privacy-notice">好友看不到你的任务、DDL、日薪、窝囊费或正在使用的应用。</p>
+            </section>
+
+            <section class="friend-actions-section" aria-labelledby="friend-actions-title">
+              <form class="add-friend-form" data-add-friend-form>
+                <h2 id="friend-actions-title">添加好友</h2>
+                <div>
+                  <input type="text" name="friendCode" autocomplete="off" placeholder="输入完整好友码" aria-label="完整好友码" />
+                  <button class="button primary" type="submit">发送申请</button>
+                </div>
+              </form>
+
+              <section class="request-section" aria-labelledby="request-title">
+                <h2 id="request-title">收到的申请 <span data-request-count>2</span></h2>
+                <div data-request-list>
+                  <article class="request-row" data-request-id="lan">
+                    <img class="friend-avatar pixel-art" src="assets/friends/request-orange-cat.png" alt="阿岚的像素桌宠" />
+                    <strong>阿岚</strong>
+                    <button class="button primary" type="button" data-request-action="accept">接受</button>
+                    <button class="button" type="button" data-request-action="decline">拒绝</button>
+                  </article>
+                  <article class="request-row" data-request-id="zhou">
+                    <img class="friend-avatar pixel-art" src="assets/friends/request-calico-cat.png" alt="小周的像素桌宠" />
+                    <strong>小周</strong>
+                    <button class="button primary" type="button" data-request-action="accept">接受</button>
+                    <button class="button" type="button" data-request-action="decline">拒绝</button>
+                  </article>
+                </div>
+              </section>
+
+              <section class="selected-friend-actions" aria-label="所选好友的展示设置">
+                <p>
+                  <img class="icon" src="icons/info-circle.svg" alt="" />
+                  <span data-selected-copy>小灰当前可以看到你的桌宠和活动状态。好友关系与对方到你的展示方向均保持不变。</span>
+                </p>
+                <div>
+                  <button class="button" type="button" data-delete-friend>删除好友</button>
+                  <button class="button" type="button" data-toggle-projection>
+                    <img class="icon" src="icons/eye-off.svg" alt="" />
+                    <span>不对其展示</span>
+                  </button>
+                </div>
+              </section>
+              <p class="feedback" role="status" aria-live="polite" data-feedback></p>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="pet-social-menu.js" defer></script>
+  </body>
+</html>

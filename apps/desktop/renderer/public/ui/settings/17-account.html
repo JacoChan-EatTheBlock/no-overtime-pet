@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>不要加班 · 账号</title>
+    <link rel="stylesheet" href="settings.css" />
+    <script src="settings.js" defer></script>
+  </head>
+  <body data-screen="17-account">
+    <main class="pixel-window settings-window" aria-labelledby="page-title">
+      <header class="app-header">
+        <div class="brand">
+          <img class="brand-pet pet" src="assets/header-pet.png" alt="" />
+          <span class="brand-copy"><strong>不要加班</strong><small>陪你高效，不要加班</small></span>
+        </div>
+        <div class="window-tools" aria-label="窗口控件">
+          <button type="button" aria-label="最小化"><img class="icon" src="icons/minus.svg" alt="" /></button>
+          <button type="button" aria-label="最大化"><img class="icon" src="icons/square.svg" alt="" /></button>
+          <button type="button" aria-label="关闭"><img class="icon" src="icons/x.svg" alt="" /></button>
+        </div>
+      </header>
+
+      <div class="settings-body">
+        <aside class="settings-sidebar">
+          <nav class="sidebar-nav" aria-label="设置导航">
+            <a class="sidebar-link" href="04-work-settings.html"><img class="icon large source-art" src="assets/nav-work.png" alt="" /><span>工作设置</span></a>
+            <a class="sidebar-link" href="15-privacy.html"><img class="icon large source-art" src="assets/nav-privacy.png" alt="" /><span>识别与隐私</span></a>
+            <a class="sidebar-link" href="16-notifications.html"><img class="icon large source-art" src="assets/nav-bell.png" alt="" /><span>通知</span></a>
+            <a class="sidebar-link active" href="17-account.html" aria-current="page"><img class="icon large source-art" src="assets/nav-account.png" alt="" /><span>账号</span></a>
+          </nav>
+          <div class="sidebar-note">
+            <img class="pet" src="assets/note-pet.png" alt="" />
+            <p>专注当下，<br />效率自然来。</p>
+          </div>
+        </aside>
+
+        <section class="settings-main account-main">
+          <h1 id="page-title">账号</h1>
+          <section class="card profile-card">
+            <img class="profile-avatar source-avatar pet" src="assets/account-avatar.png" alt="当前像素水豚头像" />
+            <div class="profile-identity">
+              <strong data-display-name>Magnus</strong>
+              <span><img class="icon small" src="icons/key.svg" alt="" />好友码：OT-0829</span>
+            </div>
+            <div class="profile-actions">
+              <button class="btn primary" type="button" data-open-dialog="profile-dialog"><img class="icon small" src="icons/edit.svg" alt="" />修改资料</button>
+              <button class="btn" type="button" data-copy-code><img class="icon small" src="icons/copy.svg" alt="" />复制好友码</button>
+            </div>
+          </section>
+
+          <p class="account-note"><img class="icon small" src="icons/info-circle.svg" alt="" />账号与计划数据会自动保存在服务器。</p>
+
+          <section class="card account-section">
+            <h2 class="card-title">账号安全</h2>
+            <div class="account-row"><span><img class="icon large" src="icons/lock.svg" alt="" />保护你的账号安全</span><button class="btn" type="button" data-open-dialog="password-dialog">修改密码</button></div>
+          </section>
+
+          <section class="card account-section">
+            <h2 class="card-title">账号操作</h2>
+            <div class="account-operations">
+              <button class="btn" type="button" data-open-dialog="logout-dialog"><img class="icon" src="icons/logout.svg" alt="" />退出登录</button>
+              <button class="btn danger" type="button" data-open-dialog="delete-dialog"><img class="icon" src="icons/trash.svg" alt="" />删除账号</button>
+            </div>
+            <p class="delete-warning"><img class="icon small" src="icons/alert-triangle.svg" alt="" />删除账号前需要再次输入密码，提交后按账号政策处理。</p>
+          </section>
+          <p class="status-line" role="status" data-account-status></p>
+        </section>
+      </div>
+    </main>
+
+    <dialog id="profile-dialog">
+      <h2>修改资料</h2>
+      <label class="dialog-field">显示名称<input value="Magnus" autocomplete="nickname" /></label>
+      <div class="dialog-actions"><button class="btn" type="button" data-dialog-cancel>取消</button><button class="btn primary" type="button" data-save-profile>保存资料</button></div>
+    </dialog>
+
+    <dialog id="password-dialog">
+      <h2>修改密码</h2>
+      <p>当前阶段只演示输入与确认，不会提交到服务器。</p>
+      <label class="dialog-field">当前密码<input type="password" autocomplete="current-password" /></label>
+      <label class="dialog-field">新密码<input type="password" autocomplete="new-password" /></label>
+      <div class="dialog-actions"><button class="btn" type="button" data-dialog-cancel>取消</button><button class="btn primary" type="button" data-account-action data-message="密码修改已提交为 Mock 状态">确认修改</button></div>
+    </dialog>
+
+    <dialog id="logout-dialog">
+      <h2>确认退出登录？</h2>
+      <p>本地 Mock 状态会保留，真实版本将清除当前登录会话。</p>
+      <div class="dialog-actions"><button class="btn" type="button" data-dialog-cancel>取消</button><button class="btn primary" type="button" data-account-action data-message="已退出登录（Mock）">退出登录</button></div>
+    </dialog>
+
+    <dialog id="delete-dialog">
+      <h2>确认删除账号？</h2>
+      <p>这是危险操作。输入密码后才能提交删除请求。</p>
+      <label class="dialog-field">密码<input type="password" autocomplete="current-password" /></label>
+      <div class="dialog-actions"><button class="btn" type="button" data-dialog-cancel>取消</button><button class="btn danger-solid" type="button" data-account-action data-message="删除账号请求已提交为 Mock 状态">删除账号</button></div>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>衣柜与叠帽子 · UI Mock</title>
+    <link rel="stylesheet" href="./economy-customization.css" />
+  </head>
+  <body data-page="wardrobe">
+    <main class="scene wardrobe-scene" data-ui-screen="11-wardrobe" data-ui-state="hat">
+      <section class="pixel-window wardrobe-window" aria-label="角色与帽子装扮">
+        <div class="window-inner wardrobe-shell">
+          <header class="wardrobe-header page-header">
+            <div class="page-title">
+              <img src="../assets/ui-wardrobe-title-icon.png" alt="" />
+              <h1>装扮</h1>
+            </div>
+            <div class="header-meta wardrobe-header-meta">
+              <span class="mock-label" title="所有装备结果均为本地演示状态">UI MOCK · 非真实装备</span>
+              <span>拖动调整顺序；帽子可以继续往上叠。</span>
+              <a class="image-button close-button" href="./09-wallet.html" aria-label="返回窝囊费钱包"><img src="../assets/ui-close-button.png" alt="" /></a>
+            </div>
+          </header>
+
+          <div class="wardrobe-body">
+            <section class="preview-panel pixel-panel" aria-label="装扮预览">
+              <div class="wardrobe-tabs" role="tablist" aria-label="装扮类型">
+                <button type="button" role="tab" aria-selected="false" data-tab="character">角色</button>
+                <button class="active" type="button" role="tab" aria-selected="true" data-tab="hat">帽子</button>
+              </div>
+              <div class="character-stage">
+                <div class="hat-tower" aria-label="已装备 6 顶帽子"></div>
+                <img class="wardrobe-character" src="/assets/capybara/idle.png" alt="当前装备角色：像素水豚" />
+              </div>
+              <div class="action-tabs" role="group" aria-label="预览动作">
+                <button class="active" type="button" aria-pressed="true" data-preview="idle">待机</button>
+                <button type="button" aria-pressed="false" data-preview="typing">敲键盘</button>
+                <button type="button" aria-pressed="false" data-preview="celebrate">庆祝</button>
+              </div>
+            </section>
+
+            <section class="inventory-panel pixel-panel" aria-labelledby="inventory-title">
+              <h2 id="inventory-title">我的帽子　6</h2>
+              <div class="appearance-grid" data-hat-inventory>
+                <button class="appearance-card selected" type="button" data-hat="hat-gold-overtime" aria-pressed="true"><img src="../assets/hat-gold-overtime.png" alt="加班免死金牌帽" /><strong>加班免死金牌帽</strong><span>点击移除</span></button>
+                <button class="appearance-card" type="button" data-hat="hat-weekly-ghost" aria-pressed="true"><img src="../assets/hat-weekly-ghost.png" alt="周一灵魂帽" /><strong>周一灵魂帽</strong><span>点击移除</span></button>
+                <button class="appearance-card" type="button" data-hat="hat-cardboard-bag" aria-pressed="true"><img src="../assets/hat-cardboard-bag.png" alt="摸鱼纸袋" /><strong>摸鱼纸袋</strong><span>点击移除</span></button>
+                <button class="appearance-card" type="button" data-hat="hat-coffee-mug" aria-pressed="true"><img src="../assets/hat-coffee-mug.png" alt="咖啡续命杯" /><strong>咖啡续命杯</strong><span>点击移除</span></button>
+                <button class="appearance-card" type="button" data-hat="hat-clockout-headband" aria-pressed="true"><img src="../assets/hat-clockout-headband.png" alt="准点跑路头带" /><strong>准点跑路头带</strong><span>点击移除</span></button>
+                <button class="appearance-card" type="button" data-hat="hat-work-badge" aria-pressed="true"><img src="../assets/hat-work-badge.png" alt="工牌" /><strong>工牌</strong><span>点击移除</span></button>
+              </div>
+              <button class="character-card" type="button" hidden data-character-card aria-pressed="true"><img src="/assets/capybara/idle.png" alt="社畜水豚角色" /><strong>社畜水豚</strong><span>默认角色 · 已拥有</span></button>
+            </section>
+
+            <section class="equipped-panel pixel-panel" aria-labelledby="equipped-title">
+              <h2 id="equipped-title">已装备 · 从下到上</h2>
+              <ol class="equipped-list" data-equipped-list aria-label="已装备帽子顺序"></ol>
+              <p class="stack-hint"><img src="../assets/ui-info.png" alt="" />高度过高时缩放至可读下限，再使用纵向滚动</p>
+              <button class="pixel-button primary-button save-appearance" type="button" data-action="save-appearance">保存装扮演示</button>
+              <div class="wardrobe-actions">
+                <button class="pixel-button secondary-button" type="button" data-action="restore-appearance">恢复上次</button>
+                <button class="pixel-button text-button" type="button" data-action="clear-hats">清空帽子</button>
+              </div>
+              <p class="wardrobe-status" role="status" aria-live="polite">所有操作只影响当前页面的演示状态。</p>
+            </section>
+          </div>
+        </div>
+      </section>
+      <img class="scene-companion compact-companion" src="/assets/capybara/idle.png" alt="在装扮窗口旁敲键盘的像素水豚" />
+    </main>
+    <script type="module" src="./economy-customization.js"></script>
+  </body>
+</html>

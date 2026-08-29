@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>不要加班 · 工作设置</title>
+    <link rel="stylesheet" href="settings.css" />
+    <script src="settings.js" defer></script>
+  </head>
+  <body data-screen="04-work-settings">
+    <main class="pixel-window work-window" aria-labelledby="work-title">
+      <header class="work-heading">
+        <div>
+          <h1 id="work-title">先把下班时间说清楚</h1>
+          <p>这些时间由你填写，我们不会从合同或电脑使用情况推断。</p>
+        </div>
+        <div class="setup-progress" aria-label="设置第 1 步，共 2 步">
+          <span>设置 1/2</span>
+          <i class="active" aria-hidden="true"></i>
+          <i aria-hidden="true"></i>
+        </div>
+      </header>
+
+      <div class="work-grid">
+        <form class="work-form" data-work-form>
+          <label class="work-field">
+            <span>时区</span>
+            <select class="work-control" name="timezone" aria-label="时区">
+              <option>Asia/Taipei</option>
+              <option>Asia/Shanghai</option>
+              <option>Asia/Hong_Kong</option>
+            </select>
+          </label>
+          <label class="work-field">
+            <span>日薪（人民币）</span>
+            <span class="money-control"><b>¥</b><input name="salary" inputmode="decimal" value="800" aria-label="日薪（人民币）" /></span>
+          </label>
+          <label class="work-field">
+            <span>上班时间</span>
+            <input class="work-control" name="work-start" type="time" value="09:00" />
+          </label>
+          <label class="work-field">
+            <span>午休开始</span>
+            <input class="work-control" name="lunch-start" type="time" value="12:00" />
+          </label>
+          <label class="work-field">
+            <span>午休结束</span>
+            <input class="work-control" name="lunch-end" type="time" value="13:00" />
+          </label>
+          <label class="work-field">
+            <span>下班时间</span>
+            <input class="work-control" name="work-end" type="time" value="18:30" />
+          </label>
+        </form>
+
+        <aside class="work-preview" aria-label="今日预览">
+          <h2>今日预览</h2>
+          <div class="preview-metric">
+            <img class="icon source-art" src="assets/work-clock.png" alt="" />
+            <p><span>标准带薪</span><strong data-paid-time>8小时30分</strong></p>
+          </div>
+          <div class="preview-metric">
+            <img class="icon source-art" src="assets/work-money.png" alt="" />
+            <p><span>每小时窝囊费约</span><strong data-hourly-value>¥94.12</strong></p>
+          </div>
+          <p class="work-hint"><img class="icon small" src="icons/shield-check.svg" alt="" />变更默认从下一个工作日生效</p>
+          <img class="work-pet pet" src="assets/work-pet.png" alt="正在键盘前工作的像素水豚" />
+        </aside>
+      </div>
+
+      <footer class="work-actions">
+        <button class="btn primary" type="button" data-save-work>保存并继续</button>
+        <button class="btn" type="button" data-later>稍后设置</button>
+        <p class="status-line" role="status" data-work-status></p>
+      </footer>
+    </main>
+  </body>
+</html>

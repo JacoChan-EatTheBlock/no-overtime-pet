@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>不要加班 · 通知</title>
+    <link rel="stylesheet" href="settings.css" />
+    <script src="settings.js" defer></script>
+  </head>
+  <body data-screen="16-notifications">
+    <main class="pixel-window settings-window" aria-labelledby="page-title">
+      <header class="app-header">
+        <div class="brand">
+          <img class="brand-pet pet" src="assets/header-pet.png" alt="" />
+          <span class="brand-copy"><strong>不要加班</strong><small>陪你高效，不要加班</small></span>
+        </div>
+        <div class="window-tools" aria-label="窗口控件">
+          <button type="button" aria-label="最小化"><img class="icon" src="icons/minus.svg" alt="" /></button>
+          <button type="button" aria-label="最大化"><img class="icon" src="icons/square.svg" alt="" /></button>
+          <button type="button" aria-label="关闭"><img class="icon" src="icons/x.svg" alt="" /></button>
+        </div>
+      </header>
+
+      <div class="settings-body">
+        <aside class="settings-sidebar">
+          <nav class="sidebar-nav" aria-label="设置导航">
+            <a class="sidebar-link" href="04-work-settings.html"><img class="icon large source-art" src="assets/nav-work.png" alt="" /><span>工作设置</span></a>
+            <a class="sidebar-link" href="15-privacy.html"><img class="icon large source-art" src="assets/nav-privacy.png" alt="" /><span>识别与隐私</span></a>
+            <a class="sidebar-link active" href="16-notifications.html" aria-current="page"><img class="icon large source-art" src="assets/nav-bell.png" alt="" /><span>通知</span></a>
+            <a class="sidebar-link" href="17-account.html"><img class="icon large source-art" src="assets/nav-account.png" alt="" /><span>账号</span></a>
+          </nav>
+          <div class="sidebar-note">
+            <img class="pet" src="assets/note-pet.png" alt="" />
+            <p>专注当下，<br />效率自然来。</p>
+          </div>
+        </aside>
+
+        <section class="settings-main notification-main">
+          <h1 id="page-title">通知</h1>
+          <div class="notification-layout">
+            <div class="notification-groups">
+              <section class="card">
+                <h2 class="card-title"><img class="icon small source-art" src="assets/nav-bell.png" alt="" />工作提醒</h2>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-task.png" alt="" /><p><strong>下一个任务开始</strong><small>任务完成后，提醒你下一项任务。</small></p><label class="toggle"><input type="checkbox" checked aria-label="下一个任务开始" /><span></span></label></div>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-alert.png" alt="" /><p><strong>截止时间风险</strong><small>截止时间临近或超时风险时提醒你。</small></p><label class="toggle"><input type="checkbox" checked aria-label="截止时间风险" /><span></span></label></div>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-coffee.png" alt="" /><p><strong>午休提醒</strong><small>午休时间到了，记得休息一下。</small></p><label class="toggle"><input type="checkbox" checked aria-label="午休提醒" /><span></span></label></div>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-briefcase.png" alt="" /><p><strong>下班提醒</strong><small>下班时间到了，提醒你跑路。</small></p><label class="toggle"><input type="checkbox" checked aria-label="下班提醒" /><span></span></label></div>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-overtime.png" alt="" /><p><strong>低频加班提醒</strong><small>连续加班时间过长时，温柔提醒你休息。</small></p><label class="toggle"><input type="checkbox" checked aria-label="低频加班提醒" /><span></span></label></div>
+              </section>
+
+              <section class="card">
+                <h2 class="card-title"><img class="icon small source-art" src="assets/notify-shop.png" alt="" />社交与奖励</h2>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-users.png" alt="" /><p><strong>好友下班动态</strong><small>好友下班时，通知你一起休息。</small></p><label class="toggle"><input type="checkbox" aria-label="好友下班动态" /><span></span></label></div>
+                <div class="notification-row"><img class="icon source-icon source-art" src="assets/notify-shop.png" alt="" /><p><strong>商店上新</strong><small>商店有新物品上架时通知你。</small></p><label class="toggle"><input type="checkbox" aria-label="商店上新" /><span></span></label></div>
+              </section>
+
+              <section class="card">
+                <h2 class="card-title"><img class="icon small source-art" src="assets/notify-moon.png" alt="" />安静模式</h2>
+                <div class="quiet-row"><img class="icon source-icon source-art" src="assets/notify-quiet-clock.png" alt="" /><p><strong>安静时段</strong><small>设定时段内，提示将静默，仅做应用内记录。</small></p><time>22:00 — 08:30</time><label class="toggle"><input type="checkbox" checked aria-label="安静时段" /><span></span></label></div>
+              </section>
+            </div>
+
+            <aside class="notification-preview" aria-label="通知预览">
+              <h2>通知预览</h2>
+              <div class="preview-bubble">
+                <img class="pet" src="assets/notification-pet.png" alt="" />
+                <p><small>不要加班 · 现在</small><strong>距离下班还有 38 分钟，建议先收尾当前任务。</strong></p>
+              </div>
+              <h2>桌面通知表现</h2>
+              <p>选择通知在桌面上的显示与提醒方式。</p>
+              <div class="banner-modes" role="radiogroup" aria-label="桌面通知表现">
+                <button type="button" role="radio" aria-checked="false" data-notification-mode><img class="icon small" src="icons/volume.svg" alt="" />横幅 + 声音</button>
+                <button type="button" role="radio" aria-checked="true" data-notification-mode><img class="icon small" src="icons/app-window.svg" alt="" />仅横幅</button>
+                <button type="button" role="radio" aria-checked="false" data-notification-mode><img class="icon small" src="icons/bell.svg" alt="" />静默记录</button>
+              </div>
+              <div class="info-strip"><img class="icon small" src="icons/info-circle.svg" alt="" />Windows 系统通知权限与上述产品开关相互独立。</div>
+              <button class="text-link" type="button" data-system-link data-status-target="#notification-status" data-message="这是 UI Mock：真实版本将打开 Windows 通知设置"><img class="icon small" src="icons/external-link.svg" alt="" />打开 Windows 通知设置</button>
+              <p class="status-line" id="notification-status" role="status"></p>
+            </aside>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

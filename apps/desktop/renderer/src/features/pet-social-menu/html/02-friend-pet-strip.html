@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>不要加班 · 好友排排坐</title>
+    <link rel="stylesheet" href="pet-social-menu.css" />
+  </head>
+  <body data-page="02-friend-pet-strip">
+    <main class="stage stage-02" data-ui-screen="02-friend-pet-strip" data-state="page-1">
+      <section class="friend-strip" aria-label="好友排排坐">
+        <div class="friend-seats" data-friend-seats>
+          <article class="friend-seat" data-motion="WORKING">
+            <img class="friend-pet pixel-art" src="../../../../public/assets/capybara/idle.png" alt="我的像素桌宠" />
+            <strong>我 · 工作中</strong>
+          </article>
+          <article class="friend-seat" data-motion="MEETING">
+            <img class="friend-pet pixel-art" src="assets/friends/gray-cat-desk.png" alt="小灰的像素桌宠" />
+            <strong>开会中</strong>
+          </article>
+          <article class="friend-seat" data-motion="SLACKING">
+            <img class="friend-pet pixel-art" src="assets/friends/rabbit-desk.png" alt="兔兔的像素桌宠" />
+            <strong>短暂出逃</strong>
+          </article>
+          <article class="friend-seat" data-motion="AWAY">
+            <img class="friend-pet pixel-art" src="assets/friends/bear-desk.png" alt="熊仔的像素桌宠" />
+            <strong>离开</strong>
+          </article>
+          <article class="friend-seat" data-motion="CLOCKED_OUT">
+            <img class="friend-pet pixel-art" src="assets/friends/gray-cat-desk.png" alt="柴柴的像素桌宠" />
+            <strong>已跑路</strong>
+          </article>
+        </div>
+        <nav class="friend-pager" aria-label="好友桌宠分页">
+          <button type="button" aria-label="上一组好友" data-pager-prev disabled>
+            <img class="icon" src="icons/chevron-left.svg" alt="" />
+          </button>
+          <span data-pager-label>好友 1–5/12</span>
+          <button type="button" aria-label="下一组好友" data-pager-next>
+            <img class="icon" src="icons/chevron-right.svg" alt="" />
+          </button>
+        </nav>
+      </section>
+    </main>
+    <script src="pet-social-menu.js" defer></script>
+  </body>
+</html>

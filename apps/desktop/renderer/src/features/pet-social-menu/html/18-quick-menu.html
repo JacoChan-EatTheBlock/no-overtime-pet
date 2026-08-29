@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>不要加班 · 快捷菜单</title>
+    <link rel="stylesheet" href="pet-social-menu.css" />
+  </head>
+  <body data-page="18-quick-menu">
+    <main class="stage stage-18" data-ui-screen="18-quick-menu" data-state="visibility-open">
+      <div class="quick-menu-cluster">
+        <section class="pixel-frame quick-menu" aria-label="不要加班快捷菜单">
+          <div class="pixel-inner quick-menu-inner">
+            <header class="quick-menu-header">
+              <img class="friend-avatar pixel-art" src="../../../../public/assets/capybara/idle.png" alt="像素桌宠" />
+              <div>不要加班 · <span>专注中</span></div>
+            </header>
+            <nav class="quick-menu-items" aria-label="快捷操作">
+              <button type="button" data-menu-action="task">
+                <img class="icon" src="icons/clipboard-list.svg" alt="" />
+                <strong>打开今日任务</strong>
+                <span></span>
+                <span aria-hidden="true"></span>
+              </button>
+              <button type="button" aria-pressed="false" data-toggle-pet>
+                <img class="icon" src="icons/eye-off.svg" alt="" data-pet-visibility-icon />
+                <strong data-pet-visibility-label>隐藏桌宠</strong>
+                <span></span>
+                <span aria-hidden="true"></span>
+              </button>
+              <button class="highlighted" type="button" aria-expanded="true" data-toggle-visibility-menu>
+                <img class="icon" src="icons/target.svg" alt="" />
+                <strong>桌宠可见范围</strong>
+                <span></span>
+                <img class="icon" src="icons/chevron-right.svg" alt="" />
+              </button>
+              <button type="button" data-mute-notifications>
+                <img class="icon" src="icons/bell.svg" alt="" />
+                <strong>通知静音</strong>
+                <span data-mute-label>1小时</span>
+                <img class="icon" src="icons/chevron-right.svg" alt="" />
+              </button>
+              <button type="button" data-menu-action="settings">
+                <img class="icon" src="icons/settings.svg" alt="" />
+                <strong>设置</strong>
+                <span></span>
+                <img class="icon" src="icons/chevron-right.svg" alt="" />
+              </button>
+              <button class="exit-item" type="button" data-menu-action="quit">
+                <img class="icon" src="icons/logout.svg" alt="" />
+                <strong>退出应用</strong>
+                <span></span>
+                <span aria-hidden="true"></span>
+              </button>
+            </nav>
+            <p class="exit-hint">退出应用不会自动下班</p>
+          </div>
+        </section>
+
+        <section class="pixel-frame visibility-submenu" aria-label="桌宠显示设置" data-visibility-menu>
+          <div class="pixel-inner">
+            <label>
+              <input type="checkbox" checked data-setting="broadcast-activity" />
+              <span class="pixel-checkbox"><img class="icon" src="icons/check.svg" alt="" /></span>
+              允许好友查看我的活动状态
+            </label>
+            <label>
+              <input type="checkbox" checked data-setting="local-friend-pets" />
+              <span class="pixel-checkbox"><img class="icon" src="icons/check.svg" alt="" /></span>
+              在桌面显示好友桌宠
+            </label>
+          </div>
+        </section>
+      </div>
+
+      <section class="quick-menu-pet-area" aria-label="桌宠与当前任务">
+        <div class="pixel-frame task-bubble" data-task-bubble>
+          <div class="pixel-inner"><span class="task-dot"></span>写方案 · 36分钟</div>
+        </div>
+        <img class="quick-menu-pet pixel-art" src="../../../../public/assets/capybara/idle.png" alt="默认像素桌宠" />
+      </section>
+    </main>
+    <script src="pet-social-menu.js" defer></script>
+  </body>
+</html>

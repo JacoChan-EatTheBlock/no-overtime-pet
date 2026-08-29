@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>窝囊费钱包 · UI Mock</title>
+    <link rel="stylesheet" href="./economy-customization.css" />
+  </head>
+  <body data-page="wallet">
+    <main class="scene wallet-scene" data-ui-screen="09-wallet" data-ui-state="default">
+      <section class="pixel-window wallet-window" aria-label="窝囊费钱包">
+        <div class="window-inner wallet-shell">
+          <header class="wallet-header page-header">
+            <div class="page-title">
+              <img src="../assets/ui-wallet-title-icon.png" alt="" />
+              <h1>窝囊费</h1>
+            </div>
+            <div class="header-meta">
+              <span class="mock-label" title="金额与记录均为本地演示数据">UI MOCK · 非真实交易</span>
+              <time datetime="2026-08-29">2026年8月29日 星期六</time>
+              <button class="image-button gear-button" type="button" aria-label="钱包设置说明" data-action="wallet-settings">
+                <img src="../assets/ui-gear-button.png" alt="" />
+              </button>
+            </div>
+          </header>
+
+          <section class="wallet-balance pixel-panel" aria-label="窝囊费余额概览">
+            <div class="balance-copy">
+              <span>你唯一能花的余额</span>
+              <strong>¥486.40</strong>
+            </div>
+            <div class="today-earned">
+              <img src="../assets/ui-clock-earned.png" alt="" />
+              <div><span>今天已获得</span><strong>+¥86.40</strong></div>
+            </div>
+          </section>
+
+          <div class="wallet-columns">
+            <section class="wallet-card pixel-panel workday-card" aria-labelledby="workday-title">
+              <h2 id="workday-title">今天的工作日流程</h2>
+              <div class="timeline-labels">
+                <span>上班<strong>09:00</strong></span>
+                <span>午休暂停</span>
+                <span>下班<strong>18:30</strong></span>
+              </div>
+              <div class="timeline" aria-label="当前处于午休暂停">
+                <span class="timeline-dot timeline-start"></span>
+                <span class="timeline-track-done"></span>
+                <span class="timeline-track-left"></span>
+                <img src="../assets/ui-timeline-pause.png" alt="午休暂停" />
+                <span class="timeline-dot timeline-end"></span>
+              </div>
+              <div class="countdown">
+                <img src="../assets/ui-clock-countdown.png" alt="" />
+                <strong>距离下班 <em>4小时12分</em></strong>
+              </div>
+            </section>
+
+            <section class="wallet-card pixel-panel reward-card" aria-labelledby="reward-title">
+              <h2 id="reward-title">今日准点奖池</h2>
+              <div class="reward-total">
+                <img src="../assets/reward-pool-chest.png" alt="准点奖池宝箱" />
+                <strong>¥1,248.00</strong>
+              </div>
+              <div class="reward-row"><img src="../assets/ui-pool-users.png" alt="" /><span>当前符合资格　32人</span></div>
+              <div class="reward-row"><img src="../assets/ui-pool-coin.png" alt="" /><span>如果现在保持资格，预计可得约　<b>¥39.00</b></span></div>
+              <div class="reward-rule"></div>
+              <div class="reward-row"><img src="../assets/ui-pool-task.png" alt="" /><span>承诺任务　3/5</span></div>
+              <div class="reward-row"><img src="../assets/ui-pool-empty.png" alt="" /><span>尚未跑路</span></div>
+              <div class="reward-row"><img src="../assets/ui-pool-check.png" alt="" /><span>会话可结算</span></div>
+              <p>完成剩余 2 项并准点跑路后取得资格</p>
+            </section>
+          </div>
+
+          <section class="ledger-card pixel-panel" aria-labelledby="ledger-title">
+            <div class="ledger-heading">
+              <h2 id="ledger-title"><img src="../assets/ui-ledger-document.png" alt="" />最近记录</h2>
+              <button type="button" class="text-link" data-action="ledger-info">查看全部记录 ›</button>
+            </div>
+            <ol class="ledger-list">
+              <li><img src="../assets/ui-ledger-work.png" alt="" /><span>工作时段获得</span><time>今天 09:00–11:00</time><strong class="positive">+¥12.00</strong></li>
+              <li><img src="../assets/ui-ledger-pause.png" alt="" /><span>午休暂停</span><time>今天 12:00–13:00</time><strong>¥0.00</strong></li>
+              <li><img src="../assets/ui-ledger-cart.png" alt="" /><span>购买：加班免死金牌帽</span><time>昨天 21:15</time><strong class="negative">−¥188.00</strong></li>
+              <li><img src="../assets/ui-ledger-gift.png" alt="" /><span>昨日准点奖励</span><time>昨天 18:35</time><strong class="positive">+¥24.50</strong></li>
+            </ol>
+          </section>
+
+          <footer class="wallet-footer">
+            <a class="pixel-button primary-button shop-link" href="./10-shop.html"><img src="../assets/ui-shop-bag.png" alt="" />去商店</a>
+            <p role="status" aria-live="polite">奖池不会显示单个贡献者的工资或加班金额。</p>
+          </footer>
+        </div>
+      </section>
+      <img class="scene-companion wallet-companion" src="/assets/capybara/idle.png" alt="在钱包窗口旁敲键盘的像素水豚" />
+    </main>
+    <script type="module" src="./economy-customization.js"></script>
+  </body>
+</html>

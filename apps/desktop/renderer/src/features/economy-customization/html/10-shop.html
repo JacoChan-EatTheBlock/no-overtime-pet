@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>窝囊费商店 · UI Mock</title>
+    <link rel="stylesheet" href="./economy-customization.css" />
+  </head>
+  <body data-page="shop">
+    <main class="scene shop-scene" data-ui-screen="10-shop" data-ui-state="recommended">
+      <section class="pixel-window shop-window" aria-label="窝囊费商店">
+        <div class="window-inner shop-shell">
+          <header class="shop-header page-header">
+            <div class="page-title">
+              <img src="../assets/ui-shop-title-icon.png" alt="" />
+              <h1>商店</h1>
+            </div>
+            <div class="header-meta shop-header-meta">
+              <span class="mock-label" title="金额、库存与购买结果均为本地演示状态">UI MOCK · 非真实交易</span>
+              <strong>窝囊费 <span data-balance>¥486.40</span></strong>
+              <a class="image-button close-button" href="./09-wallet.html" aria-label="返回窝囊费钱包"><img src="../assets/ui-close-button.png" alt="" /></a>
+            </div>
+          </header>
+
+          <div class="shop-body">
+            <nav class="shop-categories pixel-panel" aria-label="商品分类">
+              <button class="category-button active" type="button" data-category="recommended"><img src="../assets/ui-category-recommended.png" alt="" /><span>推荐</span></button>
+              <button class="category-button" type="button" data-category="character"><img src="../assets/ui-category-character.png" alt="" /><span>角色</span></button>
+              <button class="category-button" type="button" data-category="hat"><img src="../assets/ui-category-hat.png" alt="" /><span>帽子</span></button>
+              <button class="category-button" type="button" data-category="owned"><img src="../assets/ui-category-owned.png" alt="" /><span>已拥有</span></button>
+              <p><img src="../assets/ui-info.png" alt="" />目录与报价均为固定 UI Mock</p>
+            </nav>
+
+            <section class="shop-grid pixel-panel" aria-label="商品列表">
+              <button class="shop-item selected" type="button" data-item="hat-gold-overtime" data-type="hat" data-owned="false" aria-pressed="true">
+                <span class="rarity rarity-common">普通</span>
+                <img src="../assets/hat-gold-overtime.png" alt="加班免死金牌帽" />
+                <strong>加班免死金牌帽</strong><span class="price">¥188.00</span>
+              </button>
+              <button class="shop-item" type="button" data-item="hat-weekly-ghost" data-type="hat" data-owned="false" aria-pressed="false">
+                <span class="rarity rarity-rare">稀有</span>
+                <img src="../assets/hat-weekly-ghost.png" alt="周一灵魂帽" />
+                <strong>周一灵魂帽</strong><span class="price">¥94.00</span>
+              </button>
+              <button class="shop-item" type="button" data-item="hat-cardboard-bag" data-type="hat" data-owned="false" aria-pressed="false">
+                <span class="rarity rarity-common">普通</span>
+                <img src="../assets/hat-cardboard-bag.png" alt="摸鱼纸袋" />
+                <strong>摸鱼纸袋</strong><span class="price">¥141.00</span>
+              </button>
+              <button class="shop-item" type="button" data-item="hat-coffee-mug" data-type="hat" data-owned="false" aria-pressed="false">
+                <span class="rarity rarity-uncommon">少见</span>
+                <img src="../assets/hat-coffee-mug.png" alt="咖啡续命杯" />
+                <strong>咖啡续命杯</strong><span class="price">¥75.00</span>
+              </button>
+              <button class="shop-item" type="button" data-item="hat-clockout-headband" data-type="hat" data-owned="false" aria-pressed="false">
+                <span class="rarity rarity-rare">稀有</span>
+                <img src="../assets/hat-clockout-headband.png" alt="准点跑路头带" />
+                <strong>准点跑路头带</strong><span class="price">¥220.00</span>
+              </button>
+              <button class="shop-item" type="button" data-item="character-capybara-worker" data-type="character" data-owned="true" aria-pressed="false">
+                <span class="rarity rarity-epic">史诗</span>
+                <img class="character-card-image" src="/assets/capybara/idle.png" alt="社畜水豚角色" />
+                <strong>社畜水豚角色</strong><span class="price owned-label">已拥有</span>
+              </button>
+            </section>
+
+            <aside class="shop-detail pixel-panel" aria-label="所选商品详情">
+              <h2 data-detail-name>加班免死金牌帽</h2>
+              <p data-detail-description>没有免死效果，但戴着比较安心。</p>
+              <span class="work-time" data-detail-work-time>相当于当前约 2 小时的窝囊费</span>
+              <div class="shop-preview" aria-label="商品穿戴预览">
+                <img class="preview-character" src="/assets/capybara/idle.png" alt="穿戴预览中的像素水豚" />
+                <img class="preview-hat" data-detail-image src="../assets/hat-gold-overtime.png" alt="" />
+              </div>
+              <button class="pixel-button primary-button buy-button" type="button" data-action="buy">购买演示 ¥188.00</button>
+              <button class="pixel-button secondary-button preview-button" type="button" data-action="preview">预览动作说明</button>
+              <p class="shop-status" role="status" aria-live="polite">确认购买只更新当前页面状态，不调用交易接口。</p>
+            </aside>
+          </div>
+        </div>
+      </section>
+      <img class="scene-companion compact-companion" src="/assets/capybara/idle.png" alt="在商店窗口旁敲键盘的像素水豚" />
+
+      <dialog class="purchase-dialog" aria-labelledby="purchase-dialog-title">
+        <form method="dialog">
+          <span class="mock-label">UI MOCK · 不会真实扣款</span>
+          <h2 id="purchase-dialog-title">确认购买演示</h2>
+          <p>将使用本页固定演示余额购买 <strong data-dialog-item>加班免死金牌帽</strong>。</p>
+          <p class="dialog-note">确认后只更新此页面的余额和“已拥有”筛选，不写入真实账本或购买 API。</p>
+          <div class="dialog-actions">
+            <button class="pixel-button secondary-button" value="cancel">取消</button>
+            <button class="pixel-button primary-button" type="button" data-action="confirm-purchase">确认演示</button>
+          </div>
+        </form>
+      </dialog>
+    </main>
+    <script type="module" src="./economy-customization.js"></script>
+  </body>
+</html>

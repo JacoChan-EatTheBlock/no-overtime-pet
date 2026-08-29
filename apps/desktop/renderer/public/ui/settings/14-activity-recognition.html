@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>不要加班 · 活动识别</title>
+    <link rel="stylesheet" href="settings.css" />
+    <script src="settings.js" defer></script>
+  </head>
+  <body data-screen="14-activity-recognition">
+    <main class="pixel-window activity-window" aria-labelledby="activity-title">
+      <header class="activity-header">
+        <div class="activity-brand">
+          <img class="pet" src="assets/header-pet.png" alt="" />
+          <span>不要加班</span>
+          <span>活动识别</span>
+        </div>
+        <div class="activity-tools" aria-label="窗口控件">
+          <button type="button" aria-label="帮助"><img class="icon" src="icons/info-circle.svg" alt="" /></button>
+          <button type="button" aria-label="最小化"><img class="icon" src="icons/minus.svg" alt="" /></button>
+          <button type="button" aria-label="关闭"><img class="icon" src="icons/x.svg" alt="" /></button>
+        </div>
+      </header>
+
+      <section class="activity-content">
+        <header class="activity-heading">
+          <h1 id="activity-title">现在在做什么？</h1>
+          <div class="activity-badge" data-activity-badge><img class="icon" src="icons/settings.svg" alt="" />专注工作 · 36分钟</div>
+        </header>
+
+        <div class="activity-grid">
+          <aside class="history" aria-label="识别记录">
+            <h2>识别记录（最新在上）</h2>
+            <ol>
+              <li><span class="dot" aria-hidden="true"></span><time>10:16</time><strong>写方案</strong></li>
+              <li><span class="dot" aria-hidden="true"></span><time>10:07</time><span>短暂休息</span></li>
+              <li><span class="dot" aria-hidden="true"></span><time>09:42</time><span>查资料</span></li>
+              <li><span class="dot" aria-hidden="true"></span><time>09:18</time><span>写方案</span></li>
+            </ol>
+          </aside>
+
+          <article class="current-activity">
+            <strong>当前识别</strong>
+            <h2 data-activity-title>写方案</h2>
+            <dl class="activity-detail">
+              <div><img class="icon" src="icons/briefcase.svg" alt="" /><dt>类别：</dt><dd>工作</dd></div>
+              <div><img class="icon" src="icons/clock.svg" alt="" /><dt>开始时间：</dt><dd>10:16</dd></div>
+              <div><img class="icon" src="icons/stopwatch.svg" alt="" /><dt>持续：</dt><dd data-activity-elapsed>36分钟</dd></div>
+            </dl>
+            <p class="readonly-hint"><img class="icon small" src="icons/info-circle.svg" alt="" />识别结果仅用于专注统计。</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
