@@ -1,7 +1,8 @@
 {
-  "schemaVersion": "1.1",
-  "policyVersion": "overtime-pool-cny-1.1.0-example",
+  "schemaVersion": "1.2",
+  "policyVersion": "overtime-pool-cn-1.2.0-example",
   "currency": "CNY",
+  "poolCohortId": "CN:Asia/Shanghai",
   "poolAccountingUnit": "MONEY_MINOR",
   "scenarios": [
     {
@@ -32,6 +33,7 @@
         "awardsMinor": { "B": 5000 },
         "creditedEquivalentMs": { "B": 3600000 },
         "carriedOutRemainderMinor": 0,
+        "expiredMinor": 0,
         "conservationDifferenceMinor": 0
       }
     },
@@ -60,6 +62,7 @@
         "awardsMinor": { "B": 2000, "C": 2000, "D": 2000 },
         "creditedEquivalentMs": { "B": 720000, "C": 1440000, "D": 480000 },
         "carriedOutRemainderMinor": 0,
+        "expiredMinor": 0,
         "conservationDifferenceMinor": 0
       }
     },
@@ -87,6 +90,70 @@
         "awardsMinor": { "B": 500, "C": 500 },
         "creditedEquivalentMs": { "B": 180000, "C": 360000 },
         "carriedOutRemainderMinor": 1,
+        "expiredMinor": 0,
+        "conservationDifferenceMinor": 0
+      }
+    },
+    {
+      "id": "single-player-receives-carried-pool",
+      "pool": {
+        "carriedInMinor": 700,
+        "contributions": []
+      },
+      "recipients": [
+        { "userRef": "A", "eligible": true, "dailySalaryMinor": 80000, "standardPaidMs": 28800000 }
+      ],
+      "expected": {
+        "totalPoolMinor": 700,
+        "equalShareMinor": 700,
+        "awardsMinor": { "A": 700 },
+        "creditedEquivalentMs": { "A": 252000 },
+        "carriedOutRemainderMinor": 0,
+        "expiredMinor": 0,
+        "conservationDifferenceMinor": 0
+      }
+    },
+    {
+      "id": "disconnected-work-credit-forfeited-once",
+      "pool": {
+        "carriedInMinor": 0,
+        "contributions": [
+          {
+            "userRef": "A",
+            "source": "DISCONNECTED_WORK_FORFEIT",
+            "amountMinor": 5000,
+            "sourceForfeitedEquivalentMs": 3600000,
+            "dailySalaryMinor": 40000,
+            "standardPaidMs": 28800000
+          }
+        ]
+      },
+      "recipients": [],
+      "expected": {
+        "totalPoolMinor": 5000,
+        "equalShareMinor": 0,
+        "awardsMinor": {},
+        "creditedEquivalentMs": {},
+        "carriedOutRemainderMinor": 5000,
+        "expiredMinor": 0,
+        "conservationDifferenceMinor": 0
+      }
+    },
+    {
+      "id": "pool-lot-expires-after-seven-beijing-days",
+      "pool": {
+        "carriedInMinor": 1000,
+        "expiredAtCutoffMinor": 1000,
+        "contributions": []
+      },
+      "recipients": [],
+      "expected": {
+        "totalPoolMinor": 1000,
+        "equalShareMinor": 0,
+        "awardsMinor": {},
+        "creditedEquivalentMs": {},
+        "carriedOutRemainderMinor": 0,
+        "expiredMinor": 1000,
         "conservationDifferenceMinor": 0
       }
     }

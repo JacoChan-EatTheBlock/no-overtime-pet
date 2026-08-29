@@ -8,10 +8,10 @@
 |---|---|---|
 | `EntityId` | UUID v7 字符串 | 服务端生成，按时间大致有序 |
 | `UserId` | `EntityId` | 不复用邮箱或用户名 |
-| `ISODate` | `YYYY-MM-DD` | 表示用户本地自然日 |
+| `ISODate` | `YYYY-MM-DD` | 表示 `Asia/Shanghai` 北京时间自然日 |
 | `LocalTime` | `HH:mm:ss` | 24 小时制，不带日期和时区 |
 | `UTCTimestamp` | RFC 3339 UTC | 例：`2026-08-29T01:30:00.000Z` |
-| `IanaTimeZone` | IANA 时区名 | 例：`Asia/Taipei`，禁止只存 UTC 偏移 |
+| `ChinaTimeZone` | 字面量 `"Asia/Shanghai"` | MVP 唯一时区；北京时间，不提供用户选择 |
 | `DurationMs` | 非负整数毫秒 | 常规持续时间 |
 | `EquivalentMs` | 有符号整数毫秒 | 窝囊费后台规范化记账单位 |
 | `MoneyMinor` | 有符号 64 位整数 | 人民币分；禁止浮点存钱 |
@@ -67,11 +67,12 @@ type PetAction =
   | "READ" | "SLACK_SECRETLY" | "AWAY_DISAPPEAR" | "CELEBRATE";
 
 type FriendRelationStatus = "NONE" | "PENDING_OUT" | "PENDING_IN" | "ACCEPTED";
-type PresenceStatus = "ONLINE" | "IDLE" | "AWAY" | "OFFLINE";
+type PresenceStatus = "ONLINE" | "IDLE" | "AWAY" | "DISCONNECTED" | "OFFLINE";
 
 type LedgerEntryType =
   | "WORK_CREDIT"
   | "OVERTIME_FORFEIT_DEBIT"
+  | "DISCONNECTED_WORK_FORFEIT_DEBIT"
   | "ON_TIME_REWARD_CREDIT"
   | "PURCHASE_DEBIT"
   | "REFUND_CREDIT"
@@ -89,7 +90,7 @@ type PurchaseStatus = "PENDING" | "SUCCEEDED" | "FAILED" | "REFUNDED";
 interface WorkScheduleSettings {
   schemaVersion: "1.0";
   userId: UserId;
-  timeZone: IanaTimeZone;
+  timeZone: "Asia/Shanghai";
   workStart: LocalTime;
   workEnd: LocalTime;
   lunchStart: LocalTime;
@@ -103,7 +104,8 @@ interface WorkScheduleSettings {
 - 标准带薪时长：`standardPaidMs = (workEnd - workStart) - (lunchEnd - lunchStart)`。
 - 用户手动输入全部时间，系统不得用活动识别自动修改。
 - 跨日班次 `[后续]`，MVP 不支持。
-- 夏令时按用户 IANA 时区和具体日期转换，不使用固定 UTC 偏移。
+- MVP 固定使用 IANA 时区 `Asia/Shanghai` 划定自然日和结算边界；不提供时区选择，也不按设备临时时区改变工作日。
+- 周六、周日和法定节假日默认不是工作日；用户可对具体日期显式覆盖为工作或休息。
 
 ### 4.2 工作日会话状态
 
@@ -113,7 +115,14 @@ type WorkdayPhase =
   | "OVERTIME" | "CLOCKED_OUT";
 ```
 
-是否产生窝囊费只由服务端当前时间、已确认工时和工作日会话决定，不由活动分类决定。
+```ts
+type WorkdayConnectionState = "NOT_STARTED" | "CONNECTED" | "DISCONNECTED" | "CLOSED";
+```
+
+- 只有 App 已打开、用户已登录且服务端建立 `CONNECTED` 工作日会话后才产生窝囊费；计划上班时间到达本身不自动开账。
+- `DISCONNECTED` 区间不计提。结算截止前重连恢复资格并从重连时继续；不补算离线区间。
+- 结算时仍为 `DISCONNECTED` 的用户不参与当日奖励资格评估，其当日全部 `WORK_CREDIT` 由同一事务写入 `DISCONNECTED_WORK_FORFEIT_DEBIT` 并转入奖励池。
+- 是否产生窝囊费不由活动分类决定。
 
 ## 5. 窝囊费唯一货币契约
 
@@ -141,6 +150,7 @@ interface NangFeeWallet {
   balanceEquivalentMs: EquivalentMs;
   lifetimeEarnedEquivalentMs: DurationMs;
   lifetimeOvertimeForfeitedEquivalentMs: DurationMs;
+  lifetimeDisconnectedWorkForfeitedEquivalentMs: DurationMs;
   lifetimeRewardReceivedEquivalentMs: DurationMs;
   lifetimeRewardReceivedMinor: MoneyMinor;
   rewardConversionRemainderMs: string; // [0, 1) 的十进制毫秒余量，不是用户货币
@@ -189,11 +199,23 @@ interface OvertimePoolContribution extends ContractHeader {
   workdayDate: ISODate;
   currency: "CNY";
   amountMinor: MoneyMinor;                    // 实际扣除并入池的人民币分
+  source: "OVERTIME_FORFEIT" | "DISCONNECTED_WORK_FORFEIT";
   sourceForfeitedEquivalentMs: DurationMs;   // 只用于核对扣减来源，不作为池份额
   contributorRateSnapshot: NangFeeRateSnapshot;
-  overtimeSessionId: EntityId;
+  workdaySessionId: EntityId;
   ledgerEntryId: EntityId;
+  firstEnteredPoolAt: UTCTimestamp;
+  expiresAt: UTCTimestamp;                    // firstEnteredPoolAt 后第 7 个北京时间自然日的同一结算边界
   settlementId?: EntityId;
+}
+
+interface OvertimePoolBalanceLot extends ContractHeader {
+  poolCohortId: "CN:Asia/Shanghai";
+  originContributionId: EntityId;
+  remainingMinor: MoneyMinor;
+  firstEnteredPoolAt: UTCTimestamp;
+  expiresAt: UTCTimestamp;
+  status: "AVAILABLE" | "DISTRIBUTED" | "EXPIRED";
 }
 
 interface DailyCommitmentSnapshot extends ContractHeader {
@@ -226,6 +248,7 @@ interface OvertimeRewardSettlement extends ContractHeader {
   eligibleCount: number;
   equalShareMinor: MoneyMinor;
   carriedOutRemainderMinor: MoneyMinor;
+  expiredMinor: MoneyMinor;
   recipients: OvertimeRewardRecipient[];
   policyVersion: string;
   status: "PENDING" | "SETTLED" | "FAILED";
@@ -236,7 +259,7 @@ interface OvertimeRewardSettlement extends ContractHeader {
 
 ```text
 carriedInMinor + 当日全部贡献 amountMinor
-= 全部获奖者 awardedMinor 之和 + carriedOutRemainderMinor
+= 全部获奖者 awardedMinor 之和 + carriedOutRemainderMinor + expiredMinor
 ```
 
 多人符合时：
@@ -246,7 +269,7 @@ equalShareMinor = floor(distributableMinor / eligibleCount)
 remainderMinor = distributableMinor - equalShareMinor × eligibleCount
 ```
 
-奖励池只按人民币分汇总和均分，不把高工资贡献换算成统一工作时长。高工资用户同样加班时会贡献更多人民币窝囊费；低工资用户领取同额奖励后，会获得更多商店购买力，这是已确认的福利效果。
+奖励池固定使用 `poolCohortId = "CN:Asia/Shanghai"`，覆盖中国大陆全部注册用户，不设置最小参与人数。单一合格用户可独自领取全部可分配金额。奖励池只按人民币分汇总和均分，不把高工资贡献换算成统一工作时长。高工资用户同样加班时会贡献更多人民币窝囊费；低工资用户领取同额奖励后，会获得更多商店购买力，这是已确认的福利效果。
 
 奖励进入个人钱包时，服务端按收款人结算时的 `NangFeeRateSnapshot` 计算：
 
@@ -259,10 +282,13 @@ newRewardConversionRemainderMs
 
 该换算只发生在收款人的个人钱包会计层，不改变池内 `awardedMinor`，也不抹平高工资贡献给低工资用户带来的福利。余量以小于 1 毫秒的会计余量结转，防止多次奖励系统性少记。用户以后修改日薪时，钱包与商品价格仍同比变化，不能通过改工资重复放大奖励。
 
-`[待确认: ECON-POOL-001][阻塞]` 池的用户范围。建议按 IANA 时区组和当地工作日建立 `poolCohortId`。  
-`[待确认: ECON-POOL-002]` 无符合者时建议全部滚存到同池下一日。  
-`[待确认: ECON-POOL-003]` 准点缓冲建议 5 分钟。  
-`[待确认: ECON-POOL-004][阻塞]` 建议允许余额变负；负余额不可购买，但后续工作收入和奖励可抵扣。
+已确认的结算规则：
+
+- 每次结算先剔除 `expiresAt <= cutoffAt` 的到期 lot，再用未过期余额计算 `distributableMinor` 和个人份额。
+- 无合格获奖者时全部可用余额按原 lot 滚存，不能刷新 `firstEnteredPoolAt` 或 `expiresAt`。
+- 结算截止为北京时间下班时间加 5 分钟。
+- 余额允许为负；负余额不可购买，后续工作收入和奖励优先抵扣。
+- 每个 lot 自首次入池起保留 7 个北京时间自然日；到期金额写入可审计的 `expiredMinor` 后销毁，不退还贡献者。
 
 ## 7. 任务与 AI 建议边界
 
@@ -288,6 +314,8 @@ interface TaskAnalysisProposal extends PolicyTrace {
 ```
 
 Proposal 不得直接覆盖正式任务。用户接受后，由确定性 Request Assembler 生成写入请求；排程求解器只读正式输入，输出 Draft；正式 Schedule 必须由明确确认或预先允许的软计划自动激活产生。
+
+任务标题属于 `SERVER_PRIVATE`。MVP 允许把当前任务标题发送给已披露且符合无训练/无留存要求的在线大模型进行分析，但不得写入普通日志、好友事件或跨用户训练/匿名聚合基线。个人速度学习只使用当前用户自己的历史聚合特征。
 
 ## 8. 活动识别与公开状态边界
 
@@ -377,7 +405,7 @@ interface ApiError {
 
 | 级别 | 示例 | 允许去向 |
 |---|---|---|
-| `LOCAL_RAW` | 截图、窗口标题、浏览器 URL、原始输入节奏 | 默认仅本机内存 |
+| `LOCAL_RAW` | 截图、窗口标题、浏览器 URL、原始输入节奏 | 仅本机内存；截图经打码后可按已披露用途发送给视觉模型 |
 | `LOCAL_DERIVED` | 应用类别、活动分类、置信度 | 本机数据库，可由用户清除 |
 | `SERVER_PRIVATE` | 任务、DDL、日薪、钱包、好友关系 | 加密传输至服务端 |
 | `FRIEND_VISIBLE` | 工作/会议/摸鱼/离开、桌宠动作 | 仅已接受好友 |

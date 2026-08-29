@@ -13,7 +13,7 @@
 | `safe-status-templates.example.json` | 好友可见安全文案 | Desktop/Realtime |
 | `schedule-policy-v1.example.json` | 排程排序、块长和缓冲策略 | Scheduling |
 | `shop-catalog.example.json` | 固定价格窝囊时长商品 | Commerce/Desktop |
-| `character-action-manifest.example.json` | 角色动作资源 | Asset Runtime |
+| `character-action-manifest.example.json` | 128×128 透明 GIF 角色动作资源 | Asset Runtime |
 | `hat-asset-manifest.example.json` | 帽子锚点资源 | Asset Runtime |
 | `activity-evaluation-sample.example.jsonl` | 活动识别评估记录 | AI Evaluation |
 | `economy-settlement-scenarios.example.json` | 人民币金额池守恒、均分与跨工资福利用例 | Economy Tests |
@@ -37,6 +37,7 @@
 6. 评估数据不得包含原始截图、任务全文、具体按键、日薪或身份标识。
 7. 资产 hash 在本样例为占位值，生产发布必须替换。
 8. 加班奖励池样例的币种固定 `CNY`，贡献、份额和结余均使用人民币分，不得替换成等价时间字段。
+9. 角色动作样例中一个 `PetAction` 对应一个 128×128 透明 GIF；状态切换时从目标 GIF 首帧播放。
 
 ## 5. 合并要求
 

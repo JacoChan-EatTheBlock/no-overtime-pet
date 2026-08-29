@@ -4,7 +4,7 @@
 
 - 基础路径：`/v1`。
 - 内容类型：`application/json; charset=utf-8`。
-- 时间戳：RFC 3339 UTC；自然日另传 `ISODate + IanaTimeZone`。
+- 时间戳：RFC 3339 UTC；MVP 自然日固定按 `ISODate + Asia/Shanghai`。
 - 认证：`Authorization: Bearer <access-token>`。
 - 请求追踪：客户端可传 `X-Request-Id`，服务端始终回传。
 - 版本更新：需防覆盖的写入传 `If-Match: <revision>`。
@@ -38,7 +38,7 @@
 }
 ```
 
-不得接受或返回邮箱、手机号、验证码字段。密码只进入认证边界并立即进行安全校验/哈希处理，不进入普通日志、埋点或业务事件。MVP 不提供设备会话列表和“退出其他设备”端点。
+不得接受或返回邮箱、手机号、验证码、恢复码字段。密码只进入认证边界并立即进行安全校验/哈希处理，不进入普通日志、埋点或业务事件。注册响应必须要求客户端展示“密码遗失后原账号无法恢复”的明确提示。MVP 不提供密码找回、恢复码、设备会话列表和“退出其他设备”端点。
 
 ## 3. 工作设置 API
 
@@ -70,7 +70,7 @@ interface WorkSettingsResponse {
 
 ```json
 {
-  "timeZone": "Asia/Taipei",
+  "timeZone": "Asia/Shanghai",
   "workStart": "09:00:00",
   "workEnd": "18:00:00",
   "lunchStart": "12:00:00",
@@ -80,7 +80,7 @@ interface WorkSettingsResponse {
 }
 ```
 
-错误：`WORK_SETTINGS_TIME_ORDER_INVALID`、`WAGE_AMOUNT_INVALID`、`REVISION_CONFLICT`。
+`timeZone` 若出现必须等于 `Asia/Shanghai`；客户端也可省略，由服务端写入固定值。错误：`WORK_SETTINGS_TIME_ORDER_INVALID`、`WORK_SETTINGS_TIME_ZONE_UNSUPPORTED`、`WAGE_AMOUNT_INVALID`、`REVISION_CONFLICT`。
 
 ## 4. 任务与承诺 API
 
@@ -137,7 +137,7 @@ interface WorkSettingsResponse {
 
 `POST /v1/ai/task-analysis`
 
-请求传 `taskId` 和当前 `taskRevision`；服务端组装隐私最小化上下文。新建任务由客户端编排层自动调用本接口。接口返回 Proposal，不写 Task。
+请求传 `taskId` 和当前 `taskRevision`；服务端可从正式 Task 读取当前标题并发送给已披露的在线大模型，组装其余隐私最小化上下文。MVP 不加入跨用户匿名基线。新建任务由客户端编排层自动调用本接口。接口返回 Proposal，不写 Task；标题不得写入普通日志或模型响应。
 
 ### 5.2 接受 Proposal
 
@@ -183,6 +183,7 @@ interface WorkSettingsResponse {
 |---|---|---|
 | `GET` | `/v1/workdays/{date}` | 会话、阶段、当日结果 |
 | `POST` | `/v1/workdays/{date}/start` | 建立/恢复工作日会话 |
+| `POST` | `/v1/workdays/{date}/heartbeat` | 维持已连接计提区间；幂等窗口写入 |
 | `POST` | `/v1/workdays/{date}/clock-out` | 明确跑路 |
 | `GET` | `/v1/workdays/{date}/outcome` | 结果与奖励资格 |
 
@@ -195,7 +196,9 @@ interface WorkSettingsResponse {
 }
 ```
 
-服务端以接收时间和允许时钟漂移策略决定权威 `clockedOutAt`。客户端时间仅用于诊断，不能决定奖励资格。
+`start` 只能由已打开并登录的 App 调用；计划上班时间到达本身不建立会话，也不追溯计提。心跳中断后服务端把会话标记为 `DISCONNECTED`，好友投影置灰且离线区间不计提。结算前再次调用 `start` 恢复资格并从重连时继续。
+
+服务端以接收时间和允许时钟漂移策略决定权威 `clockedOutAt`。客户端时间仅用于诊断，不能决定奖励资格。结算时仍为 `DISCONNECTED` 的会话触发内部幂等事务：扣回当日全部 `WORK_CREDIT` 并创建等额 `DISCONNECTED_WORK_FORFEIT` 池贡献。
 
 ## 8. 窝囊费 API
 
@@ -238,6 +241,14 @@ interface OvertimeForfeitLedgerView {
   currency: "CNY";
   rateSnapshot: NangFeeRateSnapshot;
 }
+
+interface DisconnectedWorkForfeitLedgerView {
+  deltaEquivalentMs: EquivalentMs; // 当日 WORK_CREDIT 总量的负数
+  displayDeltaMinorAtEntry: MoneyMinor;
+  poolContributionMinor: MoneyMinor;
+  currency: "CNY";
+  workdayDate: ISODate;
+}
 ```
 
 ### 8.3 奖励结算
@@ -257,6 +268,8 @@ interface OvertimePoolSettlementView {
   eligibleCount: number;
   equalShareMinor: MoneyMinor;
   carriedOutRemainderMinor: MoneyMinor;
+  expiredMinor: MoneyMinor;
+  earliestExpiryAt?: UTCTimestamp;
 }
 
 interface OvertimeRewardReceiptView {
@@ -267,7 +280,7 @@ interface OvertimeRewardReceiptView {
 }
 ```
 
-池内不得返回或接受 `totalPoolEquivalentMs`、`equalShareEquivalentMs` 等归一化分配字段。普通 UI 展示 `awardedMinor`；同一结算的合格用户获得相同人民币分金额，而不是相同等价时间。
+池内不得返回或接受 `totalPoolEquivalentMs`、`equalShareEquivalentMs` 等归一化分配字段。普通 UI 展示 `awardedMinor`；同一结算的合格用户获得相同人民币分金额，而不是相同等价时间。`cohortId` 固定为 `CN:Asia/Shanghai`，没有最小获奖人数；余额按 lot 保留原始 7 日期限。
 
 ## 9. 商店 API
 
@@ -308,9 +321,9 @@ interface OvertimeRewardReceiptView {
 
 `GET /v1/privacy-settings`、`PUT /v1/privacy-settings`。
 
-在线截图识别授权应记录：授权版本、时间、设备、供应商策略版本。撤销后本地先停止采集，再异步同步服务端，不等待网络成功。
+在线截图识别产品开关默认 `true`，但授权状态初始为未取得。授权记录应保存：授权版本、时间、设备、供应商策略版本。macOS 未授权时不得截图或发请求；撤销后本地先停止采集，再异步同步服务端，不等待网络成功。
 
-隐私设置至少包含两个独立布尔值：`shareActivityWithFriends` 与 `showFriendPetsOnDesktop`。前者控制自己的全局活动广播，后者只控制本机是否显示好友桌宠，客户端不得把它们合并成一个开关。
+隐私设置至少包含三个独立布尔值：`shareActivityWithFriends`、`showFriendPetsOnDesktop` 与 `screenVisionEnabled`。前两者分别控制自己的全局活动广播和本机好友桌宠显示；`screenVisionEnabled=true` 只表示产品意愿，仍须结合本机 Screen Recording 系统授权才可采集。客户端不得把三者合并成一个开关或授权状态。
 
 ## 12. WebSocket 事件信封
 
@@ -341,6 +354,8 @@ interface PresenceUpdatedPayload {
   clockOutState: "NOT_STARTED" | "AT_WORK" | "CLOCKED_OUT_ON_TIME" | "CLOCKED_OUT_LATE";
 }
 ```
+
+`presence=DISCONNECTED` 时客户端必须保留角色外观并置灰；这表示已建立工作会话后的临时失联，不等同主动跑路或普通离线。
 
 ### 13.2 `pet.action.updated`
 
@@ -381,3 +396,6 @@ interface AppearanceUpdatedPayload {
 4. WebSocket 事件通过隐私字段 denylist 和 allowlist 双重校验。
 5. 旧事件、过期事件和乱序事件不会回滚好友状态。
 6. 服务端时间而非客户端时间决定计提、跑路和结算。
+7. App 未调用 `start` 时无计提；心跳中断到重连之间不补算，重连后恢复资格。
+8. 结算时仍断线的扣回、钱包更新、贡献和池 lot 同事务且可幂等重放。
+9. 单一合格用户可领取，7 日过期 lot 不参与分配并出现在 `expiredMinor` 审计中。

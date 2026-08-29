@@ -4,7 +4,7 @@
 
 - PostgreSQL 是跨设备正式数据事实来源，SQLite 是本地缓存和离线队列。
 - 经济账本、承诺快照和结算记录不可原地改写。
-- 时间使用 UTC 时间戳；工作日另存用户当地日期和 IANA 时区。
+- 时间使用 UTC 时间戳；MVP 工作日统一按 `Asia/Shanghai` 计算并另存北京时间自然日。
 - 金额使用最小单位整数；窝囊费规范余额使用有符号等价毫秒。
 - 每个可变实体带 revision、createdAt、updatedAt。
 
@@ -18,6 +18,7 @@
 | `friend_visibility_overrides` | Social | `id` | `owner_user_id + friend_user_id` 唯一 |
 | `privacy_settings` | Profile | `user_id` | 每用户一行 |
 | `work_schedule_settings` | Profile | `id` | `user_id + effective_from + revision` |
+| `workday_overrides` | Profile | `id` | `user_id + workday_date` |
 | `wage_settings` | Profile | `id` | `user_id + effective_from + revision` |
 | `tasks` | Tasks | `id` | 无业务唯一；支持软删除 |
 | `task_events` | Tasks | `id` | `idempotency_key + user_id` |
@@ -31,6 +32,7 @@
 | `nang_fee_wallets` | Economy | `user_id` | 每用户一行 |
 | `nang_fee_ledger` | Economy | `id` | 幂等操作唯一 |
 | `overtime_pool_contributions` | Economy | `id` | `ledger_entry_id` 唯一 |
+| `overtime_pool_balance_lots` | Economy | `id` | `origin_contribution_id` 唯一 |
 | `overtime_reward_settlements` | Economy | `id` | `cohort + date + policy` 唯一 |
 | `overtime_reward_recipients` | Economy | `id` | `settlement_id + user_id` |
 | `shop_items` | Commerce | `id` | `sku` 唯一 |
@@ -51,7 +53,7 @@
 | `display_name` | varchar(64) | UI 限 1–24 Unicode 字符 |
 | `friend_code` | varchar(12) | 唯一、不可枚举 |
 | `locale` | varchar(16) | BCP 47 |
-| `time_zone` | varchar(64) | IANA |
+| `time_zone` | varchar(64) | 固定 `Asia/Shanghai`，服务端拒绝其他值 |
 | `status` | enum/text | ACTIVE/SUSPENDED/DELETED |
 | `revision` | bigint | 乐观锁 |
 
@@ -64,12 +66,14 @@
 ### 好友可见性
 
 - `friend_visibility_overrides` 保存 `owner_user_id`、`friend_user_id`、`share_activity_to_friend` 和 revision；关闭时关系仍为 `ACCEPTED`。
-- `privacy_settings` 至少保存 `share_activity_with_friends` 与 `show_friend_pets_on_desktop`，两者必须独立更新。
+- `privacy_settings` 至少保存 `share_activity_with_friends`、`show_friend_pets_on_desktop` 与 `screen_vision_enabled`，三者必须独立更新。`screen_vision_enabled` 产品默认值为 `true`，但 macOS Screen Recording 系统授权状态只在本机读取，不把“默认开启”当作“已经授权”。
 - 有效活动投影条件为全局 `share_activity_with_friends=true` 且对应 `share_activity_to_friend=true`。
 
 ## 4. 设置
 
 工作时间和工资拆表，均带 `effective_from`，以免变更一项重写另一项历史。每个工作日会话引用具体 revision。
+
+`workday_overrides` 保存具体北京时间日期的 `is_workday` 和用户修改来源。周六、周日及法定节假日默认不工作，只有显式覆盖才改变该日期；不得因设备临时时区变化重写工作日。
 
 工资字段：`currency char(3) check (currency = 'CNY')`、`daily_salary_minor bigint check > 0`。首版 UI 不提供币种选择；禁止存 `hourly_wage` 作为事实字段，小时显示值随标准带薪时长计算。
 
@@ -88,7 +92,7 @@
 
 ### Proposal 与 Draft
 
-`task_analysis_proposals` 和 `schedule_drafts` 是不可变对象。接受、拒绝或过期写状态字段，不覆盖原输出。大模型原始思维过程不保存；只存结构化输出、原因码和版本。
+`task_analysis_proposals` 和 `schedule_drafts` 是不可变对象。接受、拒绝或过期写状态字段，不覆盖原输出。大模型原始思维过程不保存；只存结构化输出、原因码和版本。当前任务标题可进入受控在线任务分析请求，但不得进入普通日志、跨用户聚合特征或好友事件；MVP 不建立跨用户匿名基线表。
 
 ### 承诺快照
 
@@ -98,7 +102,7 @@
 
 ### `workday_sessions`
 
-必须引用：工时 revision、工资 revision、承诺快照 ID。计提进度用 `last_accrued_at` 和累计字段加速读取，但账本仍是余额事实来源。
+必须引用：工时 revision、工资 revision、承诺快照 ID。另存 `connection_state`、`last_connected_at`、`disconnected_at`、`clocked_out_at`。只有 `CONNECTED` 区间计提；结算时仍 `DISCONNECTED` 的会话由幂等事务扣回当日 `WORK_CREDIT` 并转池。计提进度用 `last_accrued_at` 和累计字段加速读取，但账本仍是余额事实来源。
 
 ### `nang_fee_wallets`
 
@@ -107,13 +111,14 @@ user_id PK
 balance_equivalent_ms BIGINT NOT NULL
 lifetime_earned_equivalent_ms BIGINT NOT NULL CHECK >= 0
 lifetime_overtime_forfeited_equivalent_ms BIGINT NOT NULL CHECK >= 0
+lifetime_disconnected_work_forfeited_equivalent_ms BIGINT NOT NULL CHECK >= 0
 lifetime_reward_received_equivalent_ms BIGINT NOT NULL CHECK >= 0
 lifetime_reward_received_minor BIGINT NOT NULL CHECK >= 0
 reward_conversion_remainder_ms NUMERIC(20, 12) NOT NULL DEFAULT 0
 revision BIGINT NOT NULL
 ```
 
-`balance_equivalent_ms` 是否允许负数由 `ECON-POOL-004` 决定。其他累计字段非负。
+`balance_equivalent_ms` 允许负数；负数时禁止购买，后续工作收入和奖励优先抵扣。其他累计字段非负。
 
 ### `nang_fee_ledger`
 
@@ -131,14 +136,18 @@ metadata_json, created_at
 
 ### 池贡献与结算
 
-`overtime_pool_contributions.amount_minor > 0`，币种固定 `CNY`，一对一引用扣减账本；同时保存 `source_forfeited_equivalent_ms` 和贡献者费率快照用于审计，但池汇总和均分不得读取等价时间字段。结算使用状态机 `PENDING → SETTLED/FAILED`；FAILED 可重试，不能生成第二份 SETTLED。
+`overtime_pool_contributions.amount_minor > 0`，币种固定 `CNY`，`pool_cohort_id` 固定 `CN:Asia/Shanghai`，一对一引用扣减账本。`source` 为 `OVERTIME_FORFEIT` 或 `DISCONNECTED_WORK_FORFEIT`；同时保存 `source_forfeited_equivalent_ms`、贡献者费率快照、`first_entered_pool_at` 与 `expires_at`，但池汇总和均分不得读取等价时间字段。
+
+`overtime_pool_balance_lots` 以原贡献为粒度保存 `remaining_minor`、首次入池时间、过期时间和 `AVAILABLE/DISTRIBUTED/EXPIRED` 状态。无人符合时按原 lot 滚存，不刷新期限；每次结算先剔除 `expires_at <= cutoff_at` 的 lot，再按最早到期 lot 优先分配。每笔金额自首次入池起 7 个北京时间自然日后过期，过期金额不退还但必须审计。
+
+断线转池事务必须在同一数据库事务中：汇总当日 `WORK_CREDIT` → 写 `DISCONNECTED_WORK_FORFEIT_DEBIT` → 更新钱包 → 创建等额人民币贡献和 lot。结算使用状态机 `PENDING → SETTLED/FAILED`；FAILED 可重试，不能生成第二份 SETTLED。
 
 `overtime_reward_recipients` 至少保存：`awarded_minor`、`credited_equivalent_ms`、`recipient_rate_snapshot_json` 和 `ledger_entry_id`。`awarded_minor` 是池分配事实；`credited_equivalent_ms` 只是把该人民币福利固化进收款人钱包后的会计结果。
 
 结算完成后的不变量：
 
 ```text
-SUM(recipients.awarded_minor) + carried_out_remainder_minor
+SUM(recipients.awarded_minor) + carried_out_remainder_minor + expired_minor
 = carried_in_minor + SUM(contributions.amount_minor)
 ```
 
@@ -162,7 +171,8 @@ SUM(recipients.awarded_minor) + carried_out_remainder_minor
 - `friends_cache`
 - `asset_cache_index`
 - `offline_command_queue`
-- `activity_feature_windows`
+- `activity_feature_windows`（7 天滚动）
+- `activity_classifications`（90 天滚动）
 
 禁止本地持久化：原始截图、具体按键、完整 URL、密码、refresh token 明文。
 
@@ -186,7 +196,7 @@ interface OfflineCommand {
 - 任务软删除；经济账本不可删除，只能修正。
 - 用户注销后，好友状态和登录会话立即失效。
 - 活动特征和纠错按用户请求删除。
-- AI 聚合特征必须支持按用户重新计算/删除。
+- AI 个人聚合特征必须支持按用户重新计算/删除；MVP 不存在跨用户聚合基线。
 - 结算记录如需保留，应与账号标识解耦但保持守恒审计。
 
 ## 10. 迁移规则
@@ -207,3 +217,6 @@ interface OfflineCommand {
 6. 高工资贡献的人民币金额未经归一化进入池，低工资获奖者的 `credited_equivalent_ms` 可高于高工资获奖者。
 7. 好友删除后 presence 缓存按 TTL 清除。
 8. 本地数据库扫描不包含原始截图和具体按键。
+9. App 未打开或会话断线区间不产生计提；结算前重连后只从重连时继续。
+10. 结算时仍断线的当日工作收入只扣回并入池一次，钱包、贡献与 lot 可用同一幂等键追溯。
+11. 单一合格用户可以领取全部可分配金额；过期 lot 计入 `expired_minor` 后守恒差仍为 0。

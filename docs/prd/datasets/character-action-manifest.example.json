@@ -1,7 +1,7 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "2.0",
   "characterId": "office-cat-001",
-  "assetVersion": "1.0.0",
+  "assetVersion": "2.0.0",
   "canvas": { "width": 128, "height": 128 },
   "scaleMode": "NEAREST",
   "tags": ["small-head", "standard-desk"],
@@ -12,7 +12,7 @@
   },
   "actions": {
     "IDLE": {
-      "texture": "actions/IDLE.webp",
+      "gif": "actions/IDLE.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 8,
@@ -23,7 +23,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "TYPE_LEFT": {
-      "texture": "actions/TYPE_LEFT.webp",
+      "gif": "actions/TYPE_LEFT.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 4,
@@ -34,7 +34,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "TYPE_RIGHT": {
-      "texture": "actions/TYPE_RIGHT.webp",
+      "gif": "actions/TYPE_RIGHT.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 4,
@@ -45,7 +45,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "TYPE_BOTH": {
-      "texture": "actions/TYPE_BOTH.webp",
+      "gif": "actions/TYPE_BOTH.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 6,
@@ -57,7 +57,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "MOUSE_MOVE": {
-      "texture": "actions/MOUSE_MOVE.webp",
+      "gif": "actions/MOUSE_MOVE.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 6,
@@ -67,7 +67,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "MOUSE_CLICK": {
-      "texture": "actions/MOUSE_CLICK.webp",
+      "gif": "actions/MOUSE_CLICK.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 3,
@@ -77,7 +77,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "MEETING_DAZE": {
-      "texture": "actions/MEETING_DAZE.webp",
+      "gif": "actions/MEETING_DAZE.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 10,
@@ -87,7 +87,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "READ": {
-      "texture": "actions/READ.webp",
+      "gif": "actions/READ.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 8,
@@ -97,7 +97,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "SLACK_SECRETLY": {
-      "texture": "actions/SLACK_SECRETLY.webp",
+      "gif": "actions/SLACK_SECRETLY.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 12,
@@ -107,7 +107,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "AWAY_DISAPPEAR": {
-      "texture": "actions/AWAY_DISAPPEAR.webp",
+      "gif": "actions/AWAY_DISAPPEAR.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 8,
@@ -117,7 +117,7 @@
       "contentHashSha256": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     "CELEBRATE": {
-      "texture": "actions/CELEBRATE.webp",
+      "gif": "actions/CELEBRATE.gif",
       "frameWidth": 128,
       "frameHeight": 128,
       "frameCount": 16,
@@ -128,4 +128,3 @@
     }
   }
 }
-

@@ -29,13 +29,15 @@ interface Account {
   friendCode: string;         // 8–12 位，不使用连续自增
   avatarCharacterItemId: EntityId;
   locale: string;
-  timeZone: IanaTimeZone;
+  timeZone: "Asia/Shanghai";
   status: "ACTIVE" | "SUSPENDED" | "DELETED";
   revision: Revision;
 }
 ```
 
 密码只在服务端保存强哈希，不进入业务日志。认证使用短效 access token + 可轮换 refresh token；refresh token 只通过 Electron `safeStorage` 保存在 macOS Keychain 中，不放 SQLite 或 localStorage。发行构建必须保持稳定的签名身份，避免升级后重复触发 Keychain 授权。MVP 不提供设备会话列表、数据导出或“退出其他设备”界面；账号与计划数据以服务端记录为权威来源。
+
+MVP 不提供邮箱、手机号、验证码、恢复码、密码找回或人工恢复原密码。注册和修改密码前必须明确提示：密码遗失后原账号无法恢复。显示名允许重复，好友身份只以不可枚举的好友码区分。
 
 ## 5. 好友关系状态机
 
@@ -61,6 +63,7 @@ ACCEPTED
 - 只有全局 `shareActivityWithFriends=true` 且该好友的 `shareActivityToFriend=true` 时，才向该好友发送活动状态与动作。
 - `showFriendPetsOnDesktop=false` 时，本机不订阅或不渲染好友桌宠，但不改变好友关系，也不影响自己的广播设置。
 - 好友列表不显示对方任务标题、DDL、日薪、窝囊费余额或识别来源。
+- 每个账号最多 100 名已接受好友；排排坐场景默认只渲染最近在线 12 人，其余通过分页查看。
 
 ## 7. 接口摘要
 
@@ -95,12 +98,15 @@ ACCEPTED
 7. 关闭“在桌面显示好友桌宠”后，本机不显示好友桌宠，但自己的广播设置不被改动。
 8. 使用好友 API 无法读取任务标题、窗口内容和经济余额。
 9. 同一申请重复提交不产生重复关系。
+10. 注册界面明确提示无密码恢复能力，API 不存在找回密码或恢复码端点。
+11. 两个账号可以使用相同显示名，好友关系和搜索仍以好友码准确区分。
 
-## 10. 待确认项
+## 10. 已确认项
 
-`[已确认: ACCOUNT-001]` MVP 使用用户名 + 密码，不使用邮箱、手机号或验证码登录。  
-`[待确认: FRIEND-001]` 好友上限。建议 MVP 100 人，但主场景默认只渲染最近在线的 12 人。  
-`[待确认: ACCOUNT-002]` 是否允许显示名重复。建议允许，身份以好友码区分。
+`[已确认: ACCOUNT-001]` MVP 使用用户名 + 密码，不使用邮箱、手机号或验证码登录。
+`[已确认: ACCOUNT-RECOVERY-001][2026-08-29]` 不提供密码找回、恢复码或人工恢复原密码。
+`[已确认: FRIEND-001][2026-08-29]` 好友上限 100，主场景默认渲染最近在线 12 人。
+`[已确认: ACCOUNT-002][2026-08-29]` 显示名允许重复，身份以好友码区分。
 
 ## 11. 依赖
 
