@@ -1,0 +1,1357 @@
+.mainStage,
+.overlayStage {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-width: 980px;
+  min-height: 720px;
+  place-items: center;
+  overflow: hidden;
+  background: #dce9f0;
+  font-family: "Microsoft YaHei UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-rendering: geometricPrecision;
+}
+
+.mainStage h1,
+.mainStage h2,
+.mainStage h3,
+.overlayStage h1,
+.overlayStage h2,
+.overlayStage h3 {
+  font-weight: 600;
+}
+
+.mainStage svg,
+.overlayStage svg {
+  shape-rendering: crispEdges;
+}
+
+.mainStage svg *,
+.overlayStage svg * {
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.taskBubble,
+.taskWindow,
+.analysisWindow,
+.scheduleWindow,
+.clockoutDialog,
+.successDialog {
+  filter: drop-shadow(7px 8px 0 rgb(75 43 34 / 22%));
+}
+
+.bubbleButtons button,
+.bubbleFooter button,
+.createTaskPanel > button,
+.suggestionRow button,
+.subtaskRows button,
+.analysisActions > button:not(.reanalyseButton),
+.commitmentPanel > button,
+.clockoutButtons button,
+.successActions button {
+  border-radius: 0 !important;
+  box-shadow:
+    inset 0 -4px 0 rgb(75 43 34 / 13%),
+    inset 0 2px 0 rgb(255 255 255 / 20%),
+    3px 3px 0 rgb(75 43 34 / 14%) !important;
+  transition: none !important;
+}
+
+.bubbleButtons button:active,
+.bubbleFooter button:active,
+.createTaskPanel > button:active,
+.suggestionRow button:active,
+.subtaskRows button:active,
+.analysisActions > button:not(.reanalyseButton):active,
+.commitmentPanel > button:active,
+.clockoutButtons button:active,
+.successActions button:active {
+  box-shadow:
+    inset 0 -2px 0 rgb(75 43 34 / 13%),
+    1px 1px 0 rgb(75 43 34 / 14%) !important;
+  transform: translate(2px, 2px) !important;
+}
+
+.mainStage {
+  padding: 28px 74px 78px;
+}
+
+.overlayStage {
+  padding: 32px 84px 88px;
+}
+
+.pet {
+  position: absolute;
+  z-index: 3;
+  right: max(30px, calc((100vw - 1410px) / 2));
+  bottom: 95px;
+  width: 194px;
+  height: 194px;
+  object-fit: contain;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.overlayStage .pet {
+  right: max(74px, calc((100vw - 1310px) / 2));
+  bottom: 89px;
+  width: 160px;
+  height: 160px;
+}
+
+.iconButton {
+  display: grid;
+  width: 46px;
+  height: 42px;
+  place-items: center;
+  border: 2px solid var(--color-border);
+  border-radius: 0;
+  background: var(--color-surface-soft);
+  box-shadow:
+    inset 0 -3px 0 rgb(75 43 34 / 10%),
+    2px 2px 0 rgb(75 43 34 / 12%);
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  border-color: var(--color-primary);
+}
+
+.progressSegments {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.progressSegments span {
+  display: block;
+  height: 13px;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-soft);
+  box-shadow: inset 0 -2px 0 rgb(75 43 34 / 8%);
+}
+
+.progressSegments .completedSegment {
+  border-color: #2f7180;
+  background: var(--color-primary);
+  box-shadow:
+    inset 0 -3px 0 rgb(29 92 103 / 28%),
+    1px 1px 0 rgb(75 43 34 / 18%);
+}
+
+/* 01 今日任务气泡 */
+
+.taskBubble {
+  position: absolute;
+  top: 121px;
+  left: calc(50% - 107px);
+  width: 535px;
+  height: 550px;
+}
+
+.taskBubbleInner {
+  display: flex;
+  padding: 30px 34px 26px;
+  flex-direction: column;
+}
+
+.bubbleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 42px;
+}
+
+.bubbleHeader h1 {
+  margin: 0;
+  font-size: var(--text-title-1);
+  line-height: 1.2;
+}
+
+.headerActions {
+  display: flex;
+  gap: 12px;
+}
+
+.nowLabel {
+  margin-bottom: 12px;
+  color: var(--color-primary-hover);
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+.currentTask {
+  margin: 0 0 8px;
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+.taskBubble h1 {
+  font-size: 30px;
+}
+
+.currentTime {
+  margin: 0 0 20px;
+  font-size: var(--text-body-large);
+}
+
+.bubbleButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.progressLabel {
+  margin-bottom: 10px;
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.taskBubble .progressSegments {
+  width: 372px;
+}
+
+.nextTask {
+  position: relative;
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  gap: 16px;
+  margin-top: 22px;
+  border-top: 1px dashed var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 14px 8px 12px 30px;
+}
+
+.nextTask > span {
+  position: absolute;
+  top: 11px;
+  bottom: 10px;
+  left: 7px;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.nextTask > span::before {
+  position: absolute;
+  top: 9px;
+  left: -5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-border);
+  content: '';
+}
+
+.bubbleFooter {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.bubbleFooter > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 16px;
+  line-height: 1.35;
+}
+
+.bubbleFooter button {
+  min-width: 112px;
+  font-size: var(--text-body-large);
+}
+
+.bubbleTail {
+  position: absolute;
+  z-index: 2;
+  top: 647px;
+  left: calc(50% + 303px);
+  color: var(--color-border-strong);
+  filter: drop-shadow(0 5px 0 var(--color-surface));
+}
+
+.overlayStage[data-ui-screen='01-task-bubble'] .pet {
+  top: 678px;
+  right: auto;
+  bottom: auto;
+  left: calc(50% + 345px);
+  width: 176px;
+  height: 176px;
+}
+
+/* 05 待办列表 */
+
+.taskWindow {
+  width: 1110px;
+  height: 760px;
+  margin: 0 24px 32px 0;
+}
+
+.taskWindowInner {
+  display: grid;
+  grid-template-columns: minmax(0, 624px) minmax(0, 1fr);
+  padding: 40px 4px 36px 38px;
+}
+
+.taskListColumn {
+  min-width: 0;
+  padding-right: 28px;
+}
+
+.pageHeading,
+.scheduleHeader {
+  display: flex;
+  align-items: center;
+}
+
+.pageHeading {
+  position: relative;
+  min-height: 74px;
+  gap: 38px;
+  padding: 0 8px;
+}
+
+.headingIcon {
+  display: grid;
+  width: 52px;
+  height: 58px;
+  place-items: center;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface-soft);
+  color: var(--color-border-strong);
+  box-shadow:
+    inset 0 -4px 0 rgb(75 43 34 / 10%),
+    3px 3px 0 rgb(75 43 34 / 15%);
+}
+
+.pageHeading h1,
+.scheduleHeader h1 {
+  margin: 0 0 5px;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.pageHeading h1 {
+  font-size: 34px;
+}
+
+.pageHeading p,
+.scheduleHeader p {
+  margin: 0;
+  color: #3f4143;
+  font-size: var(--text-body);
+}
+
+.pageHeading p {
+  font-size: 20px;
+}
+
+.helpIcon {
+  position: absolute;
+  top: 0;
+  right: 4px;
+}
+
+.taskTabs {
+  display: flex;
+  gap: 30px;
+  margin: 28px 0 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 58%, transparent);
+}
+
+.taskTabs button {
+  position: relative;
+  min-width: 104px;
+  padding: 0 12px 14px;
+  border: 0;
+  background: transparent;
+  color: #44484a;
+  font-weight: 600;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.taskTabs button::after {
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  left: 0;
+  height: 3px;
+  background: transparent;
+  content: '';
+}
+
+.taskTabs .activeTaskTab {
+  color: var(--color-primary-hover);
+}
+
+.taskTabs .activeTaskTab::after {
+  background: var(--color-primary);
+}
+
+.taskRows {
+  display: grid;
+}
+
+.taskRow {
+  display: grid;
+  min-height: 94px;
+  align-items: center;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 50%, transparent);
+  padding: 12px 14px;
+}
+
+.taskRow h2 {
+  margin: 0 0 5px;
+  font-size: var(--text-body-large);
+  line-height: 1.25;
+}
+
+.taskRow p {
+  margin: 0;
+  color: #41464a;
+  font-size: var(--text-small);
+}
+
+.urgentIcon { color: var(--color-danger); }
+.upcomingIcon { color: var(--color-warning); }
+.normalIcon { color: #447991; }
+
+.urgencyChip {
+  min-width: 66px;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  padding: 6px 9px;
+  text-align: center;
+  font-size: var(--text-small);
+}
+
+.urgencyChip.urgent {
+  background: color-mix(in srgb, var(--color-danger) 14%, var(--color-surface));
+  color: var(--color-danger);
+}
+
+.urgencyChip.upcoming {
+  background: color-mix(in srgb, var(--color-warning) 16%, var(--color-surface));
+  color: #c45f18;
+}
+
+.urgencyChip.normal {
+  background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));
+  color: #315e6d;
+}
+
+.createTaskPanel {
+  display: flex;
+  min-width: 0;
+  border: 3px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  padding: 32px 34px 30px;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--color-surface-soft) 58%, transparent);
+}
+
+.createTaskPanel h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 26px;
+  font-size: 26px;
+}
+
+.createTaskPanel > label {
+  margin-bottom: 22px;
+}
+
+.createTaskPanel > label > span:first-child {
+  font-size: 18px;
+}
+
+.createTaskPanel > label > span:last-child {
+  min-height: 50px;
+}
+
+.createTaskPanel input {
+  height: 46px;
+  font-size: 20px;
+}
+
+.selectField {
+  display: grid;
+  gap: 10px;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.selectField select {
+  width: 100%;
+  height: 50px;
+  border: 2px solid var(--color-border);
+  border-radius: 0;
+  padding: 0 14px;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  box-shadow:
+    inset 0 -3px 0 rgb(75 43 34 / 8%),
+    2px 2px 0 rgb(75 43 34 / 10%);
+  font-size: 20px;
+}
+
+.createTaskPanel > label > span:last-child {
+  border-radius: 0;
+  box-shadow:
+    inset 0 -3px 0 rgb(75 43 34 / 8%),
+    2px 2px 0 rgb(75 43 34 / 10%);
+}
+
+.autoAnalysisHint {
+  margin: auto 0 26px;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+}
+
+.createTaskPanel button + button {
+  margin-top: 14px;
+}
+
+.createTaskPanel > button {
+  font-size: 20px;
+}
+
+/* 06 AI 建议 */
+
+.analysisWindow {
+  width: 880px;
+  height: 895px;
+  transform: translateY(-14px);
+}
+
+.analysisWindowInner {
+  display: flex;
+  padding: 24px 26px 18px;
+  flex-direction: column;
+}
+
+.analysisHeader {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 86px 1fr auto;
+  border-bottom: 2px dashed var(--color-border);
+  padding: 0 4px 22px;
+}
+
+.robotBadge {
+  display: grid;
+  width: 64px;
+  height: 52px;
+  place-items: center;
+  border: 2px solid var(--color-border-strong);
+  background: var(--color-primary);
+  color: white;
+  box-shadow: inset 0 -4px 0 rgb(31 94 105 / 30%);
+  clip-path: polygon(6px 0, calc(100% - 6px) 0, calc(100% - 6px) 3px, 100% 3px, 100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) 100%, 6px 100%, 6px calc(100% - 3px), 0 calc(100% - 3px), 0 6px, 3px 6px, 3px 3px, 6px 3px);
+}
+
+.analysisHeader h1 {
+  margin: 0 0 4px;
+  font-size: 31px;
+  line-height: 1.2;
+}
+
+.analysisHeader p {
+  margin: 0;
+  font-size: var(--text-body);
+}
+
+.analysisTaskHeading {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  padding: 24px 4px 12px;
+}
+
+.analysisTaskHeading h2 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.analysisTaskHeading > span {
+  border: 2px solid var(--color-primary);
+  padding: 5px 14px;
+  color: var(--color-primary-hover);
+  font-size: var(--text-small);
+}
+
+.yourInputLabel {
+  margin: 6px 4px 8px;
+  color: #9b572b;
+  font-size: var(--text-small);
+}
+
+.userInputSummary {
+  display: grid;
+  min-height: 56px;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  border: 3px solid var(--color-border);
+  background: var(--color-surface-soft);
+}
+
+.userInputSummary span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+}
+
+.userInputSummary span + span {
+  border-left: 2px solid var(--color-border);
+}
+
+.suggestionPanel {
+  margin-top: 29px;
+  border: 3px solid color-mix(in srgb, var(--color-primary) 56%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary-soft) 16%, var(--color-surface-soft));
+}
+
+.suggestionPanel > h3 {
+  margin: 0;
+  padding: 12px 16px 8px;
+  color: var(--color-primary-hover);
+  font-size: var(--text-small);
+}
+
+.suggestionRow {
+  display: grid;
+  min-height: 52px;
+  align-items: center;
+  grid-template-columns: 32px 160px 1fr 80px 76px;
+  gap: 8px;
+  border-bottom: 1px dotted color-mix(in srgb, var(--color-primary) 34%, transparent);
+  padding: 5px 12px;
+  transition: opacity 120ms ease;
+}
+
+.suggestionIcon {
+  display: grid;
+  place-items: center;
+}
+
+.suggestionValue {
+  color: #223238;
+}
+
+.smallButton {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: var(--text-small);
+  border-width: 2px !important;
+}
+
+.rejectedSuggestion {
+  opacity: 0.48;
+  text-decoration: line-through;
+}
+
+.inlineEditor {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr 0.8fr 0.9fr;
+  gap: 8px;
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px 12px;
+}
+
+.inlineEditor label {
+  display: grid;
+  gap: 4px;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+.inlineEditor input,
+.inlineEditor select {
+  min-width: 0;
+  height: 34px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
+  padding: 0 7px;
+  font-size: var(--text-small);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 10%);
+}
+
+.confidenceRow {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 16px;
+  color: #355c6a;
+  font-size: var(--text-small);
+}
+
+.confidenceRow span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subtaskTitle {
+  border-top: 1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+}
+
+.subtaskRows > div {
+  display: grid;
+  min-height: 46px;
+  align-items: center;
+  grid-template-columns: 36px 1fr 90px 80px 76px;
+  gap: 8px;
+  border-top: 1px dotted color-mix(in srgb, var(--color-primary) 30%, transparent);
+  padding: 4px 12px;
+}
+
+.subtaskRows > div > span:first-child {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+}
+
+.analysisActions {
+  display: grid;
+  align-items: center;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 16px;
+  margin-top: auto;
+  padding: 14px 4px 0;
+}
+
+.analysisActions > p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+.analysisActions > button:not(.reanalyseButton) {
+  min-width: 178px;
+}
+
+.reanalyseButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--color-primary-hover);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 07 日程草案 */
+
+.scheduleWindow {
+  width: 1135px;
+  height: 850px;
+  margin-bottom: 38px;
+}
+
+.scheduleWindowInner {
+  padding: 24px 26px 20px;
+}
+
+.scheduleHeader {
+  display: grid;
+  min-height: 82px;
+  align-items: center;
+  grid-template-columns: 64px 310px 1fr auto;
+  gap: 14px;
+}
+
+.aiDraftHint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #574f49;
+  font-size: var(--text-small) !important;
+}
+
+.aiDraftHint svg {
+  color: var(--color-warning);
+}
+
+.scheduleContent {
+  display: grid;
+  height: calc(100% - 92px);
+  grid-template-columns: minmax(0, 1.75fr) minmax(310px, 0.85fr);
+  gap: 18px;
+  padding-top: 12px;
+}
+
+.scheduleTimeline,
+.commitmentPanel {
+  border: 3px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  padding: 16px 14px;
+  background: color-mix(in srgb, var(--color-surface-soft) 55%, transparent);
+}
+
+.scheduleTimeline {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  overflow: hidden;
+  padding-left: 78px;
+}
+
+.timelineHours {
+  position: absolute;
+  top: 12px;
+  bottom: 62px;
+  left: -15px;
+  display: flex;
+  width: 62px;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-direction: column;
+  color: var(--color-text);
+  font-size: var(--text-caption);
+}
+
+.timelineHours span {
+  position: relative;
+  padding-right: 14px;
+}
+
+.timelineHours span::after {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-border);
+  content: '';
+}
+
+.scheduleBlock {
+  display: grid;
+  min-height: 68px;
+  align-items: center;
+  grid-template-columns: 132px minmax(0, 1fr) auto;
+  gap: 10px;
+  border: 2px solid #327684;
+  border-radius: 0;
+  padding: 9px 14px;
+  background: var(--color-primary-soft);
+  box-shadow:
+    inset 0 -4px 0 rgb(47 111 122 / 20%),
+    2px 2px 0 rgb(75 43 34 / 12%);
+}
+
+.scheduleBlock:nth-of-type(1) { min-height: 74px; }
+.scheduleBlock:nth-of-type(2) { min-height: 60px; }
+.scheduleBlock:nth-of-type(3) { min-height: 58px; }
+.scheduleBlock:nth-of-type(5) { min-height: 100px; }
+.scheduleBlock:nth-of-type(6) { min-height: 76px; }
+.scheduleBlock:nth-of-type(7) { min-height: 114px; }
+
+.scheduleBlock.breakBlock {
+  min-height: 56px;
+  border-color: #85786d;
+  background: color-mix(in srgb, var(--color-border) 28%, var(--color-surface-soft));
+}
+
+.blockTime {
+  font-size: 16px;
+}
+
+.scheduleBlock > strong {
+  font-size: 16px;
+}
+
+.blockActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.blockActions span,
+.blockActions button,
+.breakLock {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-caption);
+  white-space: nowrap;
+}
+
+.blockActions button {
+  padding: 5px 0;
+  cursor: pointer;
+}
+
+.breakLock {
+  justify-self: end;
+}
+
+.draggingBlock {
+  opacity: 0.55;
+}
+
+.finishEstimate {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  gap: 12px;
+  border: 3px solid color-mix(in srgb, var(--color-success) 72%, var(--color-border));
+  padding: 8px 18px;
+  background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface-soft));
+  color: #2f6b42;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.commitmentPanel {
+  display: flex;
+  padding: 22px 18px;
+  flex-direction: column;
+}
+
+.commitmentPanel h2,
+.commitmentPanel h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.commitmentPanel h2 { font-size: 22px; }
+.commitmentPanel h3 { font-size: 19px; }
+
+.commitmentPanel h2 span,
+.commitmentPanel h3 span {
+  display: grid;
+  min-width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+  font-size: var(--text-small);
+}
+
+.commitmentList {
+  display: grid;
+  gap: 12px;
+}
+
+.commitmentList label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+}
+
+.commitmentList input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-success);
+}
+
+.commitmentPanel hr {
+  width: 100%;
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.unscheduledTask {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  color: #8f2f24;
+  font-size: var(--text-small);
+}
+
+.capacityWarning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+  border: 2px solid color-mix(in srgb, var(--color-warning) 55%, var(--color-border));
+  padding: 10px;
+  background: color-mix(in srgb, var(--color-warning) 12%, var(--color-surface-soft));
+  color: #a44328;
+  font-size: 16px;
+}
+
+.commitmentPanel > button {
+  font-size: 20px;
+}
+
+.commitmentPanel button + button {
+  margin-top: 10px;
+}
+
+.commitmentPanel button svg {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.scheduleStatus {
+  min-height: 32px;
+  margin: 12px 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+/* 12 跑路确认 */
+
+.clockoutDialog {
+  position: absolute;
+  top: 115px;
+  left: calc(50% - 138px);
+  width: 500px;
+  height: 690px;
+}
+
+.clockoutDialogInner {
+  display: flex;
+  padding: 30px 34px 28px;
+  flex-direction: column;
+}
+
+.clockoutDialog h1 {
+  margin: 0 0 20px;
+  font-size: 31px;
+}
+
+.clockoutTime {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 26px;
+  font-size: var(--text-body);
+}
+
+.clockoutDialog .progressSegments {
+  margin-bottom: 18px;
+}
+
+.incompleteTasks {
+  display: grid;
+  min-height: 82px;
+  gap: 7px;
+  margin: 0;
+  border-bottom: 1px dotted var(--color-border);
+  padding: 0 0 20px 30px;
+}
+
+.incompleteTasks li::marker {
+  color: var(--color-border);
+}
+
+.clockoutMessages {
+  display: grid;
+  gap: 19px;
+  padding: 40px 2px 26px;
+}
+
+.clockoutMessages p {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.safeMessage svg { color: #327143; }
+.warningMessage { color: #d8412f; }
+.warningMessage svg { flex: 0 0 auto; }
+
+.clockoutButtons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 0;
+}
+
+.clockoutButtons button {
+  display: inline-flex;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 20px;
+}
+
+.adjustCommitment {
+  display: grid;
+  min-height: 72px;
+  align-items: center;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  margin-top: 26px;
+  border: 3px solid var(--color-border);
+  background: var(--color-surface-soft);
+  padding: 8px 16px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow:
+    inset 0 -3px 0 rgb(75 43 34 / 8%),
+    2px 2px 0 rgb(75 43 34 / 12%);
+}
+
+.adjustCommitment span:nth-child(2) {
+  display: grid;
+  gap: 2px;
+}
+
+.adjustCommitment small {
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+/* 13 跑路结果 */
+
+.successDialog {
+  width: 590px;
+  height: 810px;
+  transform: translate(-14px, -7px);
+}
+
+.successDialogInner {
+  display: flex;
+  align-items: center;
+  padding: 28px 22px 24px;
+  flex-direction: column;
+  text-align: center;
+}
+
+.successMark {
+  position: relative;
+  display: grid;
+  width: 86px;
+  height: 94px;
+  place-items: center;
+  color: var(--color-primary);
+}
+
+.successMark > svg:not(.leftSuccessSparkle):not(.rightSuccessSparkle) {
+  clip-path: polygon(34% 0, 66% 0, 66% 4%, 82% 4%, 82% 12%, 92% 12%, 92% 24%, 100% 24%, 100% 76%, 92% 76%, 92% 88%, 82% 88%, 82% 96%, 66% 96%, 66% 100%, 34% 100%, 34% 96%, 18% 96%, 18% 88%, 8% 88%, 8% 76%, 0 76%, 0 24%, 8% 24%, 8% 12%, 18% 12%, 18% 4%, 34% 4%);
+  filter: drop-shadow(4px 5px 0 rgb(75 43 34 / 18%));
+}
+
+.leftSuccessSparkle,
+.rightSuccessSparkle {
+  position: absolute;
+  top: 20px;
+  color: var(--color-warning);
+}
+
+.leftSuccessSparkle { left: -45px; }
+.rightSuccessSparkle { right: -45px; }
+
+.incompleteMark {
+  color: var(--color-warning);
+}
+
+.successDialog h1 {
+  margin: 14px 0 2px;
+  font-size: 54px;
+  letter-spacing: 4px;
+  line-height: 1.2;
+}
+
+.successTime {
+  margin: 0;
+  font-size: 23px;
+}
+
+.successDialog h2 {
+  margin: 20px 0 12px;
+  color: var(--color-primary-hover);
+  font-size: 40px;
+}
+
+.successMark,
+.successDialog h1,
+.successTime,
+.successDialog h2,
+.resultRows {
+  transform: translateX(11px);
+}
+
+.resultRows {
+  width: 100%;
+  border: 3px solid color-mix(in srgb, var(--color-border) 76%, transparent);
+}
+
+.resultRows > div {
+  display: grid;
+  min-height: 62px;
+  align-items: center;
+  grid-template-columns: 35px 1fr auto;
+  gap: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 58%, transparent);
+  padding: 9px 18px;
+  text-align: left;
+}
+
+.resultRows > div:last-child {
+  border-bottom: 0;
+}
+
+.resultRows strong {
+  color: var(--color-primary-hover);
+  font-size: var(--text-body-large);
+}
+
+.resultRows .progressSegments {
+  width: 206px;
+}
+
+.resultRows .progressSegments span {
+  height: 11px;
+}
+
+.resultRows > div:last-child strong {
+  color: var(--color-danger);
+}
+
+.resultRunIcon {
+  color: var(--color-danger);
+}
+
+.dayTimeline {
+  position: relative;
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin: 23px 0 37px;
+  transform: translateX(4px);
+}
+
+.dayTimeline::before {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  left: 14px;
+  border-top: 2px dashed var(--color-border);
+  content: '';
+}
+
+.dayTimeline span {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding-top: 19px;
+  font-size: var(--text-small);
+}
+
+.dayTimeline span::before {
+  position: absolute;
+  top: 1px;
+  left: calc(50% - 7px);
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  content: '';
+}
+
+.dayTimeline .timelineEnd::before {
+  border-color: var(--color-danger);
+}
+
+.dayTimeline small {
+  font-size: var(--text-small);
+}
+
+.successActions {
+  display: grid;
+  width: calc(100% - 20px);
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+  transform: translateX(10px);
+}
+
+.successActions button {
+  min-height: 54px;
+  font-size: 21px;
+}
+
+.settlementHint {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 22px 0 0;
+  color: var(--color-text-muted);
+  font-size: 18px;
+}
+
+.overlayStage[data-ui-screen='13-clockout-success'] .pet {
+  right: 130px;
+  bottom: 130px;
+  width: 187px;
+  height: 187px;
+}
+
+.mainStage[data-ui-screen='05-task-list'] .pet {
+  right: 37px;
+  bottom: 119px;
+  width: 204px;
+  height: 204px;
+}
+
+.mainStage[data-ui-screen='06-ai-analysis'] .pet {
+  right: 63px;
+  bottom: 115px;
+  width: 212px;
+  height: 212px;
+}
+
+.mainStage[data-ui-screen='07-schedule-draft'] .pet {
+  right: 24px;
+  bottom: 99px;
+  width: 196px;
+  height: 196px;
+}
+
+.settlementHint svg {
+  color: var(--color-warning);
+}
+
+@media (max-width: 1220px), (max-height: 900px) {
+  .taskWindow,
+  .scheduleWindow {
+    transform: scale(0.82);
+  }
+
+  .analysisWindow {
+    transform: scale(0.78);
+  }
+
+  .pet {
+    width: 150px;
+    height: 150px;
+  }
+}
