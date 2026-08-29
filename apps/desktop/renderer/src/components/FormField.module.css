@@ -1,0 +1,53 @@
+.field {
+  display: grid;
+  gap: 10px;
+}
+
+.label {
+  color: var(--color-text);
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  border: 2px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 -2px 0 rgb(75 43 34 / 7%);
+}
+
+.control:focus-within {
+  border-color: var(--color-primary);
+}
+
+.leadingIcon {
+  display: grid;
+  width: 52px;
+  place-items: center;
+  color: #4d555b;
+}
+
+.input {
+  min-width: 0;
+  height: 52px;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text);
+  font-size: var(--text-body-large);
+}
+
+.input::placeholder {
+  color: #99938c;
+}
+
+.trailingAction {
+  display: grid;
+  min-width: 52px;
+  place-items: center;
+}

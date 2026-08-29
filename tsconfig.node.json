@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "types": ["node", "electron-vite/node"],
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "electron.vite.config.ts",
+    "vite.renderer.config.ts",
+    "vitest.config.ts",
+    "apps/desktop/main/**/*.ts",
+    "apps/desktop/preload/**/*.ts"
+  ]
+}
