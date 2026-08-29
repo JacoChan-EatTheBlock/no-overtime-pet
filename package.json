@@ -2,19 +2,37 @@
   "name": "no-overtime-pet",
   "version": "0.1.0",
   "private": true,
-  "description": "不要加班 macOS 像素风工作桌宠",
+  "description": "不要加班 Windows x64 像素风工作桌宠 Demo",
   "main": "./out/main/index.js",
   "type": "module",
+  "workspaces": [
+    "packages/contracts",
+    "packages/domain",
+    "packages/db",
+    "packages/asset-runtime",
+    "packages/test-fixtures",
+    "apps/api"
+  ],
   "scripts": {
-    "dev": "electron-vite dev",
+    "dev": "npm run dev:desktop",
+    "dev:desktop": "electron-vite dev",
+    "dev:api": "npm run start:dev -w @no-overtime/api",
     "dev:renderer": "vite --config vite.renderer.config.ts",
-    "build": "npm run typecheck && electron-vite build",
+    "lint": "oxlint apps/api/src packages --deny-warnings",
+    "build": "npm run typecheck && npm run build:workspaces && npm run build:desktop",
+    "build:desktop": "electron-vite build",
+    "build:workspaces": "npm run build --workspaces --if-present",
     "build:renderer": "vite build --config vite.renderer.config.ts",
-    "typecheck": "tsc -p tsconfig.node.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "typecheck": "npm run typecheck:desktop && npm run typecheck:workspaces",
+    "typecheck:desktop": "tsc -p tsconfig.node.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "typecheck:workspaces": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:up": "docker compose --env-file .env.local -f docker-compose.dev.yml up -d",
+    "db:down": "docker compose --env-file .env.local -f docker-compose.dev.yml down"
   },
   "dependencies": {
+    "@no-overtime/contracts": "0.1.0",
     "@tabler/icons-react": "3.46.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -30,8 +48,10 @@
     "electron": "44.0.0",
     "electron-vite": "5.0.0",
     "jsdom": "29.1.1",
+    "oxlint": "1.80.0",
     "typescript": "7.0.2",
     "vite": "7.3.6",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "yaml": "2.9.0"
   }
 }

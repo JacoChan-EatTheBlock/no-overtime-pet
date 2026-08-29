@@ -4,16 +4,17 @@
 
 ```text
 apps/
-  desktop/          Electron + React + PixiJS；main/platform/macos 隔离系统能力
-  api/              NestJS HTTP API
-  realtime/         NestJS/Socket.IO 网关，可先与 api 同进程
+  desktop/          Electron + React + PixiJS；main/platform/windows 隔离系统能力
+  api/              NestJS HTTP API 与 Socket.IO 网关；当前同进程
   ai-service/       FastAPI 分析、排程、视觉适配
 packages/
   contracts/        JSON Schema、共享枚举、生成类型
-  domain/           纯业务规则：时间、排程请求、经济公式
+  domain/           按领域拆分的纯业务规则：账号、排程、经济、活动、社交
+  db/               PostgreSQL 迁移与数据库约定
   asset-runtime/    Manifest 校验与 PixiJS 资源适配
   test-fixtures/    脱敏和合成测试数据
 docs/prd/            本 PRD 合集
+tests/e2e/           跨模块端到端测试
 ```
 
 MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用于代码职责与测试，而非增加运维复杂度。
@@ -25,8 +26,9 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 - 经济、权限和好友授权在服务端做权威校验。
 - AI 输出与正式数据严格分层。
 - 动画生成仅为离线工具，不进入运行时依赖。
-- renderer、preload、Electron main 与 macOS 平台适配层保持单向依赖；业务代码不得直接引用原生 API。
-- 公开发行只接受签名、公证并经干净 Apple Silicon Mac 安装验证的构建。
+- renderer、preload、Electron main 与 Windows 平台适配层保持单向依赖；业务代码不得直接引用 Win32、Node 或任意 IPC。
+- 当前只验收 Windows x64 可分享 Demo；签名、安装器、自动更新与公开发行门禁延后。
+- 所有并行工作包从同一个冻结 SHA 建立独立 Git worktree；不得让多个 AI 共用同一工作目录。
 - 每个阶段修改超过 3 个文件时按子任务逐项验证。
 - 每次重要规则变化同步更新根目录 `不要加班_agent.md`；返工与问题经验更新 `lessons.md`。
 
@@ -41,22 +43,22 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 - `TASK-COMMIT-001` 承诺冻结；
 - `ACTIVITY-PRIVACY-001` 截图权限；
 - `HAT-STACK-001` 超高帽子塔缩放、滚动和缓存策略；
-- `PRIVACY-001` 发行地区；
-- `PLATFORM-MIN-001` 最低 macOS 版本；
-- `PET-MAC-001` Dock 图标策略；
-- `PET-MAC-002` 全屏应用可见策略。
+- `PRIVACY-001` 公开发行地区（不阻塞可分享 Demo）；
+- `PLATFORM-WIN-001` 公开分发前的最低 Windows 版本（不阻塞可分享 Demo）；
+- `PET-WIN-001` 托盘常驻与开机启动策略；
+- `PET-WIN-002` 全屏应用可见策略。
 
-交付：共享 JSON Schema、OpenAPI 骨架、事件 Schema、数据库 ERD/迁移草案、数据集 v1，以及最小 macOS 发行探针。
+交付：共享 JSON Schema、API/事件 Schema、数据库迁移基座、环境参数模板、并行目录所有权、数据集 v1，以及最小 Windows 壳探针。
 
-最小 macOS 发行探针只需证明 Electron `arm64` 壳可以完成 Developer ID 签名、公证、DMG 安装、菜单栏、透明窗口和权限状态读取，不实现产品业务。
+最小 Windows 壳探针只需证明 Electron x64 壳可以完成系统托盘、主窗口、透明桌宠窗口、`workArea` 定位、`safeStorage` 能力探测和采集开关降级，不实现产品业务。
 
-验证：所有模块仅引用一份枚举和经济公式；契约测试能运行；探针在干净 Apple Silicon Mac 上无需终端绕过即可安装启动。
+验证：所有模块仅引用一份枚举和经济公式；契约测试能运行；Demo 在当前开发机启动，并记录另一台 Windows 11 x64 机器的未验证/验证证据。
 
 ## 4. 阶段 1：本地单人工作闭环
 
 范围：
 
-1. Electron 壳、菜单栏、设置主窗口、透明桌宠窗口和登录项；
+1. Electron 壳、系统托盘、设置主窗口、透明桌宠窗口和开机启动开关；
 2. 工时/午休/日薪设置；
 3. 待办创建、完成和本地持久化；
 4. 基础确定性日程；
@@ -109,7 +111,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 
 范围：
 
-1. macOS 前台应用、Input Monitoring、Accessibility 与 Screen Recording 信号采集；
+1. Windows 前台应用、输入聚合、窗口上下文与屏幕截图信号采集；
 2. 本地分类和时间平滑；
 3. 授权、截图打码、在线视觉适配；
 4. 只读识别记录与离线评估数据闭环，不提供用户纠正；
@@ -130,44 +132,47 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 
 验收：`15-test-acceptance.md` E-001 至 E-011 全部通过；人民币分守恒差异为 0，池中不存在等价时间均分字段。
 
-## 10. 阶段 7：资产扩充与上线准备
+## 10. 阶段 7：资产扩充与 Demo 收口
 
 范围：
 
 - 接入离线像素动画管线产物；
 - 扩充角色/帽子目录；
 - 自动资产 QA；
-- Developer ID 签名、Apple 公证、DMG/更新 ZIP、自动更新、崩溃监控；
-- 账号删除、服务端数据处置、隐私政策及发行地区要求的合规通道；
-- 灰度和回滚。
+- Windows x64 Demo 文件清单、commit/版本记录、SHA-256 与崩溃报告边界；
+- 账号删除、服务端数据处置与 Demo 隐私说明；
+- 清库重建、资源回滚和演示数据重置。
 
-验收：离线管线不可用时不影响已发布客户端；资源回滚和旧物品可用；干净 Apple Silicon Mac 的 Gatekeeper、安装、权限、更新与 Keychain 连续性通过。
+验收：离线管线不可用时不影响 Demo；资源回滚和旧物品可用；当前开发机及另一台 Windows 11 x64 机器完成启动、托盘、透明窗、隐私降级与 `safeStorage` 检查。签名、安装器、自动更新和公开发行另立阶段。
 
 ## 11. 可并行工作包
 
-共享契约冻结后可并行：
+共享契约冻结后固定为 8 个并行工作包，详细任务书位于 `docs/development/workstreams/`：
 
 | 工作包 | 可改范围 | 依赖输出 |
 |---|---|---|
-| Desktop Shell | Electron、macOS 菜单栏、窗口、登录项、签名与公证 | contracts、macOS 平台 PRD |
-| Task/Schedule | 任务、Proposal UI、求解器 | contracts、policy dataset |
-| Economy | 工时、账本、商店、结算 | contracts、数据库 |
-| Activity/Pet | 信号、动作状态机、PixiJS | contracts、asset manifests |
-| Social/Realtime | 好友、网关、排排坐 | contracts、public projection |
-| Asset Tooling | 离线导出和 QA | Manifest Schema |
+| WS-01 Windows Shell | Electron main/preload、托盘、窗口、`safeStorage` 与 Windows 能力适配 | contracts、Windows 平台 PRD |
+| WS-02 Account/Auth | 用户名密码、会话、资料与好友身份基础 | contracts、1000 段迁移 |
+| WS-03 Task/Proposal | 任务录入、AI Proposal、确认与承诺快照 | contracts、2000 段迁移 |
+| WS-04 Schedule | 排程 domain、日程 UI、锁定与重排 Diff | contracts、3000 段迁移 |
+| WS-05 Economy/Shop | 工时、钱包、账本、商店与装扮 | contracts、4000 段迁移 |
+| WS-06 Activity/Pet/Assets | Windows 活动信号、动作状态机、PixiJS 与 Manifest | contracts、asset manifests |
+| WS-07 Social/Realtime | 好友、presence、网关与排排坐 | contracts、5000 段迁移 |
+| WS-08 E2E/Acceptance | 跨模块 E2E、固定数据、报告和 Demo 验收 | 已合并工作包、9000 段测试种子 |
 
-并行工作包不得各自复制 `PetAction`、`PetEffect`、`TaskStatus` 或金额公式。
+并行工作包不得各自复制 `PetAction`、`PetEffect`、`TaskStatus`、错误码或金额公式；发现冻结契约缺口时提交 RFC 并暂停依赖该缺口的实现，不得自行扩展共享契约。
 
 ## 12. 合并顺序
 
-1. `packages/contracts`；
-2. 纯 domain 规则和测试；
-3. 数据库迁移与 API 骨架；
-4. 各模块服务端实现；
-5. Desktop 客户端和实时投影；
-6. AI 适配与评估；
-7. 资产目录；
-8. 跨模块 E2E。
+1. Windows Foundation；
+2. WS-01 Windows Shell；
+3. WS-02 Account/Auth；
+4. WS-03 Task/Proposal；
+5. WS-04 Schedule；
+6. WS-06 Activity/Pet/Assets；
+7. WS-05 Economy/Shop；
+8. WS-07 Social/Realtime；
+9. WS-08 E2E/Acceptance。
 
 每一步必须保证主分支仍可构建。任何破坏性契约改动先合并兼容消费者，再删除旧字段。
 
@@ -192,7 +197,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 1. 符合模块 PRD 和共享契约；
 2. 权限和失败路径已实现；
 3. 自动测试通过；
-4. 真实 Apple Silicon Mac 上的权限、窗口、签名、公证、安装与更新路径按风险验证；
+4. 真实 Windows x64 环境上的托盘、透明窗口、混合 DPI、输入/截图降级和 Demo 启动路径按风险验证；
 5. 日志和事件通过隐私扫描；
 6. 监控能定位失败但不泄露内容；
 7. 文档与数据集版本同步；

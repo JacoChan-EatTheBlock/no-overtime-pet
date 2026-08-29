@@ -83,7 +83,7 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
           audience="仅你自己"
           retention="30 天"
           checked={inputSummary}
-          systemStatus="Input Monitoring：Mock 已允许"
+          systemStatus="Windows 输入聚合：Mock 可用"
           onChange={setInputSummary}
         />
         <PrivacyRow
@@ -104,7 +104,7 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
           audience="仅你自己"
           retention="7 天"
           checked={windowContext}
-          systemStatus="Accessibility：Mock 未允许"
+          systemStatus="Windows 窗口上下文：Mock 未启用"
           onChange={setWindowContext}
         />
         <PrivacyRow
@@ -125,7 +125,7 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
           audience="在线模型"
           retention="不留存"
           checked={screenVision}
-          systemStatus="Screen Recording：Mock 未允许"
+          systemStatus="Windows 截图识别：Mock 未启用"
           onChange={setScreenVision}
         />
         <PrivacyRow
@@ -145,7 +145,7 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
       </InfoStrip>
 
       <div className={styles.settingsFooterRow}>
-        <MockSystemLink onActivate={() => setStatusMessage('这是 UI Mock：真实版本将打开 macOS 隐私与安全设置')} />
+        <MockSystemLink onActivate={() => setStatusMessage('这是 UI Mock：真实版本将打开 Windows 隐私与安全设置')} />
         <button className={styles.activityEntry} type="button" onClick={() => onNavigate('14')}>
           <IconActivityHeartbeat size={19} stroke={1.8} aria-hidden="true" />
           查看当前识别

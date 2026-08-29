@@ -11,7 +11,8 @@ export default defineConfig({
   },
   plugins: [react()],
   server: {
-    host: '127.0.0.1'
+    host: process.env.RENDERER_HOST ?? '127.0.0.1',
+    port: Number(process.env.RENDERER_PORT ?? 5173)
   },
   build: {
     outDir: resolve('out/renderer-browser'),

@@ -35,7 +35,7 @@ interface Account {
 }
 ```
 
-密码只在服务端保存强哈希，不进入业务日志。认证使用短效 access token + 可轮换 refresh token；refresh token 只通过 Electron `safeStorage` 保存在 macOS Keychain 中，不放 SQLite 或 localStorage。发行构建必须保持稳定的签名身份，避免升级后重复触发 Keychain 授权。MVP 不提供设备会话列表、数据导出或“退出其他设备”界面；账号与计划数据以服务端记录为权威来源。
+密码只在服务端保存强哈希，不进入业务日志。认证使用短效 access token + 可轮换 refresh token；refresh token 只通过 Electron `safeStorage` 使用 Windows DPAPI 加密后保存在本机，不放 SQLite、明文文件或 localStorage。若 `safeStorage` 不可用，必须阻止持久化登录并给出可解释状态，禁止明文降级。MVP 不提供设备会话列表、数据导出或“退出其他设备”界面；账号与计划数据以服务端记录为权威来源。
 
 ## 5. 好友关系状态机
 

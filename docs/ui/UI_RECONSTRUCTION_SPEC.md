@@ -3,7 +3,7 @@
 > 状态：实现基线  
 > 最后更新：2026-08-29  
 > 适用范围：`design/image2-ui-v1/`、`design/image2-ui-v2-comments/` 中的现有参考图  
-> 产品平台：macOS Apple Silicon 优先，但不把产品自有像素 UI 改成 macOS 原生视觉
+> 产品平台：Windows x64 可分享 Demo，但不把产品自有像素 UI 改成 Windows 原生视觉
 
 ## 1. 目的
 
@@ -19,10 +19,10 @@
 
 当前阶段不实现：
 
-- 真实注册登录、Token、Keychain；
+- 真实注册登录、Token、Windows DPAPI `safeStorage`；
 - AI 调用、确定性排程器和活动识别；
 - 服务端任务、好友、钱包、购买和奖励池；
-- macOS 原生权限请求、菜单栏、透明窗口层级和发行能力；
+- Windows 系统托盘、透明窗口层级、活动能力状态和 Demo 交付能力；
 - PRD 中尚未确认的业务规则。
 
 UI 不得为了演示而复制一套临时业务逻辑。后续功能接入应替换 Mock 数据源与事件处理器，而不重写页面结构和视觉组件。
@@ -56,15 +56,15 @@ UI 不得为了演示而复制一套临时业务逻辑。后续功能接入应�
 
 ### 3.2 不做的视觉迁移
 
-- 不改成 macOS 原生设置页风格；
+- 不改成 Windows 原生设置页风格；
 - 不使用毛玻璃、交通灯按钮、系统侧栏或 SF Symbols 替换既有产品视觉；
 - 不因首发平台改变而重做颜色、圆角、像素边框或页面构图。
 
 ### 3.3 操作系统外壳不属于产品 UI
 
-参考图中的 Windows 壁纸、桌面图标、任务栏、搜索框、系统托盘、日期和窗口控制按钮只是历史展示环境，不作为产品 UI 资产实现。
+参考图中的 Windows 壁纸、桌面图标、任务栏、搜索框、系统托盘、日期和窗口控制按钮只是展示环境，不作为 renderer 产品 UI 资产实现。
 
-需要保留的是窗口内部、桌宠、气泡、菜单和排排坐等产品自有表面。macOS 菜单栏、透明窗口、Dock、Spaces、Stage Manager 和权限行为由 Electron main、preload 与平台适配层承担，renderer 不模拟系统能力。
+需要保留的是窗口内部、桌宠、气泡、菜单和排排坐等产品自有表面。Windows 系统托盘、透明窗口、任务栏 `workArea`、虚拟桌面、混合 DPI 和活动能力状态由 Electron main、preload 与平台适配层承担，renderer 不模拟系统能力。
 
 ## 4. 参考图归并规则
 
@@ -72,7 +72,7 @@ UI 不得为了演示而复制一套临时业务逻辑。后续功能接入应�
 
 | 编号 | 正式界面 | 权威参考图 | 处理说明 |
 |---|---|---|---|
-| 00 | 默认桌宠 | `image2-ui-v1/00-default-desktop-pet.png` | 只还原桌宠表面；Windows 桌面不实现 |
+| 00 | 默认桌宠 | `image2-ui-v1/00-default-desktop-pet.png` | 只还原桌宠表面；Windows 桌面由真实系统提供，不在 renderer 实现 |
 | 01 | 今日任务气泡 | `image2-ui-v1/01-click-todo-panel.png` | 还原桌宠锚定气泡、当前任务和跑路入口 |
 | 02 | 好友排排坐 | `image2-ui-v1/02-friends-desktop-row.png` | 只还原角色行、状态和翻页，不实现任务栏 |
 | 03 | 登录与注册 | `image2-ui-v2-comments/03-login-coin-gif-keyframe.png` | 用户名 + 密码；无邮箱、验证码或离线体验；注册为同页状态 |
@@ -88,9 +88,9 @@ UI 不得为了演示而复制一套临时业务逻辑。后续功能接入应�
 | 13 | 跑路成功 | `image2-ui-v1/13-clockout-success.png` | 展示胜利、当日窝囊费和待结算奖励 |
 | 14 | 活动识别只读页 | `image2-ui-v2-comments/05-activity-readonly.png` | 不提供纠正、改分类、备注或历史回写 |
 | 15 | 识别与隐私 | `image2-ui-v1/15-privacy-permissions.png` | 保留版式；移除“查看并删除活动数据”入口，按新版权限层级展示 |
-| 16 | 通知 | `image2-ui-v1/16-notifications.png` | 保留版式；系统入口文案按 macOS 通知设置表达 |
+| 16 | 通知 | `image2-ui-v1/16-notifications.png` | 保留版式；系统入口文案按 Windows 通知设置表达 |
 | 17 | 账号 | `image2-ui-v2-comments/06-account-simplified.png` | 无设备列表、数据导出、活动历史删除或退出其他设备 |
-| 18 | 快捷菜单 | `image2-ui-v2-comments/07-tray-visibility-submenu.png` | 产品视觉保留；运行时由 macOS 菜单栏触发，不模拟 Windows 托盘 |
+| 18 | 快捷菜单 | `image2-ui-v2-comments/07-tray-visibility-submenu.png` | 产品视觉保留；运行时由 Windows 系统托盘触发，renderer 不模拟托盘 |
 
 ### 4.1 旧稿只作为状态参考
 
@@ -228,7 +228,7 @@ font-family:
 
 ### 7.3 尚缺与待授权资产
 
-水豚、鹈鹕、暹罗猫的 `WORK_NORMAL / SLACKING / TYPE_FRENZY`，以及共享 `COIN_OUT / COIN_IN_GLOW` 已完成原型交付和自动 QA，但仍需 Magnus 最终视觉确认、AI 模型与来源许可复核，并在客户端接入后取得真实 macOS 渲染证据。好友角色、完整帽子缩略图、商店商品、机器人、钱包和日历等像素图标目前多数只存在于合成参考图中。实现前按以下顺序处理：
+水豚、鹈鹕、暹罗猫的 `WORK_NORMAL / SLACKING / TYPE_FRENZY`，以及共享 `COIN_OUT / COIN_IN_GLOW` 已完成原型交付和自动 QA，但仍需 Magnus 最终视觉确认、AI 模型与来源许可复核，并在客户端接入后取得真实 Windows 混合 DPI 渲染证据。好友角色、完整帽子缩略图、商店商品、机器人、钱包和日历等像素图标目前多数只存在于合成参考图中。实现前按以下顺序处理：
 
 1. 查找仓库中的原始独立资产；
 2. 若只有合成图，评估是否可无损提取；
@@ -253,7 +253,7 @@ font-family:
 - 窗口不足时优先缩小内容留白或提供内部滚动，不擅自改成移动端布局；
 - 主窗口需要定义最小宽高，低于最小值时不压扁文字或图片；
 - 角色和像素资源只按整数倍或渲染器允许的最近邻比例缩放；
-- 窗口布局不得读取或假设 Windows 任务栏位置。
+- renderer 窗口布局不得硬编码 Windows 任务栏位置；透明桌宠定位由 main 读取真实 `workArea`。
 
 ### 8.3 页面族
 
@@ -293,7 +293,7 @@ font-family:
 11. 账号资料、修改密码、退出和删除账号确认；
 12. 快捷菜单、通知静音子菜单和两个独立可见性复选项。
 
-真实 API、持久化和 macOS 系统操作由后续功能层注入。页面组件只接收数据和回调；renderer 不直接调用 Electron main 或原生 macOS API。
+真实 API、持久化和 Windows 系统操作由后续功能层注入。页面组件只接收数据和回调；renderer 不直接调用 Electron main、Node 或 Win32 API。
 
 ## 10. 工程边界
 
@@ -312,7 +312,7 @@ font-family:
 
 ```text
 apps/desktop/
-  main/                 Electron 窗口和 macOS 平台边界
+  main/                 Electron 窗口和 Windows 平台边界
   preload/              最小、类型化 IPC
   renderer/
     app/                页面入口、路由和 Mock 场景
@@ -408,7 +408,7 @@ UI 组件不得直接导入 `electron`、Node API 或原生模块。
 
 1. 参考图由视觉生成流程产出，部分页面的同类控件存在 1–4px 和色彩差异；本规范要求统一组件优先，而不是复制每一处偶然差异。
 2. 多数好友角色、帽子和商品缺少独立源文件，可能需要无损提取或重新生成；未完成资产评审前不能宣称最终美术还原。
-3. 当前开发环境为 Windows，可验证 renderer、Mock 交互和截图还原，但不能验证真实 macOS 菜单栏、透明窗口、Retina、Dock、Spaces、Stage Manager、权限、签名和公证。
+3. 当前开发环境为 Windows，可验证 renderer、Mock 交互和截图还原；真实托盘、透明窗口、混合 DPI、输入钩子、截图降级和另一台 Windows 机器启动仍需逐项取得证据。
 4. PRD 仍有经济、承诺冻结、隐私权限和帽子超高视口等待确认项；UI 可以展示非承诺性的 Mock 状态，但不得把建议值编码成正式规则。
 5. 视觉还原测试不证明真实登录、AI、排程、经济、好友同步或桌面识别功能可用。
 
@@ -423,5 +423,5 @@ UI 全套还原只有同时满足以下条件才算完成：
 - 所有可见位图资产已放置，无临时占位方块；
 - 类型检查、构建和相关组件测试通过；
 - 每个正式界面完成同视口视觉对比并修复 P0/P1/P2；
-- 明确记录真实 macOS 和真实业务功能的未验证范围；
+- 明确记录真实 Windows 系统能力和真实业务功能的未验证范围；
 - 后续开发者可以通过替换 Mock 数据与回调接入功能，无需重写 UI。

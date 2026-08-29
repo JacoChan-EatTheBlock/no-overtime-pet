@@ -1,0 +1,6 @@
+export * as accountDomain from './account/index.js'
+export * as planningDomain from './planning/index.js'
+export * as scheduleDomain from './schedule/index.js'
+export * as economyDomain from './economy/index.js'
+export * as activityDomain from './activity/index.js'
+export * as socialDomain from './social/index.js'

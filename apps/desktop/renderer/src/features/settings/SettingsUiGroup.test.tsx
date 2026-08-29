@@ -52,18 +52,18 @@ describe('settings UI group', () => {
 
     expect(broadcastToggle).toBeChecked()
     expect(screenshotToggle).not.toBeChecked()
-    expect(screen.getByText('Screen Recording：Mock 未允许')).toBeInTheDocument()
+    expect(screen.getByText('Windows 截图识别：Mock 未启用')).toBeInTheDocument()
     expect(screen.queryByText('查看并删除活动数据')).not.toBeInTheDocument()
 
     await user.click(screenshotToggle)
     expect(screenshotToggle).toBeChecked()
-    expect(screen.getByText('Screen Recording：Mock 未允许')).toBeInTheDocument()
+    expect(screen.getByText('Windows 截图识别：Mock 未启用')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: '打开 macOS 系统设置' }))
+    await user.click(screen.getByRole('button', { name: '打开 Windows 系统设置' }))
     expect(screen.getByRole('status')).toHaveTextContent('UI Mock')
   })
 
-  it('uses macOS notification semantics and keeps notification types independently operable', async () => {
+  it('uses Windows notification semantics and keeps notification types independently operable', async () => {
     const user = userEvent.setup()
     render(<NotificationSettingsScreen onNavigate={noopNavigate} />)
 
@@ -80,9 +80,9 @@ describe('settings UI group', () => {
     await user.click(screen.getByRole('radio', { name: '静默记录' }))
     expect(screen.getByRole('radio', { name: '静默记录' })).toHaveAttribute('aria-checked', 'true')
 
-    await user.click(screen.getByRole('button', { name: '打开 macOS 通知设置' }))
-    expect(screen.getByRole('status')).toHaveTextContent('macOS 通知设置')
-    expect(screen.queryByText(/通知助手|Windows/)).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '打开 Windows 通知设置' }))
+    expect(screen.getByRole('status')).toHaveTextContent('Windows 通知设置')
+    expect(screen.queryByText(/通知助手/)).not.toBeInTheDocument()
   })
 
   it('keeps the account page limited to the approved MVP actions', async () => {

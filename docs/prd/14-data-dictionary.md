@@ -5,14 +5,16 @@
 - PostgreSQL 是跨设备正式数据事实来源，SQLite 是本地缓存和离线队列。
 - 经济账本、承诺快照和结算记录不可原地改写。
 - 时间使用 UTC 时间戳；工作日另存用户当地日期和 IANA 时区。
-- 金额使用最小单位整数；窝囊费规范余额使用有符号等价毫秒。
+- 金额在 PostgreSQL 使用最小单位 `BIGINT`，JSON 使用十进制整数字符串；窝囊费规范余额使用有符号等价毫秒。
 - 每个可变实体带 revision、createdAt、updatedAt。
 
 ## 2. 核心实体总表
 
 | 实体 | 所有模块 | 主键 | 关键唯一约束 |
 |---|---|---|---|
-| `users` | Identity | `id` | `username`、`friend_code` 唯一 |
+| `core_users` | Foundation | `id` | 跨模块 UUID v4；不保存密码或公开资料 |
+| `account_credentials` | Identity | `user_id` | `username`、password hash 唯一边界 |
+| `user_profiles` | Identity | `user_id` | `friend_code` 唯一 |
 | `auth_sessions` | Identity | `id` | refresh token hash |
 | `friend_relations` | Social | `id` | 规范化用户对唯一 |
 | `friend_visibility_overrides` | Social | `id` | `owner_user_id + friend_user_id` 唯一 |
@@ -41,18 +43,36 @@
 
 ## 3. 用户与好友
 
-### `users`
+### `core_users`
 
 | 字段 | 类型 | 规则 |
 |---|---|---|
-| `id` | UUID v7 | PK |
+| `id` | UUID v4 | PK |
+| `status` | enum/text | ACTIVE/DELETED |
+| `revision` | bigint | 乐观锁，从 1 开始 |
+| `created_at` / `updated_at` | timestamptz | UTC |
+| `deleted_at` | timestamptz nullable | 软删除 |
+
+`core_users` 是 Foundation 提供的最小跨模块身份，不保存密码、用户名、显示名或好友码。账号模块使用 1000 段迁移建立以下一对一表：
+
+### `account_credentials`
+
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `user_id` | UUID v4 | PK/FK → `core_users.id` |
 | `username` | varchar(32) | 3–32 字符，唯一；登录使用，规范化规则上线前冻结 |
 | `password_hash` | text | 仅服务端认证层可读，禁止进入普通日志和 API 响应 |
+| `created_at` / `updated_at` | timestamptz | UTC |
+
+### `user_profiles`
+
+| 字段 | 类型 | 规则 |
+|---|---|---|
+| `user_id` | UUID v4 | PK/FK → `core_users.id` |
 | `display_name` | varchar(64) | UI 限 1–24 Unicode 字符 |
 | `friend_code` | varchar(12) | 唯一、不可枚举 |
 | `locale` | varchar(16) | BCP 47 |
 | `time_zone` | varchar(64) | IANA |
-| `status` | enum/text | ACTIVE/SUSPENDED/DELETED |
 | `revision` | bigint | 乐观锁 |
 
 ### `friend_relations`

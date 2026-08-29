@@ -86,6 +86,6 @@
 ## Residual Follow-up Polish
 
 - P3 / asset follow-up: add distinct working, meeting, slacking, away, clocked-out, and offline GIF files to `PET_MOTION_ASSET_PATHS` when those reviewed assets exist. Until then, original-color idle artwork is the intentional fallback.
-- Real macOS menu-bar invocation, transparent-window placement, multi-display behavior, Retina/non-Retina switching, Spaces, Stage Manager, and click-through behavior remain outside this renderer-only QA.
+- Real Windows tray invocation, transparent-window placement, multi-display mixed-DPI behavior, virtual desktops, fullscreen, and click-through behavior remain outside this renderer-only QA.
 
 final result: passed

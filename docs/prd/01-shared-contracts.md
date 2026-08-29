@@ -6,7 +6,7 @@
 
 | 类型 | 表示 | 规则 |
 |---|---|---|
-| `EntityId` | UUID v7 字符串 | 服务端生成，按时间大致有序 |
+| `EntityId` | UUID v4 字符串 | 服务端或受信客户端生成；不得从业务字段推导 |
 | `UserId` | `EntityId` | 不复用邮箱或用户名 |
 | `ISODate` | `YYYY-MM-DD` | 表示用户本地自然日 |
 | `LocalTime` | `HH:mm:ss` | 24 小时制，不带日期和时区 |
@@ -14,7 +14,7 @@
 | `IanaTimeZone` | IANA 时区名 | 例：`Asia/Taipei`，禁止只存 UTC 偏移 |
 | `DurationMs` | 非负整数毫秒 | 常规持续时间 |
 | `EquivalentMs` | 有符号整数毫秒 | 窝囊费后台规范化记账单位 |
-| `MoneyMinor` | 有符号 64 位整数 | 人民币分；禁止浮点存钱 |
+| `MoneyMinor` | 有符号 64 位整数 | 人民币分；数据库使用 `BIGINT`，JSON 使用十进制整数字符串，禁止浮点存钱 |
 | `CurrencyCode` | 字面量 `"CNY"` | 首版只处理人民币，不做外币和汇率换算 |
 | `Revision` | 正整数 | 乐观锁版本，从 1 开始 |
 | `IdempotencyKey` | 1–128 字符串 | 资金、购买、结算和关键写入必需 |

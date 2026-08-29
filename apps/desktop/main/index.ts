@@ -1,5 +1,6 @@
 import { join } from 'node:path'
 import { app, BrowserWindow, ipcMain } from 'electron'
+import { DesktopIpcChannels } from '@no-overtime/contracts'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -37,16 +38,16 @@ function createMainWindow(): void {
 }
 
 app.whenReady().then(() => {
-  ipcMain.on('shell:minimize-main-window', () => {
+  ipcMain.on(DesktopIpcChannels.minimizeMainWindow, () => {
     mainWindow?.minimize()
   })
 
-  ipcMain.on('shell:toggle-maximize-main-window', () => {
+  ipcMain.on(DesktopIpcChannels.toggleMaximizeMainWindow, () => {
     if (!mainWindow) return
     mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()
   })
 
-  ipcMain.on('shell:hide-main-window', () => {
+  ipcMain.on(DesktopIpcChannels.hideMainWindow, () => {
     mainWindow?.hide()
   })
 

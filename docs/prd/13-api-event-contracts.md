@@ -10,6 +10,7 @@
 - 版本更新：需防覆盖的写入传 `If-Match: <revision>`。
 - 经济和关键写入：传 `Idempotency-Key`。
 - 响应使用共享 `ApiSuccess<T>` 或 `ApiError` 信封。
+- PostgreSQL 的 `MoneyMinor` 使用 `BIGINT`；任何 JSON 请求、响应或事件中的金额必须使用十进制整数字符串，禁止 JSON number。
 - 客户端不得依赖错误 message，只依赖稳定 error code。
 
 ## 2. 接口所有权
@@ -75,7 +76,7 @@ interface WorkSettingsResponse {
   "workEnd": "18:00:00",
   "lunchStart": "12:00:00",
   "lunchEnd": "13:00:00",
-  "dailySalaryMinor": 80000,
+  "dailySalaryMinor": "80000",
   "effectiveFrom": "2026-08-30"
 }
 ```

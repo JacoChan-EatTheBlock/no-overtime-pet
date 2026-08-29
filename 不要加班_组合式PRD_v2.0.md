@@ -1,7 +1,7 @@
 # 《不要加班》组合式 PRD v2.0
 
 > 文档状态：开发输入稿（Draft）  
-> 目标平台：macOS 桌面端（Apple Silicon 优先）  
+> 目标平台：Windows x64 桌面端（可分享 Demo）
 > 产品形态：像素风联机工作桌宠  
 > 核心胜利条件：完成当天承诺待办，并准点下班  
 > 最后更新：2026-08-29
@@ -21,9 +21,9 @@
 
 ## 2. 已锁定的产品决定
 
-1. macOS 是 MVP 开发与首发平台；Windows 延后，不属于本版发布承诺。
-2. 首版以 Apple Silicon `arm64` 为正式支持架构；Intel Mac 暂不承诺。
-3. 首发渠道为官网分发经过 Developer ID 签名和 Apple 公证的 DMG；Mac App Store 不进入 MVP。
+1. 当前开发平台是 Windows x64；macOS 暂停，不属于当前开发承诺。
+2. 当前交付目标是项目成员可直接运行的可分享 Demo，不等同于公开发行版本。
+3. 代码签名、安装器、自动更新和 SmartScreen 信誉建设暂不作为当前验收门禁；这些能力在准备公开分发时重新立项。
 4. 用户只录入待办标题、DDL 和重要性；AI 可补充任务类型、预计时长、认知负荷及拆分建议。
 5. 用户决定永远优先于 AI 建议；AI 调整正式计划前必须让用户看到差异并确认。
 6. 用户手动填写人民币日薪、上班时间、下班时间和午休时间，系统不自行判断这些字段；首版只处理人民币。
@@ -54,7 +54,7 @@
 | [待办录入](docs/prd/04-task-capture.md) | 用户输入、任务状态、承诺快照 | 客户端/服务端 |
 | [AI 任务分析](docs/prd/05-ai-task-analysis.md) | 分类、时长、历史校准、建议 | AI/服务端 |
 | [日程编排](docs/prd/06-scheduling.md) | 优先级、排程、重排、确认 | AI/客户端 |
-| [桌面活动识别](docs/prd/07-desktop-activity-recognition.md) | macOS 本地信号、截图、视觉模型、隐私 | macOS/AI |
+| [桌面活动识别](docs/prd/07-desktop-activity-recognition.md) | Windows 本地信号、截图、视觉模型、隐私 | Windows/AI |
 | [桌宠动作](docs/prd/08-pet-actions.md) | 动作状态机、拍键盘、降级 | 客户端 |
 | [联机排排坐](docs/prd/09-realtime-row-office.md) | 在线状态、动作广播、房间表现 | 实时服务/客户端 |
 | [商店与装扮](docs/prd/10-economy-shop-customization.md) | 购买、角色、帽子叠加 | 服务端/客户端 |
@@ -65,14 +65,14 @@
 | [测试与验收](docs/prd/15-test-acceptance.md) | 测试矩阵、验收门槛 | QA/全员 |
 | [开发路线](docs/prd/16-development-roadmap.md) | 分期、依赖、交付门禁 | 项目管理 |
 | [待确认问题台账](docs/prd/17-open-questions.md) | 全部产品缺口、建议默认值和阻塞阶段 | 产品/全员 |
-| [macOS 平台与发行](docs/prd/18-macos-platform-distribution.md) | 系统版本、架构、窗口、签名、公证、DMG 与更新 | macOS/发行 |
+| [Windows Demo 平台](docs/prd/18-windows-demo-platform.md) | x64、窗口、托盘、隐私降级与可分享 Demo 边界 | Windows/客户端 |
 | [数据集说明](docs/prd/datasets/README.md) | 目录、格式、版本与合并要求 | AI/全员 |
 
 ## 4. 推荐技术栈
 
 | 层级 | 选择 | 用途 |
 |---|---|---|
-| 桌面容器 | Electron | macOS 菜单栏常驻、透明窗口、系统权限与平台能力接入 |
+| 桌面容器 | Electron | Windows 托盘常驻、透明窗口、系统能力与平台适配接入 |
 | 前端 | React + TypeScript + Vite | 设置、待办、日程、好友、商店 UI |
 | 像素渲染 | PixiJS | 桌宠、角色动作、排排坐场景、帽子叠加 |
 | 本地存储 | SQLite | 设置、任务草稿、识别缓存、离线事件队列 |
@@ -110,7 +110,7 @@ MVP 可先用单体 NestJS + 独立 AI 服务，避免过早拆分微服务。�
 | ACTIVITY-PRIVACY-001 | 是否默认允许上传模糊截图到在线视觉模型 | 默认关闭，单独授权后开启 | 权限页实现前阻塞 |
 | SCHEDULE-001 | 任务未完成时是否允许用户选择按时跑路 | 允许；显示未完成但不阻止下班 | 不阻塞 |
 | HAT-STACK-001 | 超高帽子塔如何缩放、滚动和缓存 | 不设固定装备硬上限；自动缩放并缓存静态帽子层 | 视觉实现前确认 |
-| PLATFORM-MIN-001 | 首版最低支持哪个 macOS 版本 | 工程初始化时以 macOS 13 为基线，并按锁定的 Electron 版本复核 | Electron 版本锁定前阻塞 |
+| PLATFORM-WIN-001 | Demo 最低支持哪个 Windows 版本 | 当前在开发机 Windows 与另一台 Windows 11 x64 验证；公开分发前再冻结最低版本 | 不阻塞 Demo 基座 |
 
 ## 7. 明确排除范围
 

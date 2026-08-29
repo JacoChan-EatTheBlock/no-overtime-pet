@@ -21,6 +21,9 @@ export default defineConfig({
   },
   renderer: {
     root: resolve('apps/desktop/renderer'),
+    server: {
+      port: Number(process.env.RENDERER_PORT ?? 5173)
+    },
     build: {
       rollupOptions: {
         input: resolve('apps/desktop/renderer/index.html')

@@ -144,7 +144,7 @@ interface MockSystemLinkProps {
   children?: ReactNode
 }
 
-export function MockSystemLink({ onActivate, children = '打开 macOS 系统设置' }: MockSystemLinkProps) {
+export function MockSystemLink({ onActivate, children = '打开 Windows 系统设置' }: MockSystemLinkProps) {
   return (
     <button className={styles.systemLink} type="button" onClick={onActivate}>
       <span>{children}</span>

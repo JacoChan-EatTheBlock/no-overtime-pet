@@ -1,0 +1,21 @@
+{
+  "name": "@no-overtime/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": { "types": "./src/index.ts", "default": "./dist/index.js" },
+    "./account": { "types": "./src/account/index.ts", "default": "./dist/account/index.js" },
+    "./planning": { "types": "./src/planning/index.ts", "default": "./dist/planning/index.js" },
+    "./schedule": { "types": "./src/schedule/index.ts", "default": "./dist/schedule/index.js" },
+    "./economy": { "types": "./src/economy/index.ts", "default": "./dist/economy/index.js" },
+    "./activity": { "types": "./src/activity/index.ts", "default": "./dist/activity/index.js" },
+    "./social": { "types": "./src/social/index.ts", "default": "./dist/social/index.js" }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+}

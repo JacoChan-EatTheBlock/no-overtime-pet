@@ -96,8 +96,8 @@ export function NotificationSettingsScreen({ onNavigate }: NotificationSettingsS
             <button type="button" role="radio" aria-checked={mode === 'banner'} onClick={() => setMode('banner')}>仅横幅</button>
             <button type="button" role="radio" aria-checked={mode === 'silent'} onClick={() => setMode('silent')}>静默记录</button>
           </div>
-          <InfoStrip>macOS 系统通知权限与上述产品开关相互独立。</InfoStrip>
-          <MockSystemLink onActivate={() => setStatusMessage('这是 UI Mock：真实版本将打开 macOS 通知设置')}>打开 macOS 通知设置</MockSystemLink>
+          <InfoStrip>Windows 系统通知能力与上述产品开关相互独立。</InfoStrip>
+          <MockSystemLink onActivate={() => setStatusMessage('这是 UI Mock：真实版本将打开 Windows 通知设置')}>打开 Windows 通知设置</MockSystemLink>
           <p className={styles.settingsStatus} role="status">{statusMessage}</p>
         </aside>
       </div>

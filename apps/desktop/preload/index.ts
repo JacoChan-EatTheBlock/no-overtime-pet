@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
+import { DesktopIpcChannels } from '@no-overtime/contracts'
 
 export interface DesktopShellApi {
   minimizeMainWindow: () => void
@@ -7,9 +8,9 @@ export interface DesktopShellApi {
 }
 
 const desktopShell: DesktopShellApi = {
-  minimizeMainWindow: () => ipcRenderer.send('shell:minimize-main-window'),
-  toggleMaximizeMainWindow: () => ipcRenderer.send('shell:toggle-maximize-main-window'),
-  hideMainWindow: () => ipcRenderer.send('shell:hide-main-window')
+  minimizeMainWindow: () => ipcRenderer.send(DesktopIpcChannels.minimizeMainWindow),
+  toggleMaximizeMainWindow: () => ipcRenderer.send(DesktopIpcChannels.toggleMaximizeMainWindow),
+  hideMainWindow: () => ipcRenderer.send(DesktopIpcChannels.hideMainWindow)
 }
 
 contextBridge.exposeInMainWorld('desktopShell', desktopShell)

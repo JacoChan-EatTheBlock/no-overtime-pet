@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@renderer': resolve('apps/desktop/renderer/src')
+      '@renderer': resolve('apps/desktop/renderer/src'),
+      '@no-overtime/contracts': resolve('packages/contracts/src/index.ts')
     }
   },
   test: {
