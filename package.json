@@ -11,6 +11,9 @@
     "build": "npm run typecheck && electron-vite build",
     "build:renderer": "vite build --config vite.renderer.config.ts",
     "typecheck": "tsc -p tsconfig.node.json --noEmit && tsc -p tsconfig.web.json --noEmit",
+    "migration:run": "cd apps/api && npx typeorm migration:run -d src/data-source.ts",
+    "migration:revert": "cd apps/api && npx typeorm migration:revert -d src/data-source.ts",
+    "migration:generate": "cd apps/api && npx typeorm migration:generate -d src/data-source.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

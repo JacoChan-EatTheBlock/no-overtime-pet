@@ -11,9 +11,9 @@ import type {
 /* ------------------------------------------------------------------ */
 
 export const MOCK_USER_ECONOMY: UserEconomy = {
-  balance: 1234.56,
-  dailySalary: 800,
-  hourlyRate: 100 // 800 ÷ 8h
+  balance: 486.40,
+  dailySalary: 752,
+  hourlyRate: 94 // 752 ÷ 8h
 }
 
 /* ------------------------------------------------------------------ */
@@ -262,9 +262,9 @@ export const MOCK_LEDGER: LedgerRecord[] = [
 /* ------------------------------------------------------------------ */
 
 export const MOCK_OVERTIME_POOL: OvertimePool = {
-  totalBalance: 4280.5,
-  estimatedReward: 66.5,
-  participantCount: 23
+  totalBalance: 1248.00,
+  estimatedReward: 39.00,
+  participantCount: 32
 }
 
 /* ------------------------------------------------------------------ */
@@ -272,7 +272,7 @@ export const MOCK_OVERTIME_POOL: OvertimePool = {
 /* ------------------------------------------------------------------ */
 
 export const MOCK_TODAY_SUMMARY = {
-  income: 800,
-  expense: 200,
-  bonusReceived: 66.5
+  income: 86.40,
+  expense: 0,
+  bonusReceived: 0
 }

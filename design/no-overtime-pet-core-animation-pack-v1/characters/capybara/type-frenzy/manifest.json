@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "characterId": "capybara-office-worker",
+  "assetVersion": "type-frenzy-v1",
+  "canvas": {
+    "width": 192,
+    "height": 192
+  },
+  "scaleMode": "NEAREST",
+  "anchors": {
+    "feet": {
+      "x": 96,
+      "y": 188
+    },
+    "head": {
+      "x": 96,
+      "y": 50
+    },
+    "bodyCenter": {
+      "x": 96,
+      "y": 127
+    },
+    "ground": {
+      "x": 96,
+      "y": 188
+    },
+    "backGlow": {
+      "x": 96,
+      "y": 115
+    },
+    "keyboard": {
+      "x": 96,
+      "y": 164
+    },
+    "deskPlane": {
+      "x": 96,
+      "y": 188
+    }
+  },
+  "actions": {
+    "TYPE_FRENZY": {
+      "texture": "TYPE_FRENZY.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "columns": 4,
+      "rows": 2,
+      "fps": 16,
+      "loop": true,
+      "fallbackAction": "WORK_NORMAL",
+      "contentHashSha256": "6621085039698a18a3be27a17df1b1a6723e691afefd4041c7e075e71cb00dc9"
+    }
+  },
+  "preview": {
+    "file": "preview.gif",
+    "transparent": true,
+    "note": "GIF is review-only; runtime uses the transparent sprite sheet and manifest."
+  }
+}

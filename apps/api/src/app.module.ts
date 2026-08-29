@@ -28,6 +28,9 @@ import { join } from 'path';
         ssl: { rejectUnauthorized: false },
         autoLoadEntities: true,
         synchronize: false,
+        migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
+        migrationsRun: true, // auto-run pending migrations on app start
+        migrationsTableName: 'typeorm_migrations',
         logging: config.get('NODE_ENV') === 'development',
       }),
     }),

@@ -80,7 +80,7 @@ export function AccountSettingsScreen({ onNavigate }: AccountSettingsScreenProps
         </div>
         <p className={styles.deleteWarning}>
           <IconInfoCircle size={21} stroke={1.8} aria-hidden="true" />
-          删除账号前需要再次输入密码，提交后按账号政策处理。
+          删除账号前需要再次输入密码，7天内可撤销。
         </p>
       </SettingsCard>
 

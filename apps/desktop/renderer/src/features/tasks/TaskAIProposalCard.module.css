@@ -1,11 +1,11 @@
 .window {
   width: min(1060px, calc(100vw - 40px));
-  height: min(820px, calc(100vh - 40px));
+  height: 100%;
 }
 
 .windowInner {
   display: grid;
-  grid-template-rows: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .content {
@@ -164,6 +164,23 @@
   font-size: var(--text-body);
 }
 
+.fieldInput,
+.fieldSelect {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: #fff;
+  font-size: var(--text-body);
+  font-family: inherit;
+}
+
+.fieldInput:focus,
+.fieldSelect:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
 .fieldRange {
   margin-left: 12px;
   color: var(--color-text-muted);
@@ -243,6 +260,24 @@
 .subtaskTitle {
   flex: 1;
   font-size: var(--text-body);
+}
+
+.subtaskTitleInput,
+.subtaskDurationInput {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: #fff;
+  font-size: var(--text-body);
+  font-family: inherit;
+}
+
+.subtaskTitleInput {
+  flex: 1;
+}
+
+.subtaskDurationInput {
+  width: 80px;
 }
 
 .subtaskDuration {

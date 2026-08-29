@@ -11,45 +11,29 @@ interface ShopItemCardProps {
   owned: boolean
   displayPrice: string
   isFree: boolean
+  selected?: boolean
+  onSelect: () => void
   onBuy: () => void
 }
 
-export function ShopItemCard({ item, owned, displayPrice, isFree, onBuy }: ShopItemCardProps) {
+export function ShopItemCard({ item, owned, displayPrice, isFree, selected, onSelect, onBuy }: ShopItemCardProps) {
   return (
-    <div className={joinClassNames(styles.card, owned ? styles.cardOwned : undefined)}>
-      <div className={styles.cardThumbnail}>
-        <span className={styles.cardEmoji} role="img" aria-label={item.name}>
-          {item.emoji}
-        </span>
-      </div>
-
-      <div className={styles.cardBody}>
-        <span className={styles.cardName}>{item.name}</span>
-        <span className={styles.cardDesc}>{item.description}</span>
-
+    <button
+      type="button"
+      className={joinClassNames(styles.itemCard, selected ? styles.itemSelected : undefined)}
+      onClick={onSelect}
+    >
+      <img className="pixel-art" src={item.thumbnail} alt={item.name} />
+      <span className={styles.itemName}>{item.name}</span>
+      <span className={styles.itemPrice}>
         {owned ? (
-          <span className={styles.ownedBadge}>已拥有</span>
+          <span className={styles.ownedLabel}>已拥有</span>
+        ) : isFree ? (
+          '免费'
         ) : (
-          <div className={styles.cardFooter}>
-            <span
-              className={joinClassNames(
-                styles.cardPrice,
-                isFree ? styles.cardPriceFree : undefined
-              )}
-            >
-              {isFree ? '免费' : displayPrice}
-            </span>
-            <Button
-              variant="primary"
-              className={styles.cardBuyBtn}
-              onClick={onBuy}
-              disabled={isFree}
-            >
-              {isFree ? '默认' : '购买'}
-            </Button>
-          </div>
+          displayPrice
         )}
-      </div>
-    </div>
+      </span>
+    </button>
   )
 }

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "packId": "no-overtime-pet-core-animation-pack-v1",
+  "validatedAt": "2026-08-29",
+  "passed": true,
+  "checkCount": 68,
+  "failedChecks": [],
+  "summary": {
+    "characterCount": 3,
+    "characterActionCount": 9,
+    "sharedEffectCount": 2,
+    "coreGifCount": 11,
+    "coreGifFrameCount": 8,
+    "fileCount": 164
+  },
+  "validatedRules": [
+    "All paths declared by the package manifest exist inside this package.",
+    "All nine character sprite sheets are 768x384 and match their manifest SHA-256 hashes.",
+    "All character action folders contain eight 192x192 transparent PNG frames.",
+    "All eleven core GIF previews decode to eight frames.",
+    "Every character action falls back to WORK_NORMAL.",
+    "Every effect track texture matches its manifest SHA-256 hash and frame dimensions.",
+    "The package contains no MP4 source videos, Seedance input images or submission locks."
+  ]
+}

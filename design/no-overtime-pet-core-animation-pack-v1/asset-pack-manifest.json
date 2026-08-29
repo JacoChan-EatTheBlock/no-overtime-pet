@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "packId": "no-overtime-pet-core-animation-pack-v1",
+  "displayName": "不要加班：桌宠核心动画资源包 v1",
+  "platformTarget": "macOS Apple Silicon MVP",
+  "status": "PROTOTYPE_QA_PASSED",
+  "runtimeIntegrationIncluded": false,
+  "characters": [
+    {
+      "characterId": "capybara-office-worker",
+      "displayName": "水豚上班族",
+      "identityTexture": "characters/capybara/identity.png",
+      "actions": {
+        "WORK_NORMAL": {
+          "root": "characters/capybara/work-normal",
+          "spriteSheet": "characters/capybara/work-normal/WORK_NORMAL.png",
+          "previewGif": "characters/capybara/work-normal/preview.gif",
+          "manifest": "characters/capybara/work-normal/manifest.json"
+        },
+        "SLACKING": {
+          "root": "characters/capybara/slacking",
+          "spriteSheet": "characters/capybara/slacking/SLACKING.png",
+          "previewGif": "characters/capybara/slacking/preview.gif",
+          "manifest": "characters/capybara/slacking/manifest.json"
+        },
+        "TYPE_FRENZY": {
+          "root": "characters/capybara/type-frenzy",
+          "spriteSheet": "characters/capybara/type-frenzy/TYPE_FRENZY.png",
+          "previewGif": "characters/capybara/type-frenzy/preview.gif",
+          "manifest": "characters/capybara/type-frenzy/manifest.json"
+        }
+      }
+    },
+    {
+      "characterId": "pelican-office-worker",
+      "displayName": "鹈鹕上班族",
+      "identityTexture": "characters/pelican/identity.png",
+      "actions": {
+        "WORK_NORMAL": {
+          "root": "characters/pelican/work-normal",
+          "spriteSheet": "characters/pelican/work-normal/WORK_NORMAL.png",
+          "previewGif": "characters/pelican/work-normal/preview.gif",
+          "manifest": "characters/pelican/work-normal/manifest.json"
+        },
+        "SLACKING": {
+          "root": "characters/pelican/slacking",
+          "spriteSheet": "characters/pelican/slacking/SLACKING.png",
+          "previewGif": "characters/pelican/slacking/preview.gif",
+          "manifest": "characters/pelican/slacking/manifest.json"
+        },
+        "TYPE_FRENZY": {
+          "root": "characters/pelican/type-frenzy",
+          "spriteSheet": "characters/pelican/type-frenzy/TYPE_FRENZY.png",
+          "previewGif": "characters/pelican/type-frenzy/preview.gif",
+          "manifest": "characters/pelican/type-frenzy/manifest.json"
+        }
+      }
+    },
+    {
+      "characterId": "siamese-cat-office-worker",
+      "displayName": "暹罗猫上班族",
+      "identityTexture": "characters/siamese-cat/identity.png",
+      "actions": {
+        "WORK_NORMAL": {
+          "root": "characters/siamese-cat/work-normal",
+          "spriteSheet": "characters/siamese-cat/work-normal/WORK_NORMAL.png",
+          "previewGif": "characters/siamese-cat/work-normal/preview.gif",
+          "manifest": "characters/siamese-cat/work-normal/manifest.json"
+        },
+        "SLACKING": {
+          "root": "characters/siamese-cat/slacking",
+          "spriteSheet": "characters/siamese-cat/slacking/SLACKING.png",
+          "previewGif": "characters/siamese-cat/slacking/preview.gif",
+          "manifest": "characters/siamese-cat/slacking/manifest.json"
+        },
+        "TYPE_FRENZY": {
+          "root": "characters/siamese-cat/type-frenzy",
+          "spriteSheet": "characters/siamese-cat/type-frenzy/TYPE_FRENZY.png",
+          "previewGif": "characters/siamese-cat/type-frenzy/preview.gif",
+          "manifest": "characters/siamese-cat/type-frenzy/manifest.json"
+        }
+      }
+    }
+  ],
+  "effects": [
+    {
+      "effectId": "COIN_OUT",
+      "displayName": "金币从身体流出并落地消失",
+      "root": "effects/coin-out",
+      "previewGif": "effects/coin-out/preview.gif",
+      "manifest": "effects/coin-out/manifest.json"
+    },
+    {
+      "effectId": "COIN_IN_GLOW",
+      "displayName": "金币落入身体并在角色后方发出金光",
+      "root": "effects/coin-in-glow",
+      "previewGif": "effects/coin-in-glow/preview.gif",
+      "manifest": "effects/coin-in-glow/manifest.json"
+    }
+  ],
+  "qa": {
+    "masterContactSheet": "qa/11-asset-contact-sheet.png",
+    "report": "qa/qa-report.json",
+    "assistantVisualQa": "PASS",
+    "userFinalVisualApproval": "PENDING"
+  },
+  "commercialReleaseStatus": "BLOCKED_PENDING_ASSET_LICENSE_REVIEW"
+}

@@ -36,4 +36,7 @@
 
   --pixel-step: 10px;
   --pixel-border: 3px;
+
+  /* Layout: bottom navigation bar actual height */
+  --nav-bar-height: 62px;
 }

@@ -3,7 +3,6 @@
   width: 100%;
   min-width: 920px;
   height: 100%;
-  min-height: 720px;
   overflow: hidden;
   background: #dce9f0;
   color: var(--color-text);
@@ -131,27 +130,28 @@
 
 .managementStage {
   display: grid;
-  align-items: start;
+  align-items: stretch;
   justify-items: center;
-  padding: 64px 28px 28px;
+  padding: 12px 20px;
 }
 
 .friendsWindow {
-  width: min(1100px, calc(100vw - 56px));
-  height: min(820px, calc(100vh - 56px));
-  min-height: 680px;
+  width: min(1100px, 100%);
+  height: 100%;
 }
 
 .friendsWindowInner {
   display: grid;
-  grid-template-rows: 112px 74px minmax(0, 1fr);
-  padding: 0 28px 24px;
+  grid-template-rows: 56px auto auto auto minmax(0, 1fr) auto;
+  height: 100%;
+  padding: 0 28px 12px;
 }
 
 .friendsHeader {
   display: flex;
   align-items: center;
   gap: 22px;
+  padding: 16px 0;
   border-bottom: 1px solid #ead8be;
 }
 
@@ -199,6 +199,7 @@
   align-self: center;
   align-items: center;
   gap: 24px;
+  margin: 10px 0;
   border: 2px solid var(--color-border);
   padding: 10px 12px 10px 16px;
   background: var(--color-surface-soft);
@@ -239,9 +240,12 @@
 }
 
 .friendListSection {
+  display: flex;
+  flex-direction: column;
   min-height: 0;
   padding: 18px 26px 0 10px;
   border-right: 1px dotted #dbc9ac;
+  overflow: hidden;
 }
 
 .friendListSection h2,
@@ -258,6 +262,9 @@
 }
 
 .friendList {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   margin-top: 8px;
 }
 
@@ -390,20 +397,39 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dotted #dbc9ac;
   font-size: 14px;
   font-weight: 600;
 }
 
-.broadcastSummary strong {
-  color: var(--color-success);
+.broadcastSelect {
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 0;
+  padding: 0 8px;
+  background: var(--color-surface-raised);
+  box-shadow: 2px 2px 0 rgb(75 43 34 / 8%);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .privacyNotice {
-  margin: 12px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 10px 0;
+  border-top: 1px dotted #dbc9ac;
   color: var(--color-text-muted);
   font-size: 13px;
   line-height: 20px;
+}
+
+.privacyNotice svg {
+  flex: 0 0 auto;
 }
 
 .friendActionsSection {
@@ -498,231 +524,3 @@
   gap: 12px;
 }
 
-.selectedFriendActions button {
-  display: inline-flex;
-  min-height: 42px;
-  align-items: center;
-  gap: 8px;
-}
-
-.selectedFriendActions button:first-child {
-  min-width: 132px;
-}
-
-.selectedFriendActions button:last-child {
-  min-width: 172px;
-}
-
-.feedback {
-  position: absolute;
-  right: 8px;
-  bottom: -19px;
-  min-height: 18px;
-  margin: 0;
-  color: var(--color-primary-hover);
-  font-size: 13px;
-}
-
-.quickMenuStage {
-  background: transparent;
-}
-
-.quickMenuCluster {
-  position: absolute;
-  right: 16px;
-  bottom: 308px;
-  display: flex;
-  align-items: flex-start;
-}
-
-.quickMenu {
-  width: 326px;
-  height: 424px;
-}
-
-.quickMenuInner {
-  display: grid;
-  grid-template-rows: 61px 1fr 35px;
-  padding: 0 14px 12px;
-}
-
-.quickMenuHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid #d8bea0;
-  padding: 0 8px;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.quickMenuHeader img {
-  width: 42px;
-  height: 42px;
-}
-
-.quickMenuHeader span {
-  color: var(--color-primary-hover);
-}
-
-.quickMenuItems {
-  display: grid;
-  grid-auto-rows: 54px;
-  padding-top: 8px;
-}
-
-.quickMenuItems button {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto auto;
-  align-items: center;
-  border: 0;
-  border-bottom: 1px solid #ecd7ba;
-  padding: 0 8px;
-  background: transparent;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 24px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.quickMenuItems button span {
-  color: var(--color-text-muted);
-  font-size: 14px;
-}
-
-.quickMenuItems .highlightedMenuItem {
-  border: 2px solid #e5b26d;
-  background: #fff0d9;
-  box-shadow: inset 0 -2px 0 rgb(179 112 41 / 10%);
-}
-
-.quickMenuItems .exitMenuItem {
-  color: var(--color-danger);
-}
-
-.exitHint {
-  margin: 0;
-  color: var(--color-danger);
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.visibilitySubmenu {
-  width: 324px;
-  height: 124px;
-  margin-top: 168px;
-}
-
-.visibilitySubmenuInner {
-  display: grid;
-  align-content: center;
-  gap: 14px;
-  padding: 16px;
-}
-
-.visibilitySubmenu label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 24px;
-  cursor: pointer;
-}
-
-.visibilitySubmenu input {
-  position: absolute;
-  left: 0;
-  width: 24px;
-  height: 24px;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.pixelCheckbox {
-  display: grid;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  place-items: center;
-  border: 2px solid var(--color-border-strong);
-  background: var(--color-surface-raised);
-  box-shadow: inset 2px 2px 0 rgb(75 43 34 / 8%);
-  color: var(--color-border-strong);
-}
-
-.visibilitySubmenu label:has(input:focus-visible) .pixelCheckbox {
-  outline: 3px solid color-mix(in srgb, var(--color-primary) 48%, transparent);
-  outline-offset: 2px;
-}
-
-.quickMenuPetArea {
-  position: absolute;
-  right: 124px;
-  bottom: 135px;
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-}
-
-.quickMenuPet {
-  width: 205px;
-  height: 205px;
-}
-
-.taskBubble {
-  width: 188px;
-  height: 58px;
-  margin-bottom: 84px;
-  transform: translateX(32px);
-}
-
-.taskBubbleInner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.taskDot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #9a7151;
-}
-
-@media (max-width: 1120px), (max-height: 760px) {
-  .overlayStage {
-    min-width: 820px;
-    min-height: 620px;
-  }
-
-  .friendsWindow {
-    width: min(1040px, calc(100vw - 36px));
-    height: min(720px, calc(100vh - 36px));
-    min-height: 620px;
-  }
-
-  .friendRow {
-    height: 49px;
-  }
-
-  .quickMenuCluster {
-    right: 246px;
-    bottom: 190px;
-    transform: scale(0.9);
-    transform-origin: bottom right;
-  }
-
-  .quickMenuPetArea {
-    right: 28px;
-    transform: scale(0.86);
-    transform-origin: bottom right;
-  }
-}

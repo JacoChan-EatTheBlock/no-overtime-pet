@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "effectId": "COIN_OUT",
+  "assetVersion": "coin-out-v1",
+  "scaleMode": "NEAREST",
+  "durationMs": 667,
+  "tracks": [
+    {
+      "trackId": "coin",
+      "layer": "IN_FRONT_OF_CHARACTER",
+      "texture": "tracks/coin.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "frameCount": 8,
+      "fps": 12,
+      "loop": false,
+      "motion": {
+        "from": "bodyCenter",
+        "to": "ground",
+        "easing": "EASE_IN"
+      },
+      "contentHashSha256": "18213f5ad590719019019f5cb3d315d7cb09ca38c4e7fb5a6c984d52d2db3e66"
+    }
+  ],
+  "eventFrames": {
+    "exitBody": [
+      0
+    ],
+    "groundContact": [
+      6
+    ],
+    "disappear": [
+      7
+    ]
+  },
+  "preview": {
+    "file": "preview.gif",
+    "transparent": true,
+    "runtimeAsset": false,
+    "characterOverlays": {
+      "capybara": "overlay-previews/capybara.gif",
+      "pelican": "overlay-previews/pelican.gif",
+      "siamese-cat": "overlay-previews/siamese-cat.gif"
+    }
+  }
+}

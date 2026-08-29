@@ -1,17 +1,18 @@
 .stage {
   display: grid;
   width: 100%;
-  height: 100%;
-  min-height: 760px;
+  height: calc(100vh - var(--nav-bar-height, 62px));
   place-items: center;
   overflow: auto;
-  padding: 24px;
+  padding: 16px;
   background: #dce9f0;
 }
 
 .settingsWindow {
-  width: 1020px;
-  height: 780px;
+  width: 100%;
+  max-width: 1020px;
+  height: 100%;
+  max-height: 780px;
 }
 
 .settingsWindowInner {
@@ -111,7 +112,7 @@
 .settingsContent {
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow: auto;
   padding: 24px 30px 22px;
 }
 
@@ -294,8 +295,8 @@
 .workGrid {
   display: grid;
   min-height: 0;
-  grid-template-columns: 565px minmax(0, 1fr);
-  margin-top: 38px;
+  grid-template-columns: minmax(320px, 1.2fr) minmax(0, 1fr);
+  margin-top: 8px;
 }
 
 .workForm {
@@ -306,11 +307,11 @@
 
 .workForm label {
   display: grid;
-  min-height: 83px;
+  min-height: 70px;
   align-items: center;
   border-bottom: 1px dotted var(--color-border);
-  grid-template-columns: 215px minmax(0, 1fr);
-  font-size: 20px;
+  grid-template-columns: 150px minmax(0, 1fr);
+  font-size: 17px;
   font-weight: 600;
 }
 
@@ -318,14 +319,14 @@
 .workForm select,
 .moneyInput {
   width: 100%;
-  height: 54px;
+  height: 48px;
   border: 2px solid var(--color-border);
   border-radius: 3px;
   outline: 0;
   background: var(--color-surface-raised);
   box-shadow: inset 0 -2px 0 rgb(75 43 34 / 7%);
   color: var(--color-text);
-  font-size: 20px;
+  font-size: 17px;
 }
 
 .workForm input,
@@ -356,22 +357,20 @@
 }
 
 .workPreview {
-  position: relative;
-  min-height: 500px;
   border-left: 1px solid var(--color-border);
-  padding-left: 46px;
+  padding-left: 28px;
 }
 
 .workPreview h2 {
-  margin: 10px 0 21px;
-  font-size: 24px;
+  margin: 0 0 16px;
+  font-size: 22px;
 }
 
 .previewMetric {
   display: flex;
-  min-height: 125px;
+  min-height: 90px;
   align-items: center;
-  gap: 25px;
+  gap: 18px;
   border-bottom: 1px dotted var(--color-border);
 }
 
@@ -386,86 +385,32 @@
 }
 
 .previewMetric span {
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .previewMetric strong {
-  font-size: 22px;
+  font-size: 19px;
 }
 
 .effectiveHint {
   display: flex;
   align-items: center;
   gap: 9px;
-  margin: 26px 0 0;
-  font-size: 15px;
-}
-
-.workPet {
-  position: absolute;
-  right: -3px;
-  bottom: -17px;
-  width: 190px;
-  height: 190px;
-  object-fit: contain;
-}
-
-.workActions {
-  position: absolute;
-  right: 38px;
-  bottom: 28px;
-  left: 38px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.workActions button {
-  min-width: 205px;
-  min-height: 52px;
-  font-size: 18px;
-}
-
-.workActions p {
-  margin: 0 0 0 8px;
-  color: var(--color-primary-hover);
-  font-size: 13px;
+  margin: 18px 0 0;
+  font-size: 14px;
 }
 
 /* 14 activity */
-.activityWindow {
-  width: 820px;
-  height: 700px;
-}
-
-.activityWindowInner {
-  display: grid;
-  grid-template-rows: 56px minmax(0, 1fr);
-}
-
-.activityContent {
-  display: grid;
-  min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  padding: 28px 34px 24px;
-}
-
-.activityHeading {
+.activityHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 22px;
+  margin-bottom: 16px;
 }
 
-.activityEyebrow {
-  color: var(--color-text-muted);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.activityHeading h1 {
-  margin: 3px 0 0;
-  font-size: 30px;
+.activityHeader h2 {
+  margin: 0;
+  font-size: 24px;
 }
 
 .activityStatus {
@@ -488,7 +433,8 @@
   gap: 24px;
 }
 
-.activityHistory h2 {
+.activityHistory h2,
+.activityHistory h3 {
   margin: 9px 0 18px;
   font-size: 16px;
 }
@@ -550,10 +496,11 @@
   font-weight: 600;
 }
 
-.currentActivity h2 {
-  margin: 18px 0 35px;
+.currentActivity h2,
+.currentActivity h3 {
+  margin: 14px 0 28px;
   color: var(--color-border-strong);
-  font-size: 36px;
+  font-size: 32px;
 }
 
 .currentActivity dl {
@@ -961,26 +908,39 @@
   margin-top: 24px;
 }
 
+/* work settings inline (within shell) */
+.workSubtitle {
+  margin: -4px 0 4px;
+  color: var(--color-text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.workActionsInline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.workActionsInline p {
+  margin: 0;
+  color: var(--color-primary-hover);
+  font-size: 13px;
+}
+
 @media (max-width: 1060px), (max-height: 820px) {
   .stage {
-    min-height: 680px;
-    padding: 14px;
+    padding: 8px;
   }
 
-  .settingsWindow,
-  .workWindow {
-    width: min(1020px, calc(100vw - 28px));
-    height: min(780px, calc(100vh - 28px));
-    min-height: 680px;
+  .settingsWindow {
+    max-width: none;
+    max-height: none;
   }
 
-  .activityWindow {
-    width: min(820px, calc(100vw - 28px));
-    height: min(700px, calc(100vh - 28px));
-    min-height: 640px;
-  }
-
-  .settingsContent {
-    overflow: auto;
+  .workGrid {
+    grid-template-columns: 1fr;
   }
 }

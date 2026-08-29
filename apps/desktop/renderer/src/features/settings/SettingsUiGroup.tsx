@@ -14,7 +14,7 @@ export function SettingsUiGroup({ initialScreen = '04' }: SettingsUiGroupProps) 
   const [screen, setScreen] = useState<SettingsScreenId>(initialScreen)
 
   if (screen === '14') {
-    return <ActivityRecognitionScreen onOpenPrivacy={() => setScreen('15')} />
+    return <ActivityRecognitionScreen onNavigate={setScreen} />
   }
 
   if (screen === '15') {

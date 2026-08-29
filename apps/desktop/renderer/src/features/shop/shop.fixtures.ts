@@ -15,6 +15,8 @@ export interface ShopItem {
   /** 兑换该商品需要的工时（毫秒） */
   requiredWorkMs: number
   thumbnailPath: string
+  /** Emoji fallback when thumbnail fails to load */
+  emoji: string
 }
 
 /** 钱包账本记录类型 */
@@ -24,6 +26,7 @@ export type LedgerEntryKind =
   | 'overtime_pool_reward'
   | 'purchase'
   | 'refund'
+  | 'lunch_break'
 
 /** 钱包账本记录 */
 export interface LedgerEntry {
@@ -32,6 +35,8 @@ export interface LedgerEntry {
   description: string
   /** 正数 = 收入，负数 = 支出 */
   amountYuan: number
+  /** 可选的显示用时间标签，覆盖 timestamp 的默认格式化 */
+  timeLabel?: string
   timestamp: string
 }
 
@@ -74,7 +79,8 @@ export const SHOP_ITEMS: ShopItem[] = [
       '经典水豚角色。佛系表情，敲代码有条不紊，从不加班。它的座右铭是：「该走走，该摸摸。」',
     itemType: 'character',
     requiredWorkMs: 0,
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '🦫'
   },
   {
     id: 'char-shiba',
@@ -85,7 +91,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     itemType: 'character',
     requiredWorkMs: 2 * 3600 * 1000 // 2 小时工时
     ,
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '🐕'
   },
   {
     id: 'char-penguin',
@@ -96,7 +103,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     itemType: 'character',
     requiredWorkMs: 4 * 3600 * 1000 // 4 小时工时
     ,
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '🐧'
   },
 
   // 帽子 ×5
@@ -107,7 +115,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: '工地风安全帽。虽然你敲的是键盘，但安全意识不能少。防秃（心理上）。',
     itemType: 'hat',
     requiredWorkMs: 30 * 60 * 1000, // 30 分钟
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '⛑️'
   },
   {
     id: 'hat-crown',
@@ -116,7 +125,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: '头戴皇冠，摸鱼合法。全公司最会划水的那个人，非你莫属。',
     itemType: 'hat',
     requiredWorkMs: 1 * 3600 * 1000, // 1 小时
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '👑'
   },
   {
     id: 'hat-leaf',
@@ -125,7 +135,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: '头顶一片叶子，假装自己是植物。老板路过时自动启用。',
     itemType: 'hat',
     requiredWorkMs: 20 * 60 * 1000, // 20 分钟
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '🍃'
   },
   {
     id: 'hat-halo',
@@ -134,7 +145,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: '头顶光环，彰显你从不加班的圣洁灵魂。',
     itemType: 'hat',
     requiredWorkMs: 2 * 3600 * 1000, // 2 小时
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '😇'
   },
   {
     id: 'hat-catears',
@@ -143,7 +155,8 @@ export const SHOP_ITEMS: ShopItem[] = [
     description: '可爱即正义。戴上猫耳，同事都不好意思给你派活了。',
     itemType: 'hat',
     requiredWorkMs: 45 * 60 * 1000, // 45 分钟
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '😺'
   },
 
   // 动作包 ×2
@@ -155,7 +168,8 @@ export const SHOP_ITEMS: ShopItem[] = [
       '解锁"到点下班"专属街舞动画。每到下班时间，你的桌宠会跳一段 breaking。',
     itemType: 'action_pack',
     requiredWorkMs: 3 * 3600 * 1000, // 3 小时
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '💃'
   },
   {
     id: 'act-nap',
@@ -165,7 +179,8 @@ export const SHOP_ITEMS: ShopItem[] = [
       '解锁午休时段专属打盹动画。桌宠会铺好小毯子，戴上眼罩，zZZ…',
     itemType: 'action_pack',
     requiredWorkMs: 1.5 * 3600 * 1000, // 1.5 小时
-    thumbnailPath: '/assets/capybara/idle.png'
+    thumbnailPath: '/assets/capybara/idle.png',
+    emoji: '😴'
   }
 ]
 
@@ -201,15 +216,15 @@ export const DEFAULT_EQUIPPED_HATS: string[] = ['hat-leaf', 'hat-hardhat']
 
 // ── 模拟钱包数据 ─────────────────────────────────────────────
 export const MOCK_WALLET: WalletSnapshot = {
-  balanceYuan: 128.5,
-  todayIncomeYuan: 62.5,
+  balanceYuan: 486.40,
+  todayIncomeYuan: 86.40,
   todayOvertimePenaltyYuan: 0
 }
 
 export const MOCK_OVERTIME_POOL: OvertimePool = {
-  totalYuan: 2340.8,
-  todayContributors: 3,
-  yesterdayWinners: 12
+  totalYuan: 1248.00,
+  todayContributors: 32,
+  yesterdayWinners: 28
 }
 
 export const MOCK_LEDGER: LedgerEntry[] = [
@@ -277,7 +292,8 @@ export const LEDGER_KIND_LABELS: Record<LedgerEntryKind, string> = {
   overtime_penalty: '加班扣减',
   overtime_pool_reward: '奖励池瓜分',
   purchase: '商店购买',
-  refund: '商品退还'
+  refund: '商品退还',
+  lunch_break: '午休暂停'
 }
 
 /** 账本条目种类 → emoji 图标 */
@@ -286,5 +302,42 @@ export const LEDGER_KIND_ICONS: Record<LedgerEntryKind, string> = {
   overtime_penalty: '🔥',
   overtime_pool_reward: '🎁',
   purchase: '🛍️',
-  refund: '↩️'
+  refund: '↩️',
+  lunch_break: '☕'
 }
+
+// —— 钱包界面「最近记录」（匹配设计稿 09-wallet） ——————————————————
+export const WALLET_RECENT_LEDGER: LedgerEntry[] = [
+  {
+    id: 'wl-1',
+    kind: 'work_income',
+    description: '工作时段获得',
+    amountYuan: 12.00,
+    timeLabel: '今天 09:00–11:00',
+    timestamp: new Date().toISOString()
+  },
+  {
+    id: 'wl-2',
+    kind: 'lunch_break',
+    description: '午休暂停',
+    amountYuan: 0,
+    timeLabel: '今天 12:00–13:00',
+    timestamp: new Date().toISOString()
+  },
+  {
+    id: 'wl-3',
+    kind: 'purchase',
+    description: '购买：加班免死金牌帽',
+    amountYuan: -188.00,
+    timeLabel: '昨天 21:15',
+    timestamp: new Date(Date.now() - 86400000).toISOString()
+  },
+  {
+    id: 'wl-4',
+    kind: 'overtime_pool_reward',
+    description: '昨日准点奖励',
+    amountYuan: 24.50,
+    timeLabel: '昨天 18:35',
+    timestamp: new Date(Date.now() - 86400000).toISOString()
+  }
+]

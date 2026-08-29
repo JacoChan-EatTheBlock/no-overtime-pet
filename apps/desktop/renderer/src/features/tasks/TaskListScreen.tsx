@@ -1,12 +1,17 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import {
   IconAlertCircle,
   IconCalendarDue,
+  IconCheck,
   IconCirclePlus,
   IconClock,
-  IconFlag
+  IconFlag,
+  IconLoader2,
+  IconTrash,
 } from '@tabler/icons-react'
 import { Button } from '../../components/Button'
+import { createTask, listTasks, completeTask, deleteTask } from '../../api/tasks'
+import type { Task } from '../../api/types'
 import { PixelSurface } from '../../components/PixelSurface'
 import { PixelWindowHeader } from '../../components/PixelWindowHeader'
 import type { ScreenId } from '../../App'
@@ -21,6 +26,9 @@ export interface TaskItem {
   timeRange: string
   urgency: TaskUrgency
   priority: TaskPriority
+  done?: boolean
+  dueAt?: string
+  revision?: number
 }
 
 type FilterTab = 'all' | 'today' | 'done'
@@ -31,13 +39,53 @@ const URGENCY_COLORS: Record<TaskUrgency, string> = {
   '不紧急': styles.urgencyNormal,
 }
 
-const MOCK_TASKS: TaskItem[] = [
-  { id: '1', title: '整理产品评审材料', timeRange: '10:20 – 11:10', urgency: '紧急', priority: 'HIGH' },
-  { id: '2', title: '撰写需求文档', timeRange: '11:10 – 12:10', urgency: '即将到期', priority: 'HIGH' },
-  { id: '3', title: '回复客户邮件', timeRange: '14:00 – 14:30', urgency: '不紧急', priority: 'MEDIUM' },
-  { id: '4', title: '准备周一例会', timeRange: '15:00 – 16:00', urgency: '不紧急', priority: 'MEDIUM' },
-  { id: '5', title: '更新项目排期', timeRange: '16:30 – 17:30', urgency: '不紧急', priority: 'LOW' },
-]
+// ---------------------------------------------------------------------------
+// Helpers: API Task → UI TaskItem
+// ---------------------------------------------------------------------------
+
+function importanceToUrgency(importance?: string): TaskUrgency {
+  switch (importance) {
+    case 'HIGH': return '紧急'
+    case 'MEDIUM': return '即将到期'
+    default: return '不紧急'
+  }
+}
+
+function importanceToPriority(importance?: string): TaskPriority {
+  switch (importance) {
+    case 'HIGH': return 'HIGH'
+    case 'MEDIUM': return 'MEDIUM'
+    default: return 'LOW'
+  }
+}
+
+function formatTimeRange(dueAt?: string): string {
+  if (!dueAt) return ''
+  try {
+    const d = new Date(dueAt)
+    if (Number.isNaN(d.getTime())) return ''
+    const hh = String(d.getHours()).padStart(2, '0')
+    const mm = String(d.getMinutes()).padStart(2, '0')
+    return `截止 ${hh}:${mm}`
+  } catch {
+    return ''
+  }
+}
+
+function mapTaskToItem(task: Task): TaskItem {
+  return {
+    id: task.id,
+    title: task.title,
+    timeRange: formatTimeRange(task.dueAt),
+    urgency: importanceToUrgency(task.importance),
+    priority: importanceToPriority(task.importance),
+    done: task.status === 'COMPLETED',
+    dueAt: task.dueAt,
+    revision: task.revision,
+  }
+}
+
+// ---------------------------------------------------------------------------
 
 interface TaskListScreenProps {
   onClose: () => void
@@ -52,30 +100,125 @@ const dayLabel = dayNames[today.getDay()]
 
 export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListScreenProps) {
   const [filter, setFilter] = useState<FilterTab>('all')
-  const [tasks] = useState(MOCK_TASKS)
+  const [tasks, setTasks] = useState<TaskItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   // Create form state
   const [newTitle, setNewTitle] = useState('')
   const [newDeadline, setNewDeadline] = useState('')
   const [newPriority, setNewPriority] = useState<TaskPriority>('HIGH')
+  const [creating, setCreating] = useState(false)
+
+  const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), [])
+
+  // ---------------------------------------------------------------------------
+  // Load tasks from API
+  // ---------------------------------------------------------------------------
+  const fetchTasks = useCallback(async () => {
+    try {
+      setError(null)
+      setLoading(true)
+      // Fetch both PENDING and COMPLETED for client-side filtering
+      const [pending, completed] = await Promise.all([
+        listTasks({ status: 'PENDING' }),
+        listTasks({ status: 'COMPLETED' }),
+      ])
+      const allTasks = [...pending, ...completed].map(mapTaskToItem)
+      setTasks(allTasks)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '加载任务失败')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchTasks()
+  }, [fetchTasks])
+
+  // ---------------------------------------------------------------------------
+  // Filter & counts (dynamic)
+  // ---------------------------------------------------------------------------
+  const filteredTasks = useMemo(() => {
+    switch (filter) {
+      case 'today':
+        return tasks.filter((t) => !t.done && t.dueAt?.slice(0, 10) === todayStr)
+      case 'done':
+        return tasks.filter((t) => t.done)
+      case 'all':
+      default:
+        return tasks.filter((t) => !t.done)
+    }
+  }, [tasks, filter, todayStr])
 
   const counts = useMemo(() => ({
-    all: tasks.length,
-    today: tasks.length,
-    done: 2,
-  }), [tasks])
+    all: tasks.filter((t) => !t.done).length,
+    today: tasks.filter((t) => !t.done && t.dueAt?.slice(0, 10) === todayStr).length,
+    done: tasks.filter((t) => t.done).length,
+  }), [tasks, todayStr])
 
-  function handleCreateSubmit(e: FormEvent): void {
+  // ---------------------------------------------------------------------------
+  // Create task → API
+  // ---------------------------------------------------------------------------
+  async function handleCreateSubmit(e: FormEvent): Promise<void> {
     e.preventDefault()
-    if (!newTitle.trim()) return
-    const newTask: TaskItem = {
-      id: String(Date.now()),
-      title: newTitle,
-      timeRange: '',
-      urgency: '不紧急',
-      priority: newPriority,
+    if (!newTitle.trim() || creating) return
+
+    try {
+      setCreating(true)
+      setActionError(null)
+      const created = await createTask({
+        title: newTitle.trim(),
+        dueAt: newDeadline ? new Date(newDeadline).toISOString() : undefined,
+        importance: newPriority,
+      })
+      const newItem = mapTaskToItem(created)
+      setTasks((prev) => [newItem, ...prev])
+      // Reset form
+      setNewTitle('')
+      setNewDeadline('')
+      setNewPriority('HIGH')
+      // Navigate to AI analysis
+      onAIAnalysis(newItem)
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : '创建任务失败')
+    } finally {
+      setCreating(false)
     }
-    onAIAnalysis(newTask)
+  }
+
+  // ---------------------------------------------------------------------------
+  // Complete task → API (optimistic)
+  // ---------------------------------------------------------------------------
+  async function handleComplete(taskId: string): Promise<void> {
+    setTasks((prev) => prev.map((t) => t.id === taskId ? { ...t, done: true } : t))
+    try {
+      setActionError(null)
+      const idempotencyKey = `complete-${taskId}-${Date.now()}`
+      await completeTask(taskId, idempotencyKey)
+    } catch (err) {
+      // Revert on failure
+      setTasks((prev) => prev.map((t) => t.id === taskId ? { ...t, done: false } : t))
+      setActionError(err instanceof Error ? err.message : '完成任务失败')
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Delete task → API (optimistic)
+  // ---------------------------------------------------------------------------
+  async function handleDelete(taskId: string): Promise<void> {
+    const snapshot = tasks
+    setTasks((prev) => prev.filter((t) => t.id !== taskId))
+    try {
+      setActionError(null)
+      await deleteTask(taskId)
+    } catch (err) {
+      // Revert on failure
+      setTasks(snapshot)
+      setActionError(err instanceof Error ? err.message : '删除任务失败')
+    }
   }
 
   return (
@@ -112,9 +255,49 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
             ))}
           </nav>
 
+          {/* Loading state */}
+          {loading && (
+            <div className={styles.statusMessage}>
+              <IconLoader2 size={24} stroke={1.5} className={styles.spinner} />
+              <span>加载中…</span>
+            </div>
+          )}
+
+          {/* Error state */}
+          {(error || actionError) && (
+            <div className={styles.errorMessage} role="alert">
+              <IconAlertCircle size={18} stroke={1.5} />
+              <span>{error || actionError}</span>
+              {error && (
+                <button type="button" onClick={fetchTasks} className={styles.retryButton}>
+                  重试
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!loading && !error && filteredTasks.length === 0 && (
+            <div className={styles.statusMessage}>
+              <span>{filter === 'done' ? '还没有已完成的任务' : '没有待办任务 🎉'}</span>
+            </div>
+          )}
+
           <ul className={styles.taskList}>
-            {tasks.map((task) => (
-              <li key={task.id} className={styles.taskItem}>
+            {filteredTasks.map((task) => (
+              <li key={task.id} className={`${styles.taskItem} ${task.done ? styles.taskDone : ''}`}>
+                {/* Complete button (only for pending tasks) */}
+                {!task.done && (
+                  <button
+                    type="button"
+                    className={styles.completeBtn}
+                    aria-label={`完成任务: ${task.title}`}
+                    onClick={() => handleComplete(task.id)}
+                  >
+                    <IconCheck size={14} stroke={2.5} />
+                  </button>
+                )}
+                {task.done && <span className={styles.doneMark}>✓</span>}
                 <span className={styles.taskIcon}>
                   {task.urgency === '紧急' ? (
                     <IconAlertCircle size={22} stroke={2} className={styles.iconUrgent} />
@@ -129,6 +312,15 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
                 <span className={`${styles.urgencyBadge} ${URGENCY_COLORS[task.urgency]}`}>
                   {task.urgency}
                 </span>
+                {/* Delete button */}
+                <button
+                  type="button"
+                  className={styles.deleteBtn}
+                  aria-label={`删除任务: ${task.title}`}
+                  onClick={() => handleDelete(task.id)}
+                >
+                  <IconTrash size={15} stroke={1.5} />
+                </button>
               </li>
             ))}
           </ul>
@@ -152,6 +344,7 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   required
+                  disabled={creating}
                 />
               </label>
 
@@ -160,10 +353,10 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
                 <div className={styles.dateInput}>
                   <IconCalendarDue size={20} stroke={1.5} />
                   <input
-                    type="text"
-                    placeholder={`${today.getMonth() + 1}月${today.getDate()}日 17:30`}
+                    type="datetime-local"
                     value={newDeadline}
                     onChange={(e) => setNewDeadline(e.target.value)}
+                    disabled={creating}
                   />
                 </div>
               </label>
@@ -175,6 +368,7 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
                   <select
                     value={newPriority}
                     onChange={(e) => setNewPriority(e.target.value as TaskPriority)}
+                    disabled={creating}
                   >
                     <option value="HIGH">高</option>
                     <option value="MEDIUM">中</option>
@@ -187,10 +381,10 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
                 创建后将直接进入 AI 建议确认
               </p>
 
-              <Button variant="primary" fullWidth type="submit">
-                创建并进入 AI 分析
+              <Button variant="primary" fullWidth type="submit" disabled={creating}>
+                {creating ? '创建中…' : '创建并进入 AI 分析'}
               </Button>
-              <Button variant="secondary" fullWidth onClick={onClose}>
+              <Button variant="secondary" fullWidth onClick={onClose} disabled={creating}>
                 取消
               </Button>
             </form>

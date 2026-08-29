@@ -1,6 +1,7 @@
+/* ═══ Window ═══ */
 .window {
   width: min(1120px, calc(100vw - 40px));
-  height: min(820px, calc(100vh - 40px));
+  height: calc(100vh - var(--nav-bar-height, 62px));
 }
 
 .windowInner {
@@ -16,12 +17,13 @@
   padding: 24px 32px;
 }
 
-/* ─── Header ─── */
+/* ═══ Header ═══ */
 .header {
   display: flex;
   align-items: center;
   gap: 14px;
   margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .headerLeft {
@@ -64,7 +66,7 @@
   cursor: pointer;
 }
 
-/* ─── Body: timeline + commitments ─── */
+/* ═══ Body: timeline + commitments ═══ */
 .body {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -73,47 +75,95 @@
   min-height: 0;
 }
 
-/* ─── Timeline ─── */
+/* ═══ Timeline (left) ═══ */
 .timeline {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .timelineGrid {
-  position: relative;
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 64px 1fr;
   flex: 1;
+  min-height: 0;
+}
+
+/* ── Hour markers column ── */
+.hourColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 0;
+  position: relative;
+}
+
+/* Vertical dashed line connecting dots */
+.hourColumn::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--color-border) 0,
+    var(--color-border) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+}
+
+.hourRow {
+  display: flex;
+  align-items: center;
 }
 
 .hourLabel {
   font-size: var(--text-small);
   color: var(--color-text-muted);
-  padding: 8px 0;
-  width: 48px;
   text-align: right;
-  flex-shrink: 0;
+  flex: 1;
+  padding-right: 10px;
 }
 
+.hourDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  margin-right: -4px;
+}
+
+/* ═══ Schedule blocks (right of hour column) ═══ */
 .blocks {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
-  padding-left: 16px;
-  border-left: 2px dashed var(--color-border);
+  padding: 4px 0 4px 20px;
 }
 
 .block {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
   padding: 12px 16px;
   border-radius: 4px;
   font-size: var(--text-body);
+  transition: box-shadow 0.15s ease;
 }
 
+.block:hover {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Block color variants ── */
 .work {
   background: #e8f4ea;
   border: 1px solid #c3dfc8;
@@ -125,16 +175,38 @@
   color: var(--color-text-muted);
 }
 
+.wrapup {
+  background: #3d8b7a;
+  border: 1px solid #2d7566;
+  color: #fff;
+}
+
 .buffer {
   background: var(--color-surface-soft);
   border: 1px dashed var(--color-border);
 }
 
+/* ── Block status variants ── */
+.blockCompleted {
+  opacity: 0.6;
+}
+
+.blockCompleted .blockTitle {
+  text-decoration: line-through;
+}
+
+.blockActive {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.blockLocked {}
+
+/* ── Block inner elements ── */
 .blockTime {
   font-weight: 600;
   font-size: var(--text-small);
   white-space: nowrap;
-  min-width: 120px;
+  min-width: 110px;
 }
 
 .blockTitle {
@@ -145,9 +217,10 @@
 .blockActions {
   display: flex;
   gap: 10px;
+  flex-shrink: 0;
 }
 
-.blockActions button {
+.actionBtn {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -160,10 +233,32 @@
   white-space: nowrap;
 }
 
-.blockActions button:hover {
+.actionBtn:hover {
   color: var(--color-primary);
 }
 
+.actionBtnActive {
+  color: var(--color-primary);
+}
+
+/* Override muted colors inside dark (wrapup) blocks */
+.wrapup .blockTime {
+  color: #fff;
+}
+
+.wrapup .actionBtn {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wrapup .actionBtn:hover {
+  color: #fff;
+}
+
+.wrapup .actionBtnActive {
+  color: #fff;
+}
+
+/* ═══ Estimate banner ═══ */
 .estimateBanner {
   display: flex;
   align-items: center;
@@ -176,13 +271,15 @@
   color: var(--color-success);
   font-weight: 600;
   font-size: var(--text-body);
+  flex-shrink: 0;
 }
 
-/* ─── Commitments sidebar ─── */
+/* ═══ Commitments sidebar (right) ═══ */
 .commitments {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: auto;
 }
 
 .commitments h3 {
@@ -271,7 +368,59 @@
   color: var(--color-primary);
 }
 
-/* ─── Capybara ─── */
+/* ═══ NangFee display ═══ */
+.nangFee {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--color-surface-soft);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.nangFeeLabel {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.nangFeeIcon {
+  display: flex;
+  color: var(--color-primary);
+}
+
+.nangFeeAmount {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-primary);
+  margin-left: auto;
+}
+
+.nangFeeZero {
+  color: var(--color-success);
+}
+
+.nangFeeCurrency {
+  margin-right: 2px;
+}
+
+.digitSlot {
+  display: inline-block;
+  height: 1.15em;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.digitInner {
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* ═══ Capybara ═══ */
 .petCharacter {
   position: absolute;
   right: 10px;
@@ -280,4 +429,84 @@
   height: 150px;
   object-fit: contain;
   pointer-events: none;
+}
+
+/* ── Drag handle ── */
+.dragHandle {
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  color: var(--color-text-muted);
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.block[draggable='true']:active {
+  opacity: 0.5;
+}
+
+/* ── Duration picker ── */
+.durationPicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 0 0;
+  border-top: 1px dashed var(--color-border);
+  margin-top: 4px;
+}
+
+.durationBtn {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: var(--color-surface-soft);
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.durationBtn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.durationBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.durationValue {
+  font-size: var(--text-small);
+  font-weight: 600;
+  min-width: 64px;
+  text-align: center;
+}
+
+/* ── Dark block (wrapup) overrides ── */
+.wrapup .dragHandle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wrapup .durationPicker {
+  border-top-color: rgba(255, 255, 255, 0.3);
+}
+
+.wrapup .durationBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.wrapup .durationBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }

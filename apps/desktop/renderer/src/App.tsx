@@ -1,4 +1,13 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { isAuthenticated, getMe, logout as apiLogout } from './api/auth'
+import type { User } from './api/types'
+import {
+  IconCalendarDue,
+  IconUsers,
+  IconSettings,
+  IconShoppingBag,
+  IconWallet
+} from '@tabler/icons-react'
 import { LoginScreen } from './features/auth/LoginScreen'
 import { TaskScheduleFlow } from './features/task-schedule/TaskScheduleFlow'
 import { useEngine } from './features/task-schedule/adapter/useEngine'
@@ -7,15 +16,14 @@ import { ShopScreen } from './features/shop/ShopScreen'
 import { CustomizationScreen } from './features/customization/CustomizationScreen'
 import { WalletScreen } from './features/wallet/WalletScreen'
 import { SettingsUiGroup } from './features/settings/SettingsUiGroup'
+import { NangFeeScreen } from './features/nang-fee/NangFeeScreen'
 import styles from './App.module.css'
 
 /**
  * Screen IDs — each is a full-window PixelSurface panel with its own close button.
- * Navigation is stack-based: open a screen → close returns to previous.
  *
  * 'task-flow' 是任务与排程的 6 屏（气泡/待办/AI 建议/安排草案/跑路确认/跑路结果），
  * 由 useEngine 驱动真实逻辑层，内部自己路由，所以在外层只占一个屏幕位。
- * 旧的 features/tasks 与 features/schedule 组件仍保留在仓库里，未接入路由。
  */
 export type ScreenId =
   | 'task-flow'
@@ -24,18 +32,60 @@ export type ScreenId =
   | 'customization'
   | 'wallet'
   | 'settings'
+  | 'nangfee'
+
+/** Navigation items shown in the bottom bar. */
+const NAV_ITEMS: Array<{ id: ScreenId; label: string; icon: typeof IconCalendarDue }> = [
+  { id: 'task-flow', label: '任务安排', icon: IconCalendarDue },
+  { id: 'friends', label: '好友', icon: IconUsers },
+  { id: 'wallet', label: '钱包', icon: IconWallet },
+  { id: 'shop', label: '商店', icon: IconShoppingBag },
+  { id: 'settings', label: '设置', icon: IconSettings }
+]
 
 export function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [authChecking, setAuthChecking] = useState(() => isAuthenticated())
   const [screen, setScreen] = useState<ScreenId>('task-flow')
   const engine = useEngine('05-task-list')
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      setAuthChecking(false)
+      return
+    }
+
+    let cancelled = false
+
+    getMe()
+      .then((me) => {
+        if (!cancelled) {
+          setUser(me)
+          setAuthChecking(false)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          apiLogout()
+          setAuthChecking(false)
+        }
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   function openScreen(id: ScreenId): void {
     setScreen(id)
   }
 
-  if (!loggedIn) {
-    return <LoginScreen onSuccess={() => setLoggedIn(true)} />
+  if (authChecking) {
+    return null
+  }
+
+  if (!user) {
+    return <LoginScreen onSuccess={setUser} />
   }
 
   const screens: Record<ScreenId, ReactNode> = {
@@ -48,9 +98,7 @@ export function App() {
         }}
       />
     ),
-    friends: (
-      <FriendsManagementScreen />
-    ),
+    friends: <FriendsManagementScreen />,
     shop: (
       <ShopScreen
         onClose={() => setScreen('task-flow')}
@@ -68,14 +116,29 @@ export function App() {
         onNavigate={openScreen}
       />
     ),
-    settings: (
-      <SettingsUiGroup />
-    ),
+    nangfee: <NangFeeScreen />,
+    settings: <SettingsUiGroup />
   }
 
   return (
     <main className={styles.stage} data-ui-screen={screen}>
-      {screens[screen]}
+      <div className={styles.content}>
+        {screens[screen]}
+      </div>
+
+      <nav className={styles.navBar} aria-label="主导航">
+        {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            type="button"
+            className={screen === id ? styles.navItemActive : styles.navItem}
+            onClick={() => openScreen(id)}
+          >
+            <Icon size={20} stroke={1.6} />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
     </main>
   )
 }

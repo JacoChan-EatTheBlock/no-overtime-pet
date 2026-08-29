@@ -1,8 +1,135 @@
 .window {
   width: min(1120px, calc(100vw - 40px));
-  height: min(780px, calc(100vh - 40px));
+  height: calc(100vh - var(--nav-bar-height, 62px));
 }
 
+/* ─── Purchase Confirm Modal ─── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgb(29 32 35 / 42%);
+  animation: shopFadeIn 160ms ease;
+}
+
+@keyframes shopFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  width: min(420px, calc(100vw - 48px));
+  padding: 28px 24px;
+  border: 3px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 18%);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: var(--text-title-2);
+  font-weight: 700;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.modalItemPreview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #e4cfb2;
+  border-radius: 4px;
+  background: var(--color-surface-soft);
+}
+
+.modalItemEmoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.modalItemThumbnail {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.modalItemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modalItemName {
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.modalItemDesc {
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
+}
+
+.modalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-body);
+}
+
+.modalRowLabel {
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.modalRowValue {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.modalRowDanger {
+  color: var(--color-danger);
+}
+
+.modalRowPositive {
+  color: var(--color-success);
+}
+
+.modalDivider {
+  border: 0;
+  border-top: 1px dashed var(--color-border);
+  margin: 4px 0;
+}
+
+.insufficientWarning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  color: var(--color-danger);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
 .windowInner {
   display: grid;
   grid-template-rows: 56px minmax(0, 1fr);
@@ -211,4 +338,112 @@
   height: 120px;
   object-fit: contain;
   pointer-events: none;
+}
+
+/* ─── Emoji fallback ─── */
+.emojiFallback {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.detailEmoji {
+  width: 100%;
+  max-height: 240px;
+  font-size: 96px;
+  margin: 8px 0;
+}
+
+/* ─── Action Preview Modal ─── */
+.previewModal {
+  width: min(380px, calc(100vw - 48px));
+  padding: 0;
+  border: 3px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 18%);
+  overflow: hidden;
+}
+
+.previewModalHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 2px solid var(--color-border);
+  background: var(--color-surface-soft);
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.previewCloseBtn {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.previewCloseBtn:hover {
+  background: var(--color-surface-soft);
+}
+
+.previewStage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+  background: repeating-conic-gradient(#f5efe6 0% 25%, #ebe4d9 0% 50%) 0 0 / 24px 24px;
+}
+
+.previewCharacter {
+  animation: previewBounce 800ms ease-in-out infinite;
+}
+
+@keyframes previewBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.previewSprite {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.previewEmoji {
+  font-size: 120px;
+  line-height: 1;
+}
+
+.previewInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px;
+  border-top: 2px solid var(--color-border);
+}
+
+.previewItemName {
+  font-size: var(--text-title-2);
+  font-weight: 700;
+}
+
+.previewActionName {
+  padding: 3px 12px;
+  border-radius: 2px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  font-size: var(--text-small);
+  font-weight: 600;
 }

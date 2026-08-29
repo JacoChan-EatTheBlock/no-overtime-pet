@@ -132,6 +132,19 @@
   font-size: var(--text-small);
 }
 
+.statusError {
+  color: var(--color-danger);
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
 .privacyLine {
   position: absolute;
   right: 54px;
@@ -152,6 +165,23 @@
   color: var(--color-primary-hover);
   font-weight: 600;
   cursor: pointer;
+}
+
+/* --- Loading overlay --- */
+
+.stage[data-loading] .submitButton {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.stage[data-loading] .form input {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.stage[data-loading] .tabs button {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .stage[data-ui-state='register'] .heading {

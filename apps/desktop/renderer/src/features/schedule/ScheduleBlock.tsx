@@ -1,61 +1,120 @@
-import { IconLock, IconLockOpen } from '@tabler/icons-react'
+import React, { useState } from 'react'
+import {
+  IconArrowsMove,
+  IconClock,
+  IconLock,
+  IconMinus,
+  IconPlus,
+} from '@tabler/icons-react'
 import styles from './ScheduleScreen.module.css'
 
 function joinClassNames(...classNames: Array<string | undefined>): string {
   return classNames.filter(Boolean).join(' ')
 }
 
+export type BlockStatus = 'completed' | 'active' | 'pending'
+export type BlockColor = 'work' | 'lunch' | 'wrapup' | 'buffer'
+
 export interface ScheduleBlockData {
   id: string
-  startTime: string
-  taskName: string
+  timeRange: string
+  title: string
   durationMinutes: number
-  isActive?: boolean
-  isLocked?: boolean
+  status: BlockStatus
+  isLocked: boolean
   isBreak?: boolean
+  color: BlockColor
 }
 
 interface ScheduleBlockProps {
   block: ScheduleBlockData
   onToggleLock: (id: string) => void
+  onAdjustDuration: (id: string, newMinutes: number) => void
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, id: string) => void
+  onDragOver: (e: React.DragEvent<HTMLDivElement>) => void
+  onDrop: (e: React.DragEvent<HTMLDivElement>, targetId: string) => void
 }
 
-export function ScheduleBlock({ block, onToggleLock }: ScheduleBlockProps) {
+export function ScheduleBlock({ block, onToggleLock, onAdjustDuration, onDragStart, onDragOver, onDrop }: ScheduleBlockProps) {
+  const [showDuration, setShowDuration] = useState(false)
+
+  const statusClass =
+    block.status === 'completed'
+      ? styles.blockCompleted
+      : block.status === 'active'
+        ? styles.blockActive
+        : undefined
+
+  const canDrag = !block.isLocked && !block.isBreak
+
   return (
     <div
       className={joinClassNames(
         styles.block,
-        block.isActive ? styles.blockActive : undefined,
+        styles[block.color],
+        statusClass,
         block.isLocked ? styles.blockLocked : undefined,
-        block.isBreak ? styles.blockBreak : undefined
       )}
+      draggable={canDrag}
+      onDragStart={canDrag ? (e) => onDragStart(e, block.id) : undefined}
+      onDragOver={(e) => onDragOver(e)}
+      onDrop={(e) => onDrop(e, block.id)}
     >
-      <span className={styles.timeLabel}>{block.startTime}</span>
-      <span className={styles.timelineDot} />
+      {canDrag && (
+        <span className={styles.dragHandle} title="拖拽排序">
+          <IconArrowsMove size={16} stroke={1.8} />
+        </span>
+      )}
 
-      <div className={styles.blockContent}>
-        <div className={styles.blockInfo}>
-          <span className={styles.blockTaskName}>{block.taskName}</span>
-          <span className={styles.blockDuration}>{block.durationMinutes} 分钟</span>
-        </div>
-        {!block.isBreak ? (
+      <span className={styles.blockTime}>{block.timeRange}</span>
+      <span className={styles.blockTitle}>{block.title}</span>
+
+      <div className={styles.blockActions}>
+        <button
+          type="button"
+          className={joinClassNames(
+            styles.actionBtn,
+            block.isLocked ? styles.actionBtnActive : undefined,
+          )}
+          title={block.isLocked ? '解锁' : '锁定'}
+          onClick={() => onToggleLock(block.id)}
+        >
+          <IconLock size={14} stroke={1.8} />
+          <span>锁定</span>
+        </button>
+        {!block.isBreak && (
           <button
             type="button"
-            className={joinClassNames(
-              styles.lockButton,
-              block.isLocked ? styles.locked : undefined
-            )}
-            aria-label={block.isLocked ? `解锁时间块：${block.taskName}` : `锁定时间块：${block.taskName}`}
-            onClick={() => onToggleLock(block.id)}
+            className={joinClassNames(styles.actionBtn, showDuration ? styles.actionBtnActive : undefined)}
+            title="调整时长"
+            onClick={() => setShowDuration((v) => !v)}
           >
-            {block.isLocked ? (
-              <IconLock size={18} stroke={2} />
-            ) : (
-              <IconLockOpen size={18} stroke={2} />
-            )}
+            <IconClock size={14} stroke={1.8} />
+            <span>调整时长</span>
           </button>
-        ) : null}
+        )}
       </div>
+
+      {showDuration && !block.isBreak && (
+        <div className={styles.durationPicker}>
+          <button
+            type="button"
+            className={styles.durationBtn}
+            onClick={() => onAdjustDuration(block.id, block.durationMinutes - 10)}
+            disabled={block.durationMinutes <= 10}
+          >
+            <IconMinus size={14} stroke={2} />
+          </button>
+          <span className={styles.durationValue}>{block.durationMinutes} 分钟</span>
+          <button
+            type="button"
+            className={styles.durationBtn}
+            onClick={() => onAdjustDuration(block.id, block.durationMinutes + 10)}
+          >
+            <IconPlus size={14} stroke={2} />
+          </button>
+        </div>
+      )}
     </div>
   )
 }

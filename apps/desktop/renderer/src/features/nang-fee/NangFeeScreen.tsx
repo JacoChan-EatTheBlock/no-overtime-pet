@@ -5,6 +5,7 @@ import {
   IconReceipt
 } from '@tabler/icons-react'
 import { LedgerEntry } from './LedgerEntry'
+import { PixelWindowHeader } from '../../components/PixelWindowHeader'
 import {
   MOCK_USER_ECONOMY,
   MOCK_LEDGER,
@@ -25,6 +26,7 @@ export function NangFeeScreen() {
 
   return (
     <div className={styles.stage} data-ui-screen="nang-fee">
+      <PixelWindowHeader />
       {/* Hero — current balance */}
       <div className={styles.hero}>
         <span className={styles.heroLabel}>窝囊费余额</span>

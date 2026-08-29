@@ -1,4 +1,14 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { type FormEvent, useCallback, useEffect, useState } from 'react'
+import {
+  sendFriendRequest,
+  getPendingRequests,
+  acceptRequest as apiAcceptRequest,
+  declineRequest as apiDeclineRequest,
+  listFriends,
+  removeFriend,
+  updateVisibility,
+} from '../../api/friends'
+import type { Friend, FriendRequest } from '../../api/types'
 import {
   IconBell,
   IconCheck,
@@ -19,12 +29,11 @@ import {
 } from '@tabler/icons-react'
 import { Button } from '../../components/Button'
 import { PixelSurface } from '../../components/PixelSurface'
+import { PixelWindowHeader } from '../../components/PixelWindowHeader'
 import {
-  FRIEND_REQUESTS,
   FRIENDS,
   STATUS_CLASS_NAMES,
   type FriendFixture,
-  type FriendRequestFixture,
   type PetMotion,
   resolvePetMotionAssetPath
 } from './petSocialMenu.fixtures'
@@ -86,6 +95,7 @@ export function DefaultDesktopPetScreen() {
         aria-pressed={isSelected}
         onClick={() => setIsSelected((current) => !current)}
       >
+        <PixelWindowHeader />
         <PetArtwork className={styles.defaultPet} alt="坐在电脑前工作的像素水豚" />
       </button>
     </main>
@@ -148,41 +158,121 @@ export function FriendPetStripScreen() {
 type FriendProjectionState = Record<string, boolean>
 
 export function FriendsManagementScreen() {
-  const displayedFriends = useMemo(() => FRIENDS.slice(0, 8), [])
-  const acceptedFriends = useMemo(() => FRIENDS.filter((friend) => !friend.isSelf).slice(0, 7), [])
-  const [selectedFriendId, setSelectedFriendId] = useState(acceptedFriends[0]?.id ?? '')
+  // ── API state ──────────────────────────────────────────────────────────
+  const [friends, setFriends] = useState<Friend[]>([])
+  const [requests, setRequests] = useState<FriendRequest[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  // ── UI state ───────────────────────────────────────────────────────────
+  const [selectedFriendId, setSelectedFriendId] = useState('')
   const [openMenuFriendId, setOpenMenuFriendId] = useState<string | null>(null)
-  const [projectionByFriend, setProjectionByFriend] = useState<FriendProjectionState>(() =>
-    Object.fromEntries(acceptedFriends.map((friend) => [friend.id, true]))
-  )
-  const [requests, setRequests] = useState<FriendRequestFixture[]>(FRIEND_REQUESTS)
+  const [projectionByFriend, setProjectionByFriend] = useState<FriendProjectionState>({})
   const [friendCode, setFriendCode] = useState('')
   const [feedback, setFeedback] = useState('')
+  const [broadcastMode, setBroadcastMode] = useState('正常广播')
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
-  const selectedFriend = acceptedFriends.find((friend) => friend.id === selectedFriendId)
+  const selectedFriend = friends.find((f) => f.relationId === selectedFriendId)
   const selectedFriendReceivesProjection = selectedFriend
-    ? projectionByFriend[selectedFriend.id] !== false
+    ? projectionByFriend[selectedFriend.relationId] !== false
     : true
 
-  function toggleProjection(friendId: string): void {
-    setProjectionByFriend((current) => ({
-      ...current,
-      [friendId]: current[friendId] === false
-    }))
+  // ── Data fetching ──────────────────────────────────────────────────────
+  const refresh = useCallback(async () => {
+    try {
+      const [friendsData, requestsData] = await Promise.all([
+        listFriends(),
+        getPendingRequests(),
+      ])
+      setFriends(friendsData)
+      setRequests(requestsData)
+      setError('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '加载失败')
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { refresh() }, [refresh])
+
+  // Auto-select first friend when list loads
+  useEffect(() => {
+    if (friends.length > 0 && !selectedFriendId) {
+      setSelectedFriendId(friends[0].relationId)
+    }
+  }, [friends, selectedFriendId])
+
+  // ── Handlers ───────────────────────────────────────────────────────────
+  async function toggleProjection(relationId: string): Promise<void> {
+    const currentlyVisible = projectionByFriend[relationId] !== false
+    const newHidden = currentlyVisible
+    // Optimistic update
+    setProjectionByFriend((current) => ({ ...current, [relationId]: !newHidden }))
     setOpenMenuFriendId(null)
+    try {
+      await updateVisibility(relationId, newHidden)
+    } catch (err) {
+      // Revert on failure
+      setProjectionByFriend((current) => ({ ...current, [relationId]: currentlyVisible }))
+      setFeedback(err instanceof Error ? err.message : '更新可见性失败')
+    }
   }
 
-  function handleRequest(requestId: string, action: 'accept' | 'decline'): void {
+  async function handleRequest(requestId: string, action: 'accept' | 'decline'): Promise<void> {
     const request = requests.find((item) => item.id === requestId)
-    setRequests((current) => current.filter((item) => item.id !== requestId))
-    setFeedback(request ? `${request.displayName}的申请已${action === 'accept' ? '接受' : '拒绝'}` : '')
+    setSubmitting(true)
+    try {
+      if (action === 'accept') {
+        await apiAcceptRequest(requestId)
+      } else {
+        await apiDeclineRequest(requestId)
+      }
+      setRequests((current) => current.filter((item) => item.id !== requestId))
+      const name = request?.requester?.displayName ?? '好友'
+      setFeedback(`${name}的申请已${action === 'accept' ? '接受' : '拒绝'}`)
+      if (action === 'accept') await refresh()
+    } catch (err) {
+      setFeedback(err instanceof Error ? err.message : '操作失败')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  function handleFriendCodeSubmit(event: FormEvent<HTMLFormElement>): void {
+  async function handleFriendCodeSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
-    setFeedback(friendCode.trim() ? `已向 ${friendCode.trim()} 发送好友申请` : '请输入完整好友码')
-    if (friendCode.trim()) {
+    const code = friendCode.trim()
+    if (!code) {
+      setFeedback('请输入完整好友码')
+      return
+    }
+    setSubmitting(true)
+    try {
+      await sendFriendRequest(code)
+      setFeedback(`已向 ${code} 发送好友申请`)
       setFriendCode('')
+    } catch (err) {
+      setFeedback(err instanceof Error ? err.message : '发送失败')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleRemoveFriend(relationId: string): Promise<void> {
+    setSubmitting(true)
+    try {
+      await removeFriend(relationId)
+      setFriends((current) => current.filter((f) => f.relationId !== relationId))
+      if (selectedFriendId === relationId) setSelectedFriendId('')
+      setFeedback('好友已删除')
+      setConfirmDeleteId(null)
+      setOpenMenuFriendId(null)
+    } catch (err) {
+      setFeedback(err instanceof Error ? err.message : '删除失败')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -197,6 +287,7 @@ export function FriendsManagementScreen() {
         innerClassName={styles.friendsWindowInner}
         ariaLabel="好友管理"
       >
+        <PixelWindowHeader />
         <header className={styles.friendsHeader}>
           <IconUsers size={44} stroke={1.7} aria-hidden="true" />
           <div>
@@ -217,58 +308,72 @@ export function FriendsManagementScreen() {
           </button>
         </div>
 
+        {error && <p className={styles.feedback} role="alert">{error}</p>}
+        {loading && <p className={styles.feedback}>加载中…</p>}
+
         <div className={styles.friendsGrid}>
           <section className={styles.friendListSection} aria-labelledby="friend-list-title">
-            <h2 id="friend-list-title">我的好友 <span>{displayedFriends.length}</span></h2>
+            <h2 id="friend-list-title">我的好友 <span>{friends.length}</span></h2>
             <div className={styles.friendList}>
-              {displayedFriends.map((friend) => {
-                const receivesProjection = projectionByFriend[friend.id] !== false
+              {friends.map((entry) => {
+                const receivesProjection = projectionByFriend[entry.relationId] !== false
 
                 return (
                   <div
                     className={joinClassNames(
                       styles.friendRow,
-                      selectedFriendId === friend.id ? styles.selectedFriendRow : undefined
+                      selectedFriendId === entry.relationId ? styles.selectedFriendRow : undefined
                     )}
-                    key={friend.id}
+                    key={entry.relationId}
                   >
                     <button
                       type="button"
                       className={styles.friendIdentity}
-                      aria-label={`选择好友${friend.displayName}`}
-                      disabled={friend.isSelf}
-                      onClick={() => !friend.isSelf && setSelectedFriendId(friend.id)}
+                      aria-label={`选择好友${entry.friend.displayName}`}
+                      onClick={() => setSelectedFriendId(entry.relationId)}
                     >
-                      <PetArtwork motion={friend.status} alt="" />
-                      <strong>{friend.displayName}</strong>
+                      <PetArtwork alt="" />
+                      <strong>{entry.friend.displayName}</strong>
                     </button>
-                    {receivesProjection || friend.isSelf ? <StatusLabel friend={friend} /> : (
+                    {receivesProjection ? (
+                      <span className={styles.statusLabel}>好友</span>
+                    ) : (
                       <span className={styles.hiddenProjectionLabel}>不对其展示</span>
                     )}
-                    {friend.isSelf ? <span aria-hidden="true" /> : (
-                      <button
-                        type="button"
-                        className={styles.rowMenuButton}
-                        aria-label={`${friend.displayName}好友操作`}
-                        aria-expanded={openMenuFriendId === friend.id}
-                        onClick={() => {
-                          setSelectedFriendId(friend.id)
-                          setOpenMenuFriendId((current) => current === friend.id ? null : friend.id)
-                        }}
-                      >
-                        <span className={styles.rowMenuTriggerIcon} aria-hidden="true">
-                          <IconDots size={23} stroke={2} />
-                        </span>
-                        <IconChevronDown size={18} stroke={2} aria-hidden="true" />
-                      </button>
-                    )}
-                    {!friend.isSelf && openMenuFriendId === friend.id ? (
+                    <button
+                      type="button"
+                      className={styles.rowMenuButton}
+                      aria-label={`${entry.friend.displayName}好友操作`}
+                      aria-expanded={openMenuFriendId === entry.relationId}
+                      onClick={() => {
+                        setSelectedFriendId(entry.relationId)
+                        setOpenMenuFriendId((current) =>
+                          current === entry.relationId ? null : entry.relationId
+                        )
+                      }}
+                    >
+                      <span className={styles.rowMenuTriggerIcon} aria-hidden="true">
+                        <IconDots size={23} stroke={2} />
+                      </span>
+                      <IconChevronDown size={18} stroke={2} aria-hidden="true" />
+                    </button>
+                    {openMenuFriendId === entry.relationId ? (
                       <PixelSurface className={styles.rowMenu} innerClassName={styles.rowMenuInner}>
-                        <button type="button" onClick={() => toggleProjection(friend.id)}>
+                        <button type="button" onClick={() => toggleProjection(entry.relationId)}>
                           {receivesProjection ? '不对其展示' : '恢复对其展示'}
                         </button>
-                        <button type="button">删除好友</button>
+                        <button type="button" onClick={() => {
+                          setConfirmDeleteId(entry.relationId)
+                          setOpenMenuFriendId(null)
+                        }}>删除好友</button>
                       </PixelSurface>
+                    ) : null}
+                    {confirmDeleteId === entry.relationId ? (
+                      <div className={styles.feedback}>
+                        确定要删除{entry.friend.displayName}吗？
+                        <Button variant="primary" disabled={submitting} onClick={() => handleRemoveFriend(entry.relationId)}>确认</Button>
+                        <Button disabled={submitting} onClick={() => setConfirmDeleteId(null)}>取消</Button>
+                      </div>
                     ) : null}
                   </div>
                 )
@@ -277,16 +382,20 @@ export function FriendsManagementScreen() {
 
             <div className={styles.broadcastSummary}>
               <IconEye size={25} stroke={1.9} aria-hidden="true" />
-              <span>我的活动广播：</span>
-              <strong>已开启</strong>
+              <span>我的可见状态：</span>
+              <select
+                className={styles.broadcastSelect}
+                value={broadcastMode}
+                onChange={(event) => setBroadcastMode(event.target.value)}
+              >
+                <option value="正常广播">正常广播</option>
+                <option value="隐身">隐身</option>
+              </select>
             </div>
-            <p className={styles.privacyNotice}>
-              好友看不到你的任务、DDL、日薪、窝囊费或正在使用的应用。
-            </p>
           </section>
 
           <section className={styles.friendActionsSection} aria-label="好友操作">
-            <form className={styles.addFriendForm} onSubmit={handleFriendCodeSubmit}>
+            <form className={styles.addFriendForm} onSubmit={(e) => { handleFriendCodeSubmit(e) }}>
               <h2>添加好友</h2>
               <div>
                 <input
@@ -295,7 +404,7 @@ export function FriendsManagementScreen() {
                   value={friendCode}
                   onChange={(event) => setFriendCode(event.target.value)}
                 />
-                <Button variant="primary" type="submit">发送申请</Button>
+                <Button variant="primary" type="submit" disabled={submitting}>发送申请</Button>
               </div>
             </form>
 
@@ -304,9 +413,9 @@ export function FriendsManagementScreen() {
               {requests.length > 0 ? requests.map((request) => (
                 <div className={styles.requestRow} key={request.id}>
                   <PetArtwork alt="" />
-                  <strong>{request.displayName}</strong>
-                  <Button variant="primary" onClick={() => handleRequest(request.id, 'accept')}>接受</Button>
-                  <Button onClick={() => handleRequest(request.id, 'decline')}>拒绝</Button>
+                  <strong>{request.requester?.displayName ?? '未知用户'}</strong>
+                  <Button variant="primary" disabled={submitting} onClick={() => handleRequest(request.id, 'accept')}>接受</Button>
+                  <Button disabled={submitting} onClick={() => handleRequest(request.id, 'decline')}>拒绝</Button>
                 </div>
               )) : <p className={styles.emptyRequests}>暂无新的好友申请</p>}
             </div>
@@ -315,14 +424,19 @@ export function FriendsManagementScreen() {
               <p>
                 <IconInfoCircle size={22} stroke={1.8} aria-hidden="true" />
                 {selectedFriend
-                  ? `${selectedFriend.displayName}${selectedFriendReceivesProjection ? '当前可以' : '当前不可以'}看到你的桌宠和活动状态。好友关系与对方到你的展示方向均保持不变。`
+                  ? (selectedFriendReceivesProjection
+                      ? `${selectedFriend.friend.displayName}当前可以看到你的桌宠和活动状态。`
+                      : '对方将看不到你的桌宠和活动状态，好友关系仍保留。')
                   : '请选择好友。'}
               </p>
               <div>
-                <Button>删除好友</Button>
                 <Button
-                  onClick={() => selectedFriend && toggleProjection(selectedFriend.id)}
-                  disabled={!selectedFriend}
+                  disabled={!selectedFriend || submitting}
+                  onClick={() => selectedFriend && setConfirmDeleteId(selectedFriend.relationId)}
+                >删除好友</Button>
+                <Button
+                  onClick={() => selectedFriend && toggleProjection(selectedFriend.relationId)}
+                  disabled={!selectedFriend || submitting}
                 >
                   {selectedFriendReceivesProjection ? (
                     <><IconEyeOff size={21} stroke={1.9} aria-hidden="true" />不对其展示</>
@@ -336,6 +450,11 @@ export function FriendsManagementScreen() {
             <p className={styles.feedback} role="status">{feedback}</p>
           </section>
         </div>
+
+        <p className={styles.privacyNotice}>
+          <IconInfoCircle size={18} stroke={1.8} aria-hidden="true" />
+          好友看不到你的任务、DDL、日薪、窝囊费或正在使用的应用。
+        </p>
       </PixelSurface>
     </main>
   )

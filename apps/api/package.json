@@ -6,6 +6,9 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "start": "node dist/main",
+    "migration:run": "npx typeorm migration:run -d src/data-source.ts",
+    "migration:revert": "npx typeorm migration:revert -d src/data-source.ts",
+    "migration:generate": "npx typeorm migration:generate -d src/data-source.ts",
     "lint": "eslint src/",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"

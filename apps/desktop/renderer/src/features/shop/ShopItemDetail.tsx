@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// ShopItemDetail.tsx — 商品详情弹窗
+// ShopItemDetail.tsx — 商品详情面板
 // ---------------------------------------------------------------------------
 import { IconCheck, IconShoppingCart, IconX } from '@tabler/icons-react'
 import { Button } from '../../components/Button'
@@ -26,10 +26,10 @@ const TYPE_LABELS: Record<string, string> = {
 function formatWorkTime(ms: number): string {
   if (ms === 0) return '免费'
   const totalMin = Math.round(ms / 60000)
-  if (totalMin < 60) return `${totalMin} 分钟工时`
+  if (totalMin < 60) return `约 ${totalMin} 分钟的窝囊费`
   const h = Math.floor(totalMin / 60)
   const m = totalMin % 60
-  return m > 0 ? `${h} 小时 ${m} 分钟工时` : `${h} 小时工时`
+  return m > 0 ? `约 ${h} 小时 ${m} 分钟的窝囊费` : `约 ${h} 小时的窝囊费`
 }
 
 export function ShopItemDetail({
@@ -72,15 +72,18 @@ export function ShopItemDetail({
           <h2 className={styles.itemName}>{item.name}</h2>
           <p className={styles.description}>{item.description}</p>
 
+          {item.requiredWorkMs > 0 && (
+            <p className={styles.workTime}>
+              相当于你当前{formatWorkTime(item.requiredWorkMs)}
+            </p>
+          )}
+
           <div className={styles.priceLine}>
             <span className={styles.priceLabel}>价格</span>
             {item.requiredWorkMs === 0 ? (
               <span className={styles.freeTag}>免费</span>
             ) : (
-              <>
-                <span className={styles.priceAmount}>{formatYuan(priceYuan)}</span>
-                <span className={styles.workTime}>≈ {formatWorkTime(item.requiredWorkMs)}</span>
-              </>
+              <span className={styles.priceAmount}>{formatYuan(priceYuan)}</span>
             )}
           </div>
 

@@ -1,5 +1,4 @@
 import { IconShoppingCart, IconAlertTriangle } from '@tabler/icons-react'
-import type { ShopItem } from '../economy/types'
 import { Button } from '../../components/Button'
 import styles from './ShopScreen.module.css'
 
@@ -7,8 +6,15 @@ function joinClassNames(...classNames: Array<string | undefined>): string {
   return classNames.filter(Boolean).join(' ')
 }
 
+interface PurchaseModalItem {
+  name: string
+  description: string
+  thumbnail?: string
+  emoji?: string
+}
+
 interface PurchaseConfirmModalProps {
-  item: ShopItem
+  item: PurchaseModalItem
   displayPrice: string
   priceAmount: number
   currentBalance: number
@@ -44,9 +50,17 @@ export function PurchaseConfirmModal({
         <div className={styles.modalBody}>
           {/* Item preview */}
           <div className={styles.modalItemPreview}>
-            <span className={styles.modalItemEmoji} role="img" aria-label={item.name}>
-              {item.emoji}
-            </span>
+            {item.thumbnail ? (
+              <img
+                className={`${styles.modalItemThumbnail} pixel-art`}
+                src={item.thumbnail}
+                alt={item.name}
+              />
+            ) : item.emoji ? (
+              <span className={styles.modalItemEmoji} role="img" aria-label={item.name}>
+                {item.emoji}
+              </span>
+            ) : null}
             <div className={styles.modalItemInfo}>
               <span className={styles.modalItemName}>{item.name}</span>
               <span className={styles.modalItemDesc}>{item.description}</span>

@@ -1,8 +1,216 @@
 .window {
   width: min(1120px, calc(100vw - 40px));
-  height: min(780px, calc(100vh - 40px));
+  height: calc(100vh - var(--nav-bar-height, 62px));
 }
 
+/* ─── CharacterPreview sub-component ─── */
+.previewCanvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+.previewHatStack {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+.previewHat {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.previewCharacterEmoji {
+  font-size: 80px;
+  line-height: 1;
+}
+
+.previewCharName {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* ─── HatInventoryList sub-component ─── */
+.hatInventory {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.hatSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hatSectionTitle {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.hatOrderHint {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+}
+
+.hatList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hatRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #efe5d6;
+  border-radius: 3px;
+  background: var(--color-surface-soft);
+}
+
+.hatRowEquipped {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 6%, var(--color-surface-soft));
+}
+
+.hatRowDragging {
+  opacity: 0.4;
+}
+
+.hatRowOver {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
+}
+
+.hatGrip {
+  color: var(--color-disabled);
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.hatOrder {
+  display: grid;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  font-size: var(--text-small);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.hatRow img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.hatActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.hatMoveBtn {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.hatMoveBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.emptyHint {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--color-text-muted);
+  font-size: var(--text-body);
+}
+
+/* ─── InventoryGrid sub-component ─── */
+.invGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.invItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: var(--color-surface-soft);
+  cursor: pointer;
+  text-align: center;
+}
+
+.invItem:hover {
+  border-color: var(--color-border);
+}
+
+.invItemEquipped {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-soft));
+}
+
+.invItemEmoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.invItemName {
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.invItemBadge {
+  font-size: var(--text-caption);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.invEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 8px;
+  border: 2px dashed var(--color-border);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: var(--text-small);
+  font-weight: 600;
+}
+
+.invEmpty:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
 .windowInner {
   display: grid;
   grid-template-rows: 56px minmax(0, 1fr);
@@ -182,6 +390,11 @@
   border-color: var(--color-primary);
 }
 
+.hatCardEquipped {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-soft));
+}
+
 .hatCard img {
   width: 60px;
   height: 60px;
@@ -259,6 +472,16 @@
 .moveBtn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+.equippedRowDragging {
+  opacity: 0.4;
+}
+
+.equippedRowOver {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface-soft));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .gripIcon {

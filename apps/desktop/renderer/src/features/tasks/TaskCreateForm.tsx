@@ -1,12 +1,14 @@
 import { useState, type FormEvent } from 'react'
-import { IconChevronLeft } from '@tabler/icons-react'
+import {
+  IconCalendarDue,
+  IconChevronLeft,
+  IconCirclePlus,
+  IconFlag,
+  IconSparkles,
+} from '@tabler/icons-react'
 import { Button } from '../../components/Button'
 import type { TaskPriority } from './TaskListScreen'
 import styles from './TaskCreateForm.module.css'
-
-function joinClassNames(...classNames: Array<string | undefined>): string {
-  return classNames.filter(Boolean).join(' ')
-}
 
 export interface TaskCreateData {
   title: string
@@ -19,16 +21,12 @@ interface TaskCreateFormProps {
   onSubmit: (data: TaskCreateData) => void
 }
 
-const PRIORITY_OPTIONS: Array<{ value: TaskPriority; label: string; className: string }> = [
-  { value: 'LOW', label: '低', className: styles.priorityLow },
-  { value: 'MEDIUM', label: '中', className: styles.priorityMedium },
-  { value: 'HIGH', label: '高', className: styles.priorityHigh }
-]
+const today = new Date()
 
 export function TaskCreateForm({ onBack, onSubmit }: TaskCreateFormProps) {
   const [title, setTitle] = useState('')
   const [deadline, setDeadline] = useState('')
-  const [priority, setPriority] = useState<TaskPriority>('MEDIUM')
+  const [priority, setPriority] = useState<TaskPriority>('HIGH')
   const [statusMessage, setStatusMessage] = useState('')
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
@@ -54,20 +52,21 @@ export function TaskCreateForm({ onBack, onSubmit }: TaskCreateFormProps) {
         >
           <IconChevronLeft size={24} stroke={2} />
         </button>
-        <h1>新建任务</h1>
+        <IconCirclePlus size={22} stroke={1.6} />
+        <h1>新增待办</h1>
       </div>
 
       <div className={styles.formArea}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="task-title">
-              任务标题
+              要做什么 <span className={styles.required}>*</span>
             </label>
             <input
               id="task-title"
               className={styles.textInput}
               type="text"
-              placeholder="输入任务标题…"
+              placeholder="梳理上线风险"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               autoFocus
@@ -76,36 +75,34 @@ export function TaskCreateForm({ onBack, onSubmit }: TaskCreateFormProps) {
 
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel} htmlFor="task-deadline">
-              截止时间
+              DDL <span className={styles.required}>*</span>
             </label>
-            <input
-              id="task-deadline"
-              className={styles.dateInput}
-              type="date"
-              value={deadline}
-              onChange={(e) => setDeadline(e.target.value)}
-            />
+            <div className={styles.selectInput}>
+              <IconCalendarDue size={20} stroke={1.5} />
+              <input
+                id="task-deadline"
+                type="datetime-local"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className={styles.fieldGroup}>
-            <span className={styles.fieldLabel}>重要性</span>
-            <div className={styles.priorityGroup} role="radiogroup" aria-label="任务重要性">
-              {PRIORITY_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={priority === opt.value}
-                  className={joinClassNames(
-                    styles.priorityOption,
-                    opt.className,
-                    priority === opt.value ? styles.selected : undefined
-                  )}
-                  onClick={() => setPriority(opt.value)}
-                >
-                  {opt.label}
-                </button>
-              ))}
+            <label className={styles.fieldLabel} htmlFor="task-priority">
+              重要性 <span className={styles.required}>*</span>
+            </label>
+            <div className={styles.selectInput}>
+              <IconFlag size={20} stroke={1.5} />
+              <select
+                id="task-priority"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value as TaskPriority)}
+              >
+                <option value="HIGH">高</option>
+                <option value="MEDIUM">中</option>
+                <option value="LOW">低</option>
+              </select>
             </div>
           </div>
 
@@ -113,15 +110,22 @@ export function TaskCreateForm({ onBack, onSubmit }: TaskCreateFormProps) {
             {statusMessage}
           </p>
 
+          <p className={styles.aiHint}>
+            <IconSparkles size={16} stroke={1.5} />
+            创建后将直接进入 AI 建议确认
+          </p>
+
           <div className={styles.actions}>
-            <Button onClick={onBack}>取消</Button>
             <Button
               variant="primary"
               type="submit"
               fullWidth
               className={styles.submitButton}
             >
-              确认建议
+              创建并进入 AI 分析
+            </Button>
+            <Button variant="secondary" fullWidth onClick={onBack}>
+              取消
             </Button>
           </div>
         </form>

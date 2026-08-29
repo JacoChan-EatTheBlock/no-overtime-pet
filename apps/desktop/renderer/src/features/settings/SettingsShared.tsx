@@ -1,5 +1,6 @@
 import type { PropsWithChildren, ReactNode } from 'react'
 import {
+  IconActivityHeartbeat,
   IconBell,
   IconCalendarTime,
   IconChevronRight,
@@ -16,17 +17,18 @@ import styles from './SettingsUiGroup.module.css'
 export type SettingsScreenId = '04' | '14' | '15' | '16' | '17'
 
 interface SettingsShellProps extends PropsWithChildren {
-  activeScreen: Exclude<SettingsScreenId, '14'>
+  activeScreen: SettingsScreenId
   onNavigate: (screen: SettingsScreenId) => void
   title: string
 }
 
 const SETTINGS_ITEMS: Array<{
-  id: Exclude<SettingsScreenId, '14'>
+  id: SettingsScreenId
   label: string
   icon: typeof IconCalendarTime
 }> = [
   { id: '04', label: '工作设置', icon: IconCalendarTime },
+  { id: '14', label: '活动识别', icon: IconActivityHeartbeat },
   { id: '15', label: '识别与隐私', icon: IconShieldCheck },
   { id: '16', label: '通知', icon: IconBell },
   { id: '17', label: '账号', icon: IconUser }

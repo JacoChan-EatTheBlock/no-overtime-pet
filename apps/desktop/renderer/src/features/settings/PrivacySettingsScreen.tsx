@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from 'react'
 import {
-  IconActivityHeartbeat,
   IconAppWindow,
   IconBrowser,
   IconCamera,
@@ -98,8 +97,8 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
         />
         <PrivacyRow
           icon={<IconDeviceDesktop size={27} stroke={1.7} aria-hidden="true" />}
-          title="本地窗口上下文"
-          collects="窗口类别"
+          title="本地窗口标题"
+          collects="窗口标题文本"
           excludes="窗口内容、文本内容"
           audience="仅你自己"
           retention="7 天"
@@ -119,22 +118,22 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
         />
         <PrivacyRow
           icon={<IconCamera size={27} stroke={1.7} aria-hidden="true" />}
-          title="高准确截图识别"
+          title="联网截图识别"
           collects="打码后的当前屏幕"
           excludes="本地文件、剪贴板"
           audience="在线模型"
-          retention="不留存"
+          retention="24 小时"
           checked={screenVision}
           systemStatus="Screen Recording：Mock 未允许"
           onChange={setScreenVision}
         />
         <PrivacyRow
           icon={<IconSpeakerphone size={27} stroke={1.7} aria-hidden="true" />}
-          title="允许好友查看我的活动状态"
+          title="向好友广播状态"
           collects="泛化状态、桌宠动作"
           excludes="应用详情、内容数据"
-          audience="已接受好友"
-          retention="短时状态"
+          audience="好友可见"
+          retention="7 天"
           checked={friendBroadcast}
           onChange={setFriendBroadcast}
         />
@@ -146,10 +145,6 @@ export function PrivacySettingsScreen({ onNavigate }: PrivacySettingsScreenProps
 
       <div className={styles.settingsFooterRow}>
         <MockSystemLink onActivate={() => setStatusMessage('这是 UI Mock：真实版本将打开 macOS 隐私与安全设置')} />
-        <button className={styles.activityEntry} type="button" onClick={() => onNavigate('14')}>
-          <IconActivityHeartbeat size={19} stroke={1.8} aria-hidden="true" />
-          查看当前识别
-        </button>
       </div>
       <p className={styles.settingsStatus} role="status">{statusMessage}</p>
     </SettingsShell>
