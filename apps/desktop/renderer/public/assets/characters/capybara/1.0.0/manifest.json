@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "1.0",
+  "characterId": "capybara-office-worker",
+  "assetVersion": "1.0.0",
+  "canvas": {
+    "width": 192,
+    "height": 192
+  },
+  "scaleMode": "NEAREST",
+  "anchors": {
+    "feet": { "x": 96, "y": 188 },
+    "head": { "x": 96, "y": 50 },
+    "keyboard": { "x": 96, "y": 164 },
+    "bodyCenter": { "x": 96, "y": 127 },
+    "ground": { "x": 96, "y": 188 },
+    "backGlow": { "x": 96, "y": 115 },
+    "deskPlane": { "x": 96, "y": 188 }
+  },
+  "actions": {
+    "IDLE": {
+      "texture": "work-normal/WORK_NORMAL.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "fps": 8,
+      "loop": true,
+      "fallbackAction": "IDLE",
+      "contentHashSha256": "211de2e7478072a4495a9597ed4f35a058093d7d5adb6976279f9cb0f1570b36"
+    },
+    "SLACK_SECRETLY": {
+      "texture": "slacking/SLACKING.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "fps": 8,
+      "loop": true,
+      "fallbackAction": "IDLE",
+      "contentHashSha256": "b1486b13a65e668434c95e850e66c9ec1e5b61887b85531b8deb61d49d03f204"
+    },
+    "TYPE_BOTH": {
+      "texture": "type-frenzy/TYPE_FRENZY.png",
+      "frameWidth": 192,
+      "frameHeight": 192,
+      "frameCount": 8,
+      "fps": 16,
+      "loop": true,
+      "fallbackAction": "IDLE",
+      "contentHashSha256": "6621085039698a18a3be27a17df1b1a6723e691afefd4041c7e075e71cb00dc9"
+    }
+  }
+}

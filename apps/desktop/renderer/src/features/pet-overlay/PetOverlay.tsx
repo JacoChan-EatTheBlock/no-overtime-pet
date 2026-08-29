@@ -1,9 +1,14 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent as ReactMouseEvent } from 'react'
+import { PetCanvas } from '../../components/PetCanvas'
+import type { CharacterManifest } from '../../engine'
 import styles from './PetOverlay.module.css'
 
 /** Screen-px movement below this is a click, not a drag. */
 const DRAG_THRESHOLD = 4
+
+const MANIFEST_URL = '/assets/characters/capybara/1.0.0/manifest.json'
+const ASSET_BASE_PATH = '/assets/characters/capybara/1.0.0/'
 
 /**
  * PetOverlay — content of the transparent, always-on-top pet window
@@ -17,16 +22,34 @@ const DRAG_THRESHOLD = 4
  * ourselves lets a plain click still toggle the main window while a real
  * drag still repositions it.
  *
- * Only the static idle capybara portrait is wired up so far: the general
- * sprite-sheet character (`engine/PetEngine` + `components/PetCanvas`) has no
- * manifest that defines an `IDLE` loop yet, only the login screen's one-shot
- * "coin hits head" reaction (`capybara/coin-hit-v1`). Swap the `<img>` below
- * for `<PetCanvas manifest={...} action="IDLE" transparent />` once a real
- * idle sprite sheet + manifest exists — don't fake a loop out of assets that
- * aren't meant for it.
+ * The manifest under public/assets/characters/capybara/1.0.0/ was hand-built
+ * from design/no-overtime-pet-core-animation-pack-v1/ — that pack's own
+ * per-action manifests use ad-hoc action names (WORK_NORMAL/SLACKING/
+ * TYPE_FRENZY) that don't exist in the actual `PetAction` union
+ * (engine/PetStateMachine.ts), which docs/prd/08-pet-actions.md defines as
+ * the authoritative list. Remapped here: WORK_NORMAL → IDLE, SLACKING →
+ * SLACK_SECRETLY, TYPE_FRENZY → TYPE_BOTH (best semantic match; revisit if
+ * product intent differs). If the manifest fails to load, falls back to the
+ * static idle portrait rather than showing a blank window.
  */
 export function PetOverlay() {
   const dragged = useRef(false)
+  const [manifest, setManifest] = useState<CharacterManifest | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(MANIFEST_URL)
+      .then((res) => res.json())
+      .then((data: CharacterManifest) => {
+        if (!cancelled) setManifest(data)
+      })
+      .catch((err: unknown) => {
+        console.error('[PetOverlay] failed to load character manifest, using static fallback:', err)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   function handleContextMenu(event: ReactMouseEvent): void {
     event.preventDefault()
@@ -66,7 +89,18 @@ export function PetOverlay() {
 
   return (
     <div className={styles.stage} onContextMenu={handleContextMenu} onMouseDown={handleMouseDown}>
-      <img className={styles.sprite} src="/assets/capybara/idle.png" alt="" draggable={false} />
+      {manifest ? (
+        <PetCanvas
+          manifest={manifest}
+          assetBasePath={ASSET_BASE_PATH}
+          action="IDLE"
+          width={192}
+          height={192}
+          transparent
+        />
+      ) : (
+        <img className={styles.fallbackSprite} src="/assets/capybara/idle.png" alt="" draggable={false} />
+      )}
     </div>
   )
 }

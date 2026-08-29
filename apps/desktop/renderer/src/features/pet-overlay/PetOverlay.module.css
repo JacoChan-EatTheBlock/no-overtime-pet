@@ -10,14 +10,14 @@
   cursor: grab;
 }
 
-.sprite {
+/* 只有 manifest 加载失败时的静态兜底图才用得到——真动画走 PetCanvas，见组件注释。 */
+.fallbackSprite {
   width: 100%;
   height: 100%;
   object-fit: contain;
   image-rendering: pixelated;
   -webkit-user-select: none;
   user-select: none;
-  /* 没有待机精灵动画素材前的过渡效果——纯 CSS 呼吸感，不是真的帧动画，见组件注释。 */
   animation: idleBob 2.4s ease-in-out infinite;
 }
 
@@ -32,7 +32,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sprite {
+  .fallbackSprite {
     animation: none;
   }
 }
