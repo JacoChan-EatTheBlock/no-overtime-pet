@@ -76,11 +76,11 @@ function mapTaskToItem(task: Task): TaskItem {
   return {
     id: task.id,
     title: task.title,
-    timeRange: formatTimeRange(task.dueAt),
+    timeRange: formatTimeRange(task.dueAt ?? undefined),
     urgency: importanceToUrgency(task.importance),
     priority: importanceToPriority(task.importance),
     done: task.status === 'COMPLETED',
-    dueAt: task.dueAt,
+    dueAt: task.dueAt ?? undefined,
     revision: task.revision,
   }
 }
@@ -122,8 +122,8 @@ export function TaskListScreen({ onClose, onNavigate, onAIAnalysis }: TaskListSc
       setLoading(true)
       // Fetch both PENDING and COMPLETED for client-side filtering
       const [pending, completed] = await Promise.all([
-        listTasks({ status: 'PENDING' }),
-        listTasks({ status: 'COMPLETED' }),
+        listTasks('PENDING'),
+        listTasks('COMPLETED'),
       ])
       const allTasks = [...pending, ...completed].map(mapTaskToItem)
       setTasks(allTasks)

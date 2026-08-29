@@ -1,5 +1,13 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { Friend, FriendRequest } from '../../api/types'
+import {
+  acceptRequest,
+  declineRequest,
+  getPendingRequests,
+  listFriends,
+  updateVisibility
+} from '../../api/friends'
 import {
   FriendPetStripScreen,
   FriendsManagementScreen,
@@ -7,7 +15,59 @@ import {
   QuickMenuScreen
 } from './PetSocialMenuScreens'
 
+// 好友页以服务端为权威数据源，组件不再内置 fixture，因此必须提供 API 替身。
+vi.mock('../../api/friends', () => ({
+  sendFriendRequest: vi.fn(),
+  getPendingRequests: vi.fn(),
+  acceptRequest: vi.fn(),
+  declineRequest: vi.fn(),
+  listFriends: vi.fn(),
+  removeFriend: vi.fn(),
+  updateVisibility: vi.fn()
+}))
+
+function makeFriend(relationId: string, displayName: string): Friend {
+  return {
+    relationId,
+    friend: {
+      id: `user-${relationId}`,
+      username: relationId,
+      displayName,
+      friendCode: 'C7P4-K8M2'
+    },
+    since: '2026-08-01T00:00:00.000Z'
+  }
+}
+
+function makeRequest(id: string, displayName: string): FriendRequest {
+  return {
+    id,
+    requesterId: `user-${id}`,
+    requester: { id: `user-${id}`, username: id, displayName },
+    status: 'PENDING',
+    createdAt: '2026-08-20T00:00:00.000Z'
+  }
+}
+
 describe('PetSocialMenuScreens', () => {
+  /** 待处理申请需要真实状态：接受后刷新必须返回剩余申请，而不是把已接受的人放回来。 */
+  let pendingRequests: FriendRequest[] = []
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    pendingRequests = [makeRequest('lan', '阿岚'), makeRequest('zhou', '小周')]
+
+    vi.mocked(listFriends).mockResolvedValue([makeFriend('hui', '小灰')])
+    vi.mocked(getPendingRequests).mockImplementation(async () => [...pendingRequests])
+    vi.mocked(updateVisibility).mockResolvedValue(undefined)
+    vi.mocked(acceptRequest).mockImplementation(async (id: string) => {
+      pendingRequests = pendingRequests.filter((item) => item.id !== id)
+    })
+    vi.mocked(declineRequest).mockImplementation(async (id: string) => {
+      pendingRequests = pendingRequests.filter((item) => item.id !== id)
+    })
+  })
+
   it.each([
     ['00-default-pet', '00-default-pet'],
     ['02-friend-pet-strip', '02-friend-pet-strip'],
@@ -47,27 +107,32 @@ describe('PetSocialMenuScreens', () => {
     const user = userEvent.setup()
     render(<FriendsManagementScreen />)
 
-    expect(screen.getByText('小灰')).toBeInTheDocument()
+    expect(await screen.findByText('小灰')).toBeInTheDocument()
     expect(screen.queryByText('拉黑')).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: '不对其展示' }))
 
+    // 单向隐藏只改可见性，好友关系必须保留。
+    expect(updateVisibility).toHaveBeenCalledWith('hui', true)
     expect(screen.getByText('小灰')).toBeInTheDocument()
-    expect(screen.getByText('恢复对其展示')).toBeInTheDocument()
-    expect(screen.getByText(/好友关系与对方到你的展示方向均保持不变/)).toBeInTheDocument()
+    expect(await screen.findByText('恢复对其展示')).toBeInTheDocument()
+    expect(screen.getByText(/好友关系仍保留/)).toBeInTheDocument()
   })
 
   it('accepts one request without affecting the other request', async () => {
     const user = userEvent.setup()
     render(<FriendsManagementScreen />)
 
-    const requestRows = screen.getAllByText(/阿岚|小周/).map((name) => name.closest('div'))
-    const lanRow = requestRows[0]
+    const lanName = await screen.findByText('阿岚')
+    const lanRow = lanName.closest('div')
 
     expect(lanRow).not.toBeNull()
     await user.click(within(lanRow as HTMLElement).getByRole('button', { name: '接受' }))
 
-    expect(screen.queryByText('阿岚')).not.toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.queryByText('阿岚')).not.toBeInTheDocument()
+    })
+    expect(acceptRequest).toHaveBeenCalledWith('lan')
     expect(screen.getByText('小周')).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('阿岚的申请已接受')
   })

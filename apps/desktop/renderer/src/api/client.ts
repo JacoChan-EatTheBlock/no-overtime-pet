@@ -7,8 +7,7 @@ import type { ApiError } from './types'
 // Base URL
 // ---------------------------------------------------------------------------
 const API_BASE: string =
-  (import.meta as Record<string, { env?: Record<string, string> }>).env
-    ?.VITE_API_BASE ?? 'http://localhost:3000/v1'
+  import.meta.env.VITE_API_BASE ?? 'http://localhost:3000/v1'
 
 // ---------------------------------------------------------------------------
 // Token 管理

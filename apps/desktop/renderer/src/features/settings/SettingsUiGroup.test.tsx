@@ -1,5 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import type { WorkSettings } from '../../api/types'
+import { getWorkSettings, updateWorkSettings } from '../../api/work-settings'
 import { AccountSettingsScreen } from './AccountSettingsScreen'
 import { ActivityRecognitionScreen } from './ActivityRecognitionScreen'
 import { NotificationSettingsScreen } from './NotificationSettingsScreen'
@@ -9,12 +11,42 @@ import { WorkSettingsScreen } from './WorkSettingsScreen'
 
 const noopNavigate = () => undefined
 
+// 工作设置已改为以服务端为权威数据源：加载和保存都走 API，
+// 组件不再内置 fixture，所以这里必须显式提供 API 替身。
+vi.mock('../../api/work-settings', () => ({
+  getWorkSettings: vi.fn(),
+  updateWorkSettings: vi.fn()
+}))
+
+const getWorkSettingsMock = vi.mocked(getWorkSettings)
+const updateWorkSettingsMock = vi.mocked(updateWorkSettings)
+
+/** 09:00–18:30、午休 1 小时 → 标准带薪 8 小时 30 分；日薪 ¥800 → 每小时约 ¥94.12。 */
+const WORK_SETTINGS: WorkSettings = {
+  workStart: '09:00',
+  lunchStart: '12:00',
+  lunchEnd: '13:00',
+  workEnd: '18:30',
+  dailySalaryMinor: '80000',
+  revision: 1
+}
+
 describe('settings UI group', () => {
-  it('updates the workday preview from editable mock settings', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    getWorkSettingsMock.mockResolvedValue({ ...WORK_SETTINGS })
+    updateWorkSettingsMock.mockImplementation(async (data, revision) => ({
+      ...WORK_SETTINGS,
+      ...data,
+      revision: revision + 1
+    }))
+  })
+
+  it('updates the workday preview from settings loaded through the API', async () => {
     const user = userEvent.setup()
     render(<WorkSettingsScreen onNavigate={noopNavigate} />)
 
-    expect(screen.getByText('8小时30分')).toBeInTheDocument()
+    expect(await screen.findByText('8小时30分')).toBeInTheDocument()
     expect(screen.getByText('¥94.12')).toBeInTheDocument()
 
     const salaryInput = screen.getByLabelText('日薪（人民币）')
@@ -23,15 +55,23 @@ describe('settings UI group', () => {
 
     expect(screen.getByText('¥100.00')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: '保存并继续' }))
-    expect(screen.getByRole('status')).toHaveTextContent('下一个工作日生效')
+    await user.click(screen.getByRole('button', { name: '保存设置' }))
+
+    await waitFor(() => {
+      expect(screen.getByRole('status')).toHaveTextContent('下一个工作日生效')
+    })
+    // 保存必须带上当前 revision，服务端才能做乐观并发校验。
+    expect(updateWorkSettingsMock).toHaveBeenCalledWith(
+      expect.objectContaining({ dailySalaryMinor: '85000' }),
+      WORK_SETTINGS.revision
+    )
   })
 
   it('keeps activity recognition read-only while allowing pause and close', async () => {
     const user = userEvent.setup()
-    render(<ActivityRecognitionScreen onOpenPrivacy={() => undefined} />)
+    render(<ActivityRecognitionScreen onNavigate={noopNavigate} />)
 
-    expect(screen.getByText('写方案', { selector: 'h2' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '写方案', level: 3 })).toBeInTheDocument()
     expect(screen.queryByText(/纠正|改分类|备注|历史回写/)).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: '暂停识别' }))
@@ -47,8 +87,8 @@ describe('settings UI group', () => {
     const user = userEvent.setup()
     render(<PrivacySettingsScreen onNavigate={noopNavigate} />)
 
-    const broadcastToggle = screen.getByRole('checkbox', { name: '允许好友查看我的活动状态' })
-    const screenshotToggle = screen.getByRole('checkbox', { name: '高准确截图识别' })
+    const broadcastToggle = screen.getByRole('checkbox', { name: '向好友广播状态' })
+    const screenshotToggle = screen.getByRole('checkbox', { name: '联网截图识别' })
 
     expect(broadcastToggle).toBeChecked()
     expect(screenshotToggle).not.toBeChecked()
