@@ -14,6 +14,46 @@
 
 ---
 
+## 2026-08-29：不能把常见 SaaS 功能默认塞进桌宠产品
+
+### 问题现象
+
+视觉稿中出现了逐条“交给 AI 分析”、邮箱验证码、离线体验、活动纠正、拉黑、设备管理、数据导出和退出其他设备等入口，但这些能力并非 Magnus 确认的产品路径。
+
+### 导致原因
+
+页面设计沿用了通用效率工具和账号系统的默认模式，没有先判断评论是视觉文案调整还是会改变业务契约的产品决定。
+
+### 修正内容
+
+新建待办自动进入 AI 建议确认；登录只使用用户名和密码；活动识别改为只读；好友使用单向“不对其展示”而非拉黑；账号页只保留基础资料、密码、退出和删除账号；好友活动广播与本机好友桌宠显示拆成两个独立设置；登录页使用金币砸脑壳动画位。
+
+### 防止规则
+
+- 视觉评审意见涉及流程、权限、数据来源或关系状态时，必须先单列为 PRD 变更，取得 Magnus 确认后再同步。
+- 不得因为邮箱验证、设备会话、数据导出、拉黑或人工纠正是常见功能，就默认加入 MVP。
+- 页面文案和 PRD 契约必须同时检查；删除入口时还要清理状态机、API、验收和路线图中的旧能力。
+
+### 关联文件
+
+- `不要加班_组合式PRD_v2.0.md`
+- `不要加班_agent.md`
+- `docs/prd/02-account-friends.md`
+- `docs/prd/04-task-capture.md`
+- `docs/prd/05-ai-task-analysis.md`
+- `docs/prd/07-desktop-activity-recognition.md`
+- `docs/prd/12-notifications-privacy.md`
+
+### 验证方式
+
+- 创建任务后直接进入 AI 建议确认，列表无逐条分析按钮。
+- 登录流程只出现用户名与密码。
+- 全局搜索确认没有可执行的活动纠正或拉黑能力。
+- 账号页没有设备列表、数据导出和退出其他设备。
+- 两个好友可见性设置互不改变彼此状态。
+
+---
+
 ## 2026-08-29：动画生成管线不能成为产品运行时依赖
 
 ### 问题现象
@@ -34,8 +74,8 @@
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -64,8 +104,8 @@
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -94,8 +134,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -124,8 +164,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -153,8 +193,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -182,8 +222,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -217,8 +257,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -252,8 +292,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 
 ### 验证方式
 
@@ -289,7 +329,7 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
+- `不要加班_agent.md`
 - `docs/prd/10-economy-shop-customization.md`
 - `docs/prd/13-api-event-contracts.md`
 - `docs/prd/14-data-dictionary.md`
@@ -331,8 +371,8 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 
 ### 关联文件
 
-- `AGENTS.md`
-- `docs/prd-combined-v1.0.md`
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
 - `docs/prd/01-shared-contracts.md`
 - `docs/prd/03-work-settings-nang-fee.md`
 - `docs/prd/13-api-event-contracts.md`
@@ -347,3 +387,123 @@ AI 不得创建或修改 DDL、重要性、完成状态和用户锁定时间。�
 - 三名工资不同的获奖者从 60 元池中各领取 20 元，但获得的个人购买力不同。
 - 1001 分由两人领取时各得 500 分，1 分结转。
 - 收款人修改日薪后，已领取奖励的购买力不再二次放大。
+
+---
+
+## 2026-08-29：动作模型只负责角色反应，道具必须确定性叠加
+
+### 问题现象
+
+水豚“金币砸脑门”原始动画虽然明确要求不绘制撞击物，模型仍在少数中间帧生成了一根黑色撞击道具，导致它与后处理叠加的像素金币同时出现。
+
+### 导致原因
+
+视频模型会把“被物体击中”的动作语义补全为可见道具，仅靠提示词无法保证每一帧都严格遵守“道具不可见”。
+
+### 修正内容
+
+保留同一个已生成视频，不再次产生付费任务；从原视频时间线中选择动作相同但没有黑色道具的相邻干净帧，并由确定性脚本统一叠加像素金币、落点轨迹和受击像素线。
+
+### 防止规则
+
+- 付费动画任务提交前必须写入一次性锁和任务 ID，重跑只能恢复查询，不能静默重提。
+- 视频模型只生成角色肢体与表情，道具、轨迹、命中特效和消失时机由确定性代码叠加。
+- 每个动作必须输出逐帧联系表，检查身份漂移、额外道具、镜头漂移和回待机衔接。
+- 如果只有少量污染帧，优先从同一原视频选取相邻干净帧；只有动作本身不可用时才讨论是否重新生成。
+- Manifest 必须记录源视频哈希和最终选帧索引；GIF 只用于审阅，运行时仍使用透明 Sprite Sheet。
+
+### 关联文件
+
+- `design/pet-action-prototypes/tools/generate_coin_hit_prototype.py`
+- `design/pet-action-prototypes/capybara/coin-hit-v1/qa.json`
+- `design/pet-action-prototypes/capybara/coin-hit-v1/character-action-manifest.prototype.json`
+
+### 验证方式
+
+- 16 帧联系表中不再出现模型生成的黑色撞击物。
+- 第 4 帧只出现确定性像素金币与受击线，随后金币弹开并在第 9 帧消失。
+- Sprite Sheet 为 768×768 RGBA，16 个角像素均透明，透明像素 RGB 为零且无绿幕残留。
+- 最后一帧能够自然衔接回 IDLE；源视频、Sprite Sheet 和 GIF 哈希均与 QA 记录一致。
+
+---
+
+## 2026-08-29：跨角色梗特效不能烘焙角色与场景
+
+### 问题现象
+
+首版“金币砸脑门”把水豚、桌子、受伤表情和金币合成在同一组帧中，反应过度夸张，桌面又贴住画布底边，视觉上像没有完整抠图；更换鹈鹕或暹罗猫时也无法直接复用。
+
+### 导致原因
+
+把一个跨角色可复用的前景金币特效错误建模为角色专属动作，没有先区分角色动作层与前景特效层；同时把“经典平台游戏金币”误解成旋转动画要求，而不是金币本体的视觉样式要求。
+
+### 修正内容
+
+金币改为独立前景特效，不包含角色、桌子、阴影、背景或受伤反应。金币本体使用原创的经典平台游戏式竖向金色像素造型，八帧保持相同轮廓，只做直线下落；运行时通过特效落点对齐不同角色的 `head` 锚点。
+
+### 防止规则
+
+- 只要素材需要跨角色复用，就必须优先拆成独立前景或后景特效，不能烘焙角色和场景。
+- 用户提到其他游戏时，必须区分是在参考美术造型、动画节奏还是交互机制，不得自行扩大到另外两个维度。
+- 可以借鉴经典平台游戏的通用金币意象，但不得复刻具体游戏的像素图、精确轮廓、帧序列或品牌元素。
+- 特效长图必须显式记录 `columns`、`rows` 和切帧顺序；本版固定为 8×1、从左到右。
+- 正式纹理和 GIF 预览都必须保留真实透明背景；每帧底部至少保留 6 行全透明像素。
+
+### 关联文件
+
+- `design/pet-action-prototypes/tools/generate_coin_drop_effect.py`
+- `design/pet-action-prototypes/effects/coin-drop-v2/effect-manifest.prototype.json`
+- `design/pet-action-prototypes/effects/coin-drop-v2/qa.json`
+
+### 验证方式
+
+- 八帧金币宽度全部为 42 像素，确认没有旋转、翻面或缩放。
+- Sprite Strip 为 768×160 RGBA，布局为 8 列 1 行。
+- 每帧四角、底部 6 行均透明，透明像素 RGB 为零。
+- 最后一帧的 `effectImpactPoint` 对齐角色 `head` 锚点，素材中不存在任何角色或桌面像素。
+
+---
+
+## 2026-08-29：macOS 公开分发必须作为产品能力提前验证
+
+### 问题现象
+
+项目原本把 Windows 作为首发平台。切换到 macOS 后，如果只把 React/Electron 页面在开发机上跑起来，仍可能因为签名、公证、原生模块、系统权限或 Gatekeeper 失败而无法交给普通用户安装。
+
+### 导致原因
+
+把“跨平台 Web 技术可以运行”和“macOS 应用可以公开发行”误当成同一件事，没有把 Developer ID、Hardened Runtime、公证、干净机器安装及权限降级纳入产品验收。
+
+### 修正内容
+
+MVP 改为 macOS 首发、Apple Silicon `arm64` 优先、Windows 延后。首发通过官网分发经过 Developer ID 签名和 Apple 公证的 DMG；Mac App Store 不进入 MVP。新增独立 macOS 平台与发行 PRD，并把菜单栏、Dock/Spaces/Stage Manager、Input Monitoring、Accessibility、Screen Recording、Keychain 和自动更新纳入路线及验收。
+
+### 防止规则
+
+- 开发构建可运行不等于可分发；阶段 0 必须先完成最小签名、公证和 DMG 安装探针。
+- 未签名、ad-hoc 签名或未公证构建不得标记为公开发行版本。
+- 原生输入或截图依赖必须同时验证 Electron ABI、Apple Silicon、Hardened Runtime、签名和公证。
+- 系统权限与产品开关分开处理；拒绝任一高权限时只能降级识别，不能阻断任务、排程、经济和基础桌宠。
+- 正式发布必须在干净 Apple Silicon Mac 上验证 Gatekeeper、首次权限引导、Keychain、登录项和自动更新。
+- 带 Windows 桌面、任务栏或系统托盘的旧视觉稿只作为历史方向稿，不能作为 macOS 验收证据。
+
+### 关联文件
+
+- `不要加班_agent.md`
+- `不要加班_组合式PRD_v2.0.md`
+- `docs/prd/00-product-overview.md`
+- `docs/prd/07-desktop-activity-recognition.md`
+- `docs/prd/08-pet-actions.md`
+- `docs/prd/12-notifications-privacy.md`
+- `docs/prd/15-test-acceptance.md`
+- `docs/prd/16-development-roadmap.md`
+- `docs/prd/17-open-questions.md`
+- `docs/prd/18-macos-platform-distribution.md`
+
+### 验证方式
+
+- 干净 Apple Silicon Mac 从 DMG 安装并首次启动，无需终端命令、关闭 Gatekeeper 或手工移除 quarantine。
+- 代码签名、entitlements、公证票据和 Gatekeeper assessment 均通过。
+- Input Monitoring、Accessibility、Screen Recording 分别验证允许、拒绝和撤销路径。
+- 更新前后 Keychain 会话、SQLite、登录项、权限状态和 bundle identity 连续。
+- 全文检查确认“Windows 首发”只作为已被替代的历史决定或未来平台出现。

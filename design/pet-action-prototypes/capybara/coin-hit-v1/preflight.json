@@ -1,0 +1,23 @@
+{
+  "preparedAt": "2026-08-29T01:07:27.969875+00:00",
+  "identity": {
+    "source": "identity-source.png",
+    "width": 1182,
+    "height": 1330,
+    "sha256": "cc4b35b229e973887041ba42906452aeb12f000b4473ec2aec2db2a61aac14c8"
+  },
+  "seedanceInput": {
+    "file": "seedance-input.png",
+    "width": 768,
+    "height": 768,
+    "background": "#00FF66",
+    "sha256": "06aed44e378ef40677cee01fd1d26b87163a61553bc570f94158f4c9724407bb"
+  },
+  "coin": {
+    "file": "coin.png",
+    "width": 18,
+    "height": 18,
+    "sha256": "2889834f2a120eee3163817500039ffbd279726a28100d995d6767453af6a7d3"
+  },
+  "motionPromptSha256": "78cf8dc5e8ce59cf9e7cc722c28cad211bb39bfd31d45985d79fddc0e08c312b"
+}

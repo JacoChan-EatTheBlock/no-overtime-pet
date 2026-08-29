@@ -17,7 +17,7 @@
 | 域 | 前缀 | 服务端模块 |
 |---|---|---|
 | 账号 | `/auth`, `/me` | Identity |
-| 好友 | `/friends`, `/friend-requests`, `/blocks` | Social |
+| 好友 | `/friends`, `/friend-requests` | Social |
 | 设置 | `/work-settings`, `/privacy-settings` | Profile |
 | 任务 | `/tasks`, `/commitments` | Tasks |
 | AI | `/ai/task-analysis`, `/ai/schedules` | AI Gateway |
@@ -26,6 +26,19 @@
 | 窝囊费 | `/nang-fee` | Economy |
 | 商店 | `/shop`, `/purchases`, `/appearance` | Commerce |
 | 实时 | WebSocket `/realtime` | Realtime Gateway |
+
+### 2.1 账号认证
+
+`POST /v1/auth/register` 与 `POST /v1/auth/login` 只接受用户名和密码：
+
+```json
+{
+  "username": "Magnus",
+  "password": "<client-provided-secret>"
+}
+```
+
+不得接受或返回邮箱、手机号、验证码字段。密码只进入认证边界并立即进行安全校验/哈希处理，不进入普通日志、埋点或业务事件。MVP 不提供设备会话列表和“退出其他设备”端点。
 
 ## 3. 工作设置 API
 
@@ -83,7 +96,7 @@ interface WorkSettingsResponse {
 }
 ```
 
-服务端返回正式 `Task`，AI 分析需另行请求。
+服务端先返回正式 `Task`。创建成功后，客户端编排层必须立即自动请求该任务的 AI 分析并进入 Proposal 确认页；任务创建不能因 AI 超时而回滚，任务列表也不提供逐条分析入口。
 
 ### 4.2 更新任务
 
@@ -124,7 +137,7 @@ interface WorkSettingsResponse {
 
 `POST /v1/ai/task-analysis`
 
-请求传 `taskId` 和当前 `taskRevision`；服务端组装隐私最小化上下文。返回 Proposal，不写 Task。
+请求传 `taskId` 和当前 `taskRevision`；服务端组装隐私最小化上下文。新建任务由客户端编排层自动调用本接口。接口返回 Proposal，不写 Task。
 
 ### 5.2 接受 Proposal
 
@@ -140,6 +153,8 @@ interface WorkSettingsResponse {
 ```
 
 服务端确定性组装 Task Patch，返回新 revision。
+
+客户端主操作文案统一为“确认建议”；是否接受单项、修改单项或全部拒绝仍通过上述确定性请求表达。
 
 ## 6. 日程 API
 
@@ -277,13 +292,25 @@ interface OvertimeRewardReceiptView {
 
 ## 10. 好友 API
 
-遵循 `02-account-friends.md`。所有接受、删除和拉黑请求都必须服务端验证当前用户身份；请求体不得传“操作者 userId”。
+遵循 `02-account-friends.md`。所有接受、删除和可见性设置请求都必须服务端验证当前用户身份；请求体不得传“操作者 userId”。MVP 不提供拉黑端点。
+
+`PUT /v1/friends/{userId}/visibility`
+
+```json
+{
+  "shareActivityToFriend": false
+}
+```
+
+该请求只改变当前用户到指定好友的单向活动投影，不改变 `ACCEPTED` 关系。
 
 ## 11. 隐私设置 API
 
 `GET /v1/privacy-settings`、`PUT /v1/privacy-settings`。
 
 在线截图识别授权应记录：授权版本、时间、设备、供应商策略版本。撤销后本地先停止采集，再异步同步服务端，不等待网络成功。
+
+隐私设置至少包含两个独立布尔值：`shareActivityWithFriends` 与 `showFriendPetsOnDesktop`。前者控制自己的全局活动广播，后者只控制本机是否显示好友桌宠，客户端不得把它们合并成一个开关。
 
 ## 12. WebSocket 事件信封
 

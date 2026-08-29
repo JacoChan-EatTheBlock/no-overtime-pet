@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "1.0-prototype",
+  "effectId": "NANG_FEE_COIN_DROP",
+  "assetVersion": "coin-drop-v1",
+  "renderLayer": "FOREGROUND_EFFECT",
+  "compositionMode": "ALPHA_OVER",
+  "animationStyle": "ORIGINAL_PLATFORMER_PICKUP_SPIN",
+  "texture": "NANG_FEE_COIN_DROP-strip.png",
+  "scaleMode": "NEAREST",
+  "frame": {
+    "width": 96,
+    "height": 160,
+    "count": 8,
+    "columns": 8,
+    "rows": 1,
+    "fps": 12,
+    "durationMs": 83
+  },
+  "loop": false,
+  "target": {
+    "characterAnchor": "head",
+    "effectImpactPoint": {
+      "x": 48,
+      "y": 154
+    }
+  },
+  "eventFrames": {
+    "impact": [
+      7
+    ]
+  },
+  "contentHashSha256": "f1f05500fa82117ebfd54d796f12521f2a37f3605c898569ffbe984ea7703904",
+  "preview": {
+    "file": "preview-transparent.gif",
+    "transparent": true,
+    "runtimeAsset": false
+  }
+}

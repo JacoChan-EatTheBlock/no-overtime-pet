@@ -4,7 +4,7 @@
 
 ```text
 apps/
-  desktop/          Electron + React + PixiJS
+  desktop/          Electron + React + PixiJS；main/platform/macos 隔离系统能力
   api/              NestJS HTTP API
   realtime/         NestJS/Socket.IO 网关，可先与 api 同进程
   ai-service/       FastAPI 分析、排程、视觉适配
@@ -25,8 +25,10 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 - 经济、权限和好友授权在服务端做权威校验。
 - AI 输出与正式数据严格分层。
 - 动画生成仅为离线工具，不进入运行时依赖。
+- renderer、preload、Electron main 与 macOS 平台适配层保持单向依赖；业务代码不得直接引用原生 API。
+- 公开发行只接受签名、公证并经干净 Apple Silicon Mac 安装验证的构建。
 - 每个阶段修改超过 3 个文件时按子任务逐项验证。
-- 每次重要规则变化同步更新`AGENTS.md`；返工与问题经验更新 `lessons.md`。
+- 每次重要规则变化同步更新根目录 `不要加班_agent.md`；返工与问题经验更新 `lessons.md`。
 
 ## 3. 阶段 0：未决问题与契约冻结
 
@@ -39,17 +41,22 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 - `TASK-COMMIT-001` 承诺冻结；
 - `ACTIVITY-PRIVACY-001` 截图权限；
 - `HAT-STACK-001` 超高帽子塔缩放、滚动和缓存策略；
-- `PRIVACY-001` 发行地区。
+- `PRIVACY-001` 发行地区；
+- `PLATFORM-MIN-001` 最低 macOS 版本；
+- `PET-MAC-001` Dock 图标策略；
+- `PET-MAC-002` 全屏应用可见策略。
 
-交付：共享 JSON Schema、OpenAPI 骨架、事件 Schema、数据库 ERD/迁移草案、数据集 v1。
+交付：共享 JSON Schema、OpenAPI 骨架、事件 Schema、数据库 ERD/迁移草案、数据集 v1，以及最小 macOS 发行探针。
 
-验证：所有模块仅引用一份枚举和经济公式；契约测试能运行。
+最小 macOS 发行探针只需证明 Electron `arm64` 壳可以完成 Developer ID 签名、公证、DMG 安装、菜单栏、透明窗口和权限状态读取，不实现产品业务。
+
+验证：所有模块仅引用一份枚举和经济公式；契约测试能运行；探针在干净 Apple Silicon Mac 上无需终端绕过即可安装启动。
 
 ## 4. 阶段 1：本地单人工作闭环
 
 范围：
 
-1. Electron 壳、托盘、透明桌宠窗口；
+1. Electron 壳、菜单栏、设置主窗口、透明桌宠窗口和登录项；
 2. 工时/午休/日薪设置；
 3. 待办创建、完成和本地持久化；
 4. 基础确定性日程；
@@ -64,7 +71,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 
 范围：
 
-1. 注册登录和设备会话；
+1. 用户名密码注册登录；
 2. PostgreSQL 正式任务/设置；
 3. 工作日权威计提；
 4. 钱包不可变账本；
@@ -77,11 +84,12 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 
 范围：
 
-1. 好友码、申请、接受、删除、拉黑；
+1. 好友码、申请、接受、删除和单向“不对其展示”；
 2. WebSocket presence；
 3. 聚合桌宠动作；
 4. 排排坐场景；
-5. 角色和帽子同步。
+5. “允许好友查看我的活动状态”和“在桌面显示好友桌宠”两个独立设置；
+6. 角色和帽子同步。
 
 验收：只有已接受好友可见；隐私抓包通过；12 角色性能达标。
 
@@ -101,10 +109,10 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 
 范围：
 
-1. Windows 信号采集；
+1. macOS 前台应用、Input Monitoring、Accessibility 与 Screen Recording 信号采集；
 2. 本地分类和时间平滑；
 3. 授权、截图打码、在线视觉适配；
-4. 用户纠错与评估数据闭环；
+4. 只读识别记录与离线评估数据闭环，不提供用户纠正；
 5. 安全文案投影。
 
 验收：权限撤销、敏感页面、无原图留存和宏观准确率全部过门槛。
@@ -129,11 +137,11 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 - 接入离线像素动画管线产物；
 - 扩充角色/帽子目录；
 - 自动资产 QA；
-- 安装包、更新、崩溃监控；
-- 数据导出、删除、隐私政策；
+- Developer ID 签名、Apple 公证、DMG/更新 ZIP、自动更新、崩溃监控；
+- 账号删除、服务端数据处置、隐私政策及发行地区要求的合规通道；
 - 灰度和回滚。
 
-验收：离线管线不可用时不影响已发布客户端；资源回滚和旧物品可用。
+验收：离线管线不可用时不影响已发布客户端；资源回滚和旧物品可用；干净 Apple Silicon Mac 的 Gatekeeper、安装、权限、更新与 Keychain 连续性通过。
 
 ## 11. 可并行工作包
 
@@ -141,7 +149,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 
 | 工作包 | 可改范围 | 依赖输出 |
 |---|---|---|
-| Desktop Shell | Electron、托盘、窗口 | contracts |
+| Desktop Shell | Electron、macOS 菜单栏、窗口、登录项、签名与公证 | contracts、macOS 平台 PRD |
 | Task/Schedule | 任务、Proposal UI、求解器 | contracts、policy dataset |
 | Economy | 工时、账本、商店、结算 | contracts、数据库 |
 | Activity/Pet | 信号、动作状态机、PixiJS | contracts、asset manifests |
@@ -174,7 +182,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 - 风险和取舍；
 - 测试用例、执行命令和结果；
 - 未验证的真实环境；
-- 是否更新 `AGENTS.md`、`lessons.md`；
+- 是否更新 `不要加班_agent.md`、`lessons.md`；
 - 是否包含数据库迁移或兼容影响。
 
 ## 14. 完成定义
@@ -184,7 +192,7 @@ MVP 不强制微服务化：`api` 与 `realtime` 可同一部署；包边界用�
 1. 符合模块 PRD 和共享契约；
 2. 权限和失败路径已实现；
 3. 自动测试通过；
-4. 真实 Windows 手动路径按风险验证；
+4. 真实 Apple Silicon Mac 上的权限、窗口、签名、公证、安装与更新路径按风险验证；
 5. 日志和事件通过隐私扫描；
 6. 监控能定位失败但不泄露内容；
 7. 文档与数据集版本同步；

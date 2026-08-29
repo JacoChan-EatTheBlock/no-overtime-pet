@@ -6,7 +6,7 @@
 
 ## 2. 强制阅读顺序
 
-1. `docs/prd-combined-v1.0.md`；
+1. 根目录 `不要加班_组合式PRD_v2.0.md`；
 2. `00-product-overview.md`；
 3. `01-shared-contracts.md`；
 4. 当前开发模块；

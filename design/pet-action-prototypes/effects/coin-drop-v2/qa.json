@@ -1,0 +1,189 @@
+{
+  "generatedAt": "2026-08-29T01:50:11.799768+00:00",
+  "structuralPass": true,
+  "manualReviewRequired": true,
+  "manualReviewItems": [
+    "coin reads as deliberately oversized but not comedic-impact exaggerated",
+    "coin body reads as an original classic platform-game gold coin without copying a specific game sprite",
+    "fall direction is immediately readable and the coin itself does not rotate",
+    "no character, desk, shadow, backdrop, bruise, or impact prop is present",
+    "last frame aligns naturally to each character head anchor"
+  ],
+  "source": {
+    "file": "coin-source.png",
+    "sha256": "2889834f2a120eee3163817500039ffbd279726a28100d995d6767453af6a7d3"
+  },
+  "output": {
+    "coinSize": [
+      42,
+      54
+    ],
+    "coinStyle": "platformer",
+    "motion": "straight",
+    "frameSize": [
+      96,
+      160
+    ],
+    "frameCount": 8,
+    "stripSize": [
+      768,
+      160
+    ],
+    "layout": {
+      "columns": 8,
+      "rows": 1,
+      "order": "left-to-right"
+    },
+    "yPositions": [
+      -54,
+      -44,
+      -30,
+      -12,
+      10,
+      38,
+      70,
+      100
+    ],
+    "frameCoinWidths": [
+      42,
+      42,
+      42,
+      42,
+      42,
+      42,
+      42,
+      42
+    ],
+    "impactPoint": [
+      48,
+      154
+    ],
+    "foregroundBoxes": [
+      null,
+      [
+        33,
+        0,
+        63,
+        7
+      ],
+      [
+        30,
+        0,
+        66,
+        21
+      ],
+      [
+        30,
+        0,
+        66,
+        39
+      ],
+      [
+        30,
+        13,
+        66,
+        61
+      ],
+      [
+        30,
+        41,
+        66,
+        89
+      ],
+      [
+        30,
+        73,
+        66,
+        121
+      ],
+      [
+        30,
+        103,
+        66,
+        151
+      ]
+    ],
+    "opaquePixelCounts": [
+      0,
+      156,
+      648,
+      1296,
+      1512,
+      1512,
+      1512,
+      1512
+    ],
+    "cornerAlpha": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "transparentRgbZero": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "bottomSixRowsTransparent": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "stripSha256": "4d67b1cb639577e8855be94e26e3dfdfc12d2f07ce096dbf6045bc67d326c5e2",
+    "gifSha256": "fdebc8f3326ead391d3f84333a4ed484e0c515e6191dbd42831b69453c7b93e1"
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "processedAt": "2026-08-29T01:27:21.009367+00:00",
+  "structuralPass": true,
+  "manualReviewRequired": true,
+  "manualReviewItems": [
+    "capybara identity and clothing remain recognizable",
+    "forehead impact reads clearly at frame 4",
+    "painful recoil reads clearly without desk/camera drift",
+    "last frame transitions naturally back to IDLE"
+  ],
+  "sourceVideo": {
+    "frameCount": 97,
+    "selectedIndices": [
+      0,
+      6,
+      8,
+      19,
+      26,
+      32,
+      38,
+      45,
+      51,
+      58,
+      64,
+      70,
+      77,
+      83,
+      90,
+      96
+    ],
+    "sha256": "4d037510ce3551a037bfce9523ea681cd8bbf34881c2b0433b5a477518d6af71"
+  },
+  "output": {
+    "frameCount": 16,
+    "frameSize": [
+      192,
+      192
+    ],
+    "sheetSize": [
+      768,
+      768
+    ],
+    "sheetSha256": "151fab8c2a51684f67132795bc7818d6ec5af484d78015d9e93e6f17679df243",
+    "gifSha256": "c5696dfbbdc8116f352708587451fea90f6c53363c2e181ae291bb5b54114149",
+    "cornerAlpha": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "transparentRgbZero": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "greenSpillPixelCounts": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "foregroundBoxes": [
+      [
+        0,
+        30,
+        192,
+        188
+      ],
+      [
+        0,
+        0,
+        192,
+        188
+      ],
+      [
+        0,
+        0,
+        192,
+        188
+      ],
+      [
+        0,
+        2,
+        192,
+        188
+      ],
+      [
+        0,
+        12,
+        192,
+        188
+      ],
+      [
+        0,
+        0,
+        192,
+        188
+      ],
+      [
+        0,
+        0,
+        192,
+        188
+      ],
+      [
+        0,
+        0,
+        192,
+        188
+      ],
+      [
+        0,
+        14,
+        192,
+        188
+      ],
+      [
+        0,
+        44,
+        192,
+        188
+      ],
+      [
+        0,
+        44,
+        192,
+        188
+      ],
+      [
+        0,
+        44,
+        192,
+        188
+      ],
+      [
+        0,
+        40,
+        192,
+        188
+      ],
+      [
+        0,
+        30,
+        192,
+        188
+      ],
+      [
+        0,
+        30,
+        192,
+        188
+      ],
+      [
+        0,
+        30,
+        192,
+        188
+      ]
+    ],
+    "idleReturn": {
+      "pass": true,
+      "maskIoU": 0.9882,
+      "foregroundAreaRatio": 1.0039,
+      "meanAbsoluteRgbDifferenceOnUnion": 11.71
+    }
+  }
+}

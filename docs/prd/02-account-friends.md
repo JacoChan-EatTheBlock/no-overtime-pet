@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-提供注册、登录、设备会话和双向好友关系，使联机状态只在已接受好友之间传播。
+提供用户名密码注册、登录和双向好友关系，使联机状态只在已接受且满足可见性设置的好友之间传播。
 
 ## 2. 非目标
 
@@ -13,19 +13,19 @@
 
 ## 3. 用户故事
 
-1. 用户可用邮箱或手机号注册并设置唯一显示名。
+1. 用户使用唯一用户名和密码注册、登录，不经过邮箱、手机号或验证码步骤。
 2. 用户可搜索精确好友码，发送好友申请。
 3. 对方接受后，双方才能互相看到桌宠状态。
-4. 任一方删除或拉黑后，实时状态立即停止传播。
-5. 用户可管理已登录设备并注销其他设备。
+4. 用户可对单个好友选择“不对其展示”，只停止向该好友发送自己的桌宠与活动状态，好友关系仍保留。
+5. 用户可独立控制“允许好友查看我的活动状态”和“在桌面显示好友桌宠”。
 
 ## 4. 账号模型
 
 ```ts
 interface Account {
   id: UserId;
-  loginIdentifierVerified: boolean;
-  displayName: string;        // 1–24 Unicode 字符
+  username: string;           // 3–32 字符，唯一，登录凭据
+  displayName: string;        // MVP 默认等于 username，可在资料页修改
   friendCode: string;         // 8–12 位，不使用连续自增
   avatarCharacterItemId: EntityId;
   locale: string;
@@ -35,7 +35,7 @@ interface Account {
 }
 ```
 
-认证建议：短效 access token + 可轮换 refresh token；refresh token 只保存在 Electron 安全凭据存储中，不放 localStorage。
+密码只在服务端保存强哈希，不进入业务日志。认证使用短效 access token + 可轮换 refresh token；refresh token 只通过 Electron `safeStorage` 保存在 macOS Keychain 中，不放 SQLite 或 localStorage。发行构建必须保持稳定的签名身份，避免升级后重复触发 Keychain 授权。MVP 不提供设备会话列表、数据导出或“退出其他设备”界面；账号与计划数据以服务端记录为权威来源。
 
 ## 5. 好友关系状态机
 
@@ -43,13 +43,10 @@ interface Account {
 NONE
   └─ 发送申请 → PENDING_OUT / 对方 PENDING_IN
        ├─ 接受 → ACCEPTED
-       ├─ 拒绝/撤回 → NONE
-       └─ 拉黑 → BLOCKED
+       └─ 拒绝/撤回 → NONE
 ACCEPTED
   ├─ 删除 → NONE
-  └─ 拉黑 → BLOCKED
-BLOCKED
-  └─ 解除拉黑 → NONE
+  └─ 不对其展示 → ACCEPTED（仅单向关闭自己的活动投影）
 ```
 
 好友关系只保存一条规范记录，双方视图由 `requesterId / addresseeId / status` 投影，避免双记录不一致。
@@ -59,8 +56,10 @@ BLOCKED
 - 好友搜索只接受完整好友码，不提供模糊用户名遍历。
 - 每用户每小时发送申请数量应限流；重复申请返回现有关系，不新建记录。
 - 只有 `ACCEPTED` 才能订阅好友 presence 和公开动作。
-- 删除、拉黑、账号停用后，实时网关应在 3 秒内撤销订阅。
-- 拉黑关系不向被拉黑方透露具体原因，只表现为不可用。
+- 删除好友或账号停用后，实时网关应在 3 秒内撤销订阅。
+- “不对其展示”只关闭当前用户到指定好友的单向活动投影；对方看到“状态不可用”，不得表现为拉黑或解除好友。
+- 只有全局 `shareActivityWithFriends=true` 且该好友的 `shareActivityToFriend=true` 时，才向该好友发送活动状态与动作。
+- `showFriendPetsOnDesktop=false` 时，本机不订阅或不渲染好友桌宠，但不改变好友关系，也不影响自己的广播设置。
 - 好友列表不显示对方任务标题、DDL、日薪、窝囊费余额或识别来源。
 
 ## 7. 接口摘要
@@ -70,13 +69,12 @@ BLOCKED
 | `POST` | `/v1/auth/register` | 注册 |
 | `POST` | `/v1/auth/login` | 登录 |
 | `POST` | `/v1/auth/refresh` | 刷新会话 |
-| `DELETE` | `/v1/auth/sessions/{id}` | 注销设备 |
 | `GET` | `/v1/friends` | 获取好友和申请 |
 | `POST` | `/v1/friend-requests` | 按完整好友码申请 |
 | `POST` | `/v1/friend-requests/{id}/accept` | 接受 |
 | `DELETE` | `/v1/friend-requests/{id}` | 拒绝或撤回 |
 | `DELETE` | `/v1/friends/{userId}` | 删除 |
-| `POST` | `/v1/blocks` | 拉黑 |
+| `PUT` | `/v1/friends/{userId}/visibility` | 设置是否向该好友展示自己的状态 |
 
 精确请求/响应见 `13-api-event-contracts.md`。
 
@@ -91,13 +89,16 @@ BLOCKED
 1. 未注册用户无法进入好友联机场景。
 2. 未接受申请前，双方均看不到对方在线状态。
 3. 接受后 3 秒内可以看到对方当前公开状态。
-4. 删除或拉黑后 3 秒内停止接收对方状态。
-5. 使用好友 API 无法读取任务标题、窗口内容和经济余额。
-6. 同一申请重复提交不产生重复关系。
+4. 删除好友后 3 秒内停止双方状态订阅。
+5. 选择“不对其展示”后 3 秒内只停止当前用户到目标好友的活动投影，好友关系保持 `ACCEPTED`。
+6. 关闭“允许好友查看我的活动状态”后，任何好友都收不到当前用户的活动和动作。
+7. 关闭“在桌面显示好友桌宠”后，本机不显示好友桌宠，但自己的广播设置不被改动。
+8. 使用好友 API 无法读取任务标题、窗口内容和经济余额。
+9. 同一申请重复提交不产生重复关系。
 
 ## 10. 待确认项
 
-`[待确认: ACCOUNT-001]` MVP 使用邮箱、手机号还是二者均支持。建议先邮箱验证码。  
+`[已确认: ACCOUNT-001]` MVP 使用用户名 + 密码，不使用邮箱、手机号或验证码登录。  
 `[待确认: FRIEND-001]` 好友上限。建议 MVP 100 人，但主场景默认只渲染最近在线的 12 人。  
 `[待确认: ACCOUNT-002]` 是否允许显示名重复。建议允许，身份以好友码区分。
 
@@ -107,4 +108,3 @@ BLOCKED
 - 实时排排坐模块；
 - 通知与隐私模块；
 - API 与数据字典。
-

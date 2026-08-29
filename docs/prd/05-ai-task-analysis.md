@@ -18,12 +18,13 @@
 
 ```text
 Task Source
+  → Automatic Analysis Trigger
   → AI Analysis Proposal
   → Deterministic Validator / Request Assembler
   → User-confirmed Formal Task Fields
 ```
 
-AI 只输出 Proposal。确定性层负责 Schema、范围和权限校验；用户接受后才写入正式字段。
+每个新建任务自动触发一次分析并进入建议确认页，不在任务列表提供逐条手动分析按钮。AI 只输出 Proposal；确定性层负责 Schema、范围和权限校验，用户点击“确认建议”后才写入正式字段。
 
 ## 4. 输入
 
@@ -163,13 +164,15 @@ finalEstimate = baseEstimate × personalMultiplier
 
 ## 10. 验收条件
 
-1. 模型输出永远先落 Proposal，不直接修改 Task。
-2. 用户覆盖字段在重新分析后保持不变。
-3. 模型不可用时仍可给出确定性基线估计。
-4. 至少展示估计范围、置信程度和简短原因。
-5. 有足够历史后，个人特征参与估计且版本可追溯。
-6. 评估数据不包含日薪和可识别截图内容。
-7. 删除用户学习数据后，后续请求不再使用其历史特征。
+1. 新建任务后自动进入 AI 建议确认页，任务列表不出现逐条分析入口。
+2. 模型输出永远先落 Proposal，不直接修改 Task。
+3. 只有用户点击“确认建议”后，接受或修改过的字段才写入 Task。
+4. 用户覆盖字段在重新分析后保持不变。
+5. 模型不可用时仍可给出确定性基线估计。
+6. 至少展示估计范围、置信程度和简短原因。
+7. 有足够历史后，个人特征参与估计且版本可追溯。
+8. 评估数据不包含日薪和可识别截图内容。
+9. 注销账号或按服务端数据策略删除学习数据后，后续请求不再使用其历史特征。
 
 ## 11. 待确认项
 
@@ -183,4 +186,3 @@ finalEstimate = baseEstimate × personalMultiplier
 - 共享契约与任务类别数据集；
 - 日程编排；
 - 隐私和数据删除能力。
-

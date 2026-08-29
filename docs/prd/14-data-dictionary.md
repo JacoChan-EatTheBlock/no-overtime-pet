@@ -12,9 +12,11 @@
 
 | 实体 | 所有模块 | 主键 | 关键唯一约束 |
 |---|---|---|---|
-| `users` | Identity | `id` | `friend_code`；登录标识另表唯一 |
+| `users` | Identity | `id` | `username`、`friend_code` 唯一 |
 | `auth_sessions` | Identity | `id` | refresh token hash |
 | `friend_relations` | Social | `id` | 规范化用户对唯一 |
+| `friend_visibility_overrides` | Social | `id` | `owner_user_id + friend_user_id` 唯一 |
+| `privacy_settings` | Profile | `user_id` | 每用户一行 |
 | `work_schedule_settings` | Profile | `id` | `user_id + effective_from + revision` |
 | `wage_settings` | Profile | `id` | `user_id + effective_from + revision` |
 | `tasks` | Tasks | `id` | 无业务唯一；支持软删除 |
@@ -36,7 +38,6 @@
 | `inventory_items` | Commerce | `id` | `user_id + shop_item_id` |
 | `appearance_loadouts` | Commerce | `user_id` | 每用户一行 |
 | `privacy_consents` | Profile | `id` | `user + permission + policyVersion` |
-| `activity_corrections` | Local/AI | `id` | 本地优先，不含原始内容 |
 
 ## 3. 用户与好友
 
@@ -45,6 +46,8 @@
 | 字段 | 类型 | 规则 |
 |---|---|---|
 | `id` | UUID v7 | PK |
+| `username` | varchar(32) | 3–32 字符，唯一；登录使用，规范化规则上线前冻结 |
+| `password_hash` | text | 仅服务端认证层可读，禁止进入普通日志和 API 响应 |
 | `display_name` | varchar(64) | UI 限 1–24 Unicode 字符 |
 | `friend_code` | varchar(12) | 唯一、不可枚举 |
 | `locale` | varchar(16) | BCP 47 |
@@ -57,6 +60,12 @@
 保存 `user_low_id`、`user_high_id` 作为规范对，同时保存 requester。`user_low_id < user_high_id`，避免 A→B 和 B→A 两条记录。
 
 索引：`(user_low_id, status)`、`(user_high_id, status)`、`requester_id`。
+
+### 好友可见性
+
+- `friend_visibility_overrides` 保存 `owner_user_id`、`friend_user_id`、`share_activity_to_friend` 和 revision；关闭时关系仍为 `ACCEPTED`。
+- `privacy_settings` 至少保存 `share_activity_with_friends` 与 `show_friend_pets_on_desktop`，两者必须独立更新。
+- 有效活动投影条件为全局 `share_activity_with_friends=true` 且对应 `share_activity_to_friend=true`。
 
 ## 4. 设置
 
@@ -154,7 +163,6 @@ SUM(recipients.awarded_minor) + carried_out_remainder_minor
 - `asset_cache_index`
 - `offline_command_queue`
 - `activity_feature_windows`
-- `activity_corrections`
 
 禁止本地持久化：原始截图、具体按键、完整 URL、密码、refresh token 明文。
 

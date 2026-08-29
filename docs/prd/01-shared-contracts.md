@@ -66,7 +66,7 @@ type PetAction =
   | "MOUSE_MOVE" | "MOUSE_CLICK" | "MEETING_DAZE"
   | "READ" | "SLACK_SECRETLY" | "AWAY_DISAPPEAR" | "CELEBRATE";
 
-type FriendRelationStatus = "NONE" | "PENDING_OUT" | "PENDING_IN" | "ACCEPTED" | "BLOCKED";
+type FriendRelationStatus = "NONE" | "PENDING_OUT" | "PENDING_IN" | "ACCEPTED";
 type PresenceStatus = "ONLINE" | "IDLE" | "AWAY" | "OFFLINE";
 
 type LedgerEntryType =
@@ -292,6 +292,18 @@ Proposal 不得直接覆盖正式任务。用户接受后，由确定性 Request
 ## 8. 活动识别与公开状态边界
 
 ```ts
+interface FriendVisibilitySettings extends ContractHeader {
+  userId: UserId;
+  shareActivityWithFriends: boolean;
+  showFriendPetsOnDesktop: boolean;
+}
+
+interface FriendVisibilityOverride extends ContractHeader {
+  ownerUserId: UserId;
+  friendUserId: UserId;
+  shareActivityToFriend: boolean;
+}
+
 interface PrivateActivityObservation {
   schemaVersion: "1.0";
   observedAt: UTCTimestamp;
@@ -314,6 +326,8 @@ interface PublicActivityProjection {
 ```
 
 好友事件中禁止包含应用名、进程路径、窗口标题、URL、截图、文档内容、按键、鼠标坐标和模型原始解释。
+
+`shareActivityWithFriends` 控制是否向任何好友广播自己的活动；`showFriendPetsOnDesktop` 只控制本机是否渲染好友桌宠。单个好友的“不对其展示”写入 `FriendVisibilityOverride.shareActivityToFriend=false`，不改变 `ACCEPTED` 好友关系，也不影响对方是否向当前用户展示。
 
 ## 9. API 通用信封
 
