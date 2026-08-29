@@ -1,0 +1,36 @@
+# 不要加班 — 开发环境 (云端依赖版)
+# 
+# PostgreSQL, Redis, Storage 全部使用云端服务:
+#   - Supabase (Auth + PostgreSQL + Storage)
+#   - Upstash (Redis)
+#
+# 本文件只编排本地需要运行的应用服务（可选，也可直接 pnpm dev）
+# 如果你更喜欢 pnpm dev:api / pnpm dev:realtime，可以不用 docker-compose
+
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file: .env.local
+    depends_on: []  # 无本地依赖！
+
+  realtime:
+    build:
+      context: .
+      dockerfile: apps/realtime/Dockerfile
+    ports:
+      - "3001:3001"
+    env_file: .env.local
+
+  ai-service:
+    build:
+      context: ./apps/ai-service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file: .env.local

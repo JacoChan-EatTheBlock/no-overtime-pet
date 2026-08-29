@@ -1,26 +1,35 @@
-.DS_Store
-.AppleDouble
-.LSOverride
-Thumbs.db
-
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# Build outputs
 dist/
-build/
+*.tsbuildinfo
+.turbo/
+
+# Electron
 out/
-coverage/
+release/
 
-.env
-.env.*
-!.env.example
-*.log
-
-.vscode/
-.idea/
-
+# Python
 __pycache__/
 *.pyc
 .venv/
+*.egg-info/
 
-*.p12
-*.pfx
-*.provisionprofile
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Test
+coverage/

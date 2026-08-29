@@ -1,0 +1,37 @@
+{
+  "name": "@not/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "vite",
+    "dev:electron": "electron .",
+    "build": "tsc -p tsconfig.json && vite build",
+    "build:electron": "electron-builder --mac --arm64",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "pixi.js": "^8.3.0",
+    "zustand": "^4.5.0",
+    "@tanstack/react-query": "^5.50.0",
+    "better-sqlite3": "^11.1.0",
+    "socket.io-client": "^4.7.0",
+    "@not/contracts": "workspace:*",
+    "@not/domain": "workspace:*",
+    "@not/asset-runtime": "workspace:*"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.0",
+    "vite": "^5.4.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "typescript": "^5.5.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@types/better-sqlite3": "^7.6.0"
+  }
+}

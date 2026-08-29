@@ -1,0 +1,27 @@
+{
+  "name": "@not/realtime",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/core": "^10.4.0",
+    "@nestjs/common": "^10.4.0",
+    "@nestjs/config": "^3.2.0",
+    "@nestjs/platform-socket.io": "^10.4.0",
+    "@nestjs/websockets": "^10.4.0",
+    "socket.io": "^4.7.0",
+    "ioredis": "^5.4.0",
+    "@not/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.4.0",
+    "typescript": "^5.5.0"
+  }
+}

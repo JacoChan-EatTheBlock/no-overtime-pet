@@ -1,0 +1,34 @@
+appId: com.noovertime.pet
+productName: 不要加班
+copyright: Copyright © 2026
+
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: [arm64]
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: entitlements.mac.plist
+  entitlementsInherit: entitlements.mac.plist
+  notarize:
+    teamId: TEAM_ID_HERE
+
+dmg:
+  sign: true
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - assets/**/*
+  - "!**/*.map"

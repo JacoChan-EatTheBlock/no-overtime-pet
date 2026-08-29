@@ -1,0 +1,29 @@
+{
+  "name": "no-overtime-pet",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@9.7.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev:desktop": "turbo run dev --filter=@not/desktop",
+    "dev:api": "turbo run dev --filter=@not/api",
+    "dev:realtime": "turbo run dev --filter=@not/realtime",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.0",
+    "typescript": "^5.5.0",
+    "eslint": "^9.8.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "prettier": "^3.3.0",
+    "vitest": "^2.0.0"
+  }
+}
