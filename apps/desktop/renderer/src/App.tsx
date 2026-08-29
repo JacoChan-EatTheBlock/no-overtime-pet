@@ -7,7 +7,7 @@ import { FriendsManagementScreen } from './features/pet-social-menu/PetSocialMen
 import { ShopScreen } from './features/shop/ShopScreen'
 import { CustomizationScreen } from './features/customization/CustomizationScreen'
 import { WalletScreen } from './features/wallet/WalletScreen'
-import { WorkSettingsScreen } from './features/settings/WorkSettingsScreen'
+import { SettingsUiGroup } from './features/settings/SettingsUiGroup'
 import styles from './App.module.css'
 
 /**
@@ -89,7 +89,7 @@ export function App() {
       />
     ),
     settings: (
-      <WorkSettingsScreen />
+      <SettingsUiGroup />
     ),
   }
 

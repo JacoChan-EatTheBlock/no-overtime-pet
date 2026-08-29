@@ -8,6 +8,8 @@ dist/
 build/
 out/
 coverage/
+.turbo/
+*.tsbuildinfo
 
 .env
 .env.*
