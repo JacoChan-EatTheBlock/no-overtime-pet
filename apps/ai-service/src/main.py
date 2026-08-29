@@ -1,11 +1,15 @@
 """
-AI Service Entry Point
+AI Service Entry Point — 不要加班
+
+Provider: 硅基流动 (SiliconFlow) — OpenAI 兼容接口
+Models: Qwen2.5-72B / DeepSeek-V3 / GLM-4 等
 
 Provides:
 - Task analysis (category, duration estimate, cognitive load)
 - Schedule optimization (deterministic solver)
 - Desktop activity vision classification
 """
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,10 +17,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: load models, warm caches
-    print("[ai-service] Starting up...")
+    # Startup: verify LLM connection
+    print(f"[ai-service] LLM Provider: {os.getenv('LLM_BASE_URL')}")
+    print(f"[ai-service] LLM Model: {os.getenv('LLM_MODEL')}")
     yield
-    # Shutdown: cleanup
     print("[ai-service] Shutting down...")
 
 
@@ -36,15 +40,16 @@ app.add_middleware(
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "service": "ai-service"}
+    return {
+        "status": "ok",
+        "service": "ai-service",
+        "llm_provider": "siliconflow",
+        "model": os.getenv("LLM_MODEL", "not configured"),
+    }
 
 
-# ─── Task Analysis ─────────────────────────────────────────────
-
-# from .routers import task_analysis, scheduling, vision
-# app.include_router(task_analysis.router, prefix="/task-analysis")
-# app.include_router(scheduling.router, prefix="/schedules")
-# app.include_router(vision.router, prefix="/vision")
+from .routers import task_analysis
+app.include_router(task_analysis.router, prefix="/task-analysis", tags=["Task Analysis"])
 
 
 if __name__ == "__main__":
