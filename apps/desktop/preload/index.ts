@@ -27,10 +27,20 @@ export interface NotAiApi {
   }) => Promise<unknown>
 }
 
+export interface PetShellApi {
+  requestContextMenu: () => void
+  toggleMainWindow: () => void
+}
+
 const desktopShell: DesktopShellApi = {
   minimizeMainWindow: () => ipcRenderer.send('shell:minimize-main-window'),
   toggleMaximizeMainWindow: () => ipcRenderer.send('shell:toggle-maximize-main-window'),
   hideMainWindow: () => ipcRenderer.send('shell:hide-main-window')
+}
+
+const petShell: PetShellApi = {
+  requestContextMenu: () => ipcRenderer.send('pet:context-menu'),
+  toggleMainWindow: () => ipcRenderer.send('pet:toggle-main-window')
 }
 
 const notAI: NotAiApi = {
@@ -41,3 +51,4 @@ const notAI: NotAiApi = {
 
 contextBridge.exposeInMainWorld('desktopShell', desktopShell)
 contextBridge.exposeInMainWorld('notAI', notAI)
+contextBridge.exposeInMainWorld('petShell', petShell)

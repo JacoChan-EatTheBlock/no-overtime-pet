@@ -24,10 +24,17 @@ interface NotAiApi {
   }) => Promise<unknown>
 }
 
+/** 由 preload 注入；桌宠悬浮窗用来弹出原生右键菜单、点击唤出/收起主窗口。 */
+interface PetShellApi {
+  requestContextMenu: () => void
+  toggleMainWindow: () => void
+}
+
 declare global {
   interface Window {
     desktopShell?: DesktopShellApi
     notAI: NotAiApi
+    petShell?: PetShellApi
   }
 }
 
