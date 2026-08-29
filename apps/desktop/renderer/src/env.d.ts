@@ -24,10 +24,13 @@ interface NotAiApi {
   }) => Promise<unknown>
 }
 
-/** 由 preload 注入；桌宠悬浮窗用来弹出原生右键菜单、点击唤出/收起主窗口。 */
+/** 由 preload 注入；桌宠悬浮窗用来弹出原生右键菜单、点击唤出/收起主窗口、手动拖拽定位。 */
 interface PetShellApi {
   requestContextMenu: () => void
   toggleMainWindow: () => void
+  dragStart: (screenX: number, screenY: number) => void
+  dragMove: (screenX: number, screenY: number) => void
+  dragEnd: () => void
 }
 
 declare global {

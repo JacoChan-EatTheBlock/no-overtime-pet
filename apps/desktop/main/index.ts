@@ -5,6 +5,8 @@ import { aiStatus, handleAnalyzeTask, handleGenerateSchedule, loadEnv } from './
 
 let mainWindow: BrowserWindow | null = null
 let petWindow: BrowserWindow | null = null
+/** 手动拖拽悬浮窗时，鼠标屏幕坐标相对窗口原点的偏移——drag-start 记一次，drag-move 一直复用。 */
+let petDragOffset: { dx: number; dy: number } | null = null
 
 const RENDERER_DIR = join(__dirname, '../renderer')
 const PET_WINDOW_SIZE = 192
@@ -178,6 +180,24 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('pet:toggle-main-window', () => toggleMainWindow())
+
+  // 手动拖拽（不用 -webkit-app-region: drag——那个会吃掉 click，见 PetOverlay 组件注释）。
+  ipcMain.on('pet:drag-start', (event, screenX: number, screenY: number) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return
+    const [winX, winY] = win.getPosition()
+    petDragOffset = { dx: screenX - winX, dy: screenY - winY }
+  })
+
+  ipcMain.on('pet:drag-move', (event, screenX: number, screenY: number) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win || !petDragOffset) return
+    win.setPosition(Math.round(screenX - petDragOffset.dx), Math.round(screenY - petDragOffset.dy))
+  })
+
+  ipcMain.on('pet:drag-end', () => {
+    petDragOffset = null
+  })
 
   createMainWindow(false)
   createPetWindow()

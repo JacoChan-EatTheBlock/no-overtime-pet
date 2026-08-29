@@ -5,8 +5,9 @@
   align-items: flex-end;
   justify-content: center;
   background: transparent;
-  /* 整个悬浮窗都可拖动定位；没有边框可抓，只能靠内容区自己声明拖拽区。 */
-  -webkit-app-region: drag;
+  /* 拖拽是手动用鼠标事件 + IPC 做的（见 PetOverlay.tsx 组件注释），
+     不用 -webkit-app-region: drag——那个属性会把 click 事件整个吃掉。 */
+  cursor: grab;
 }
 
 .sprite {

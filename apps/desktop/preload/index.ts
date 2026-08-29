@@ -30,6 +30,10 @@ export interface NotAiApi {
 export interface PetShellApi {
   requestContextMenu: () => void
   toggleMainWindow: () => void
+  /** 手动拖拽实现的三段式：down 记起点，move 跟随，up 结束（见主进程 pet:drag-* 处理）。 */
+  dragStart: (screenX: number, screenY: number) => void
+  dragMove: (screenX: number, screenY: number) => void
+  dragEnd: () => void
 }
 
 const desktopShell: DesktopShellApi = {
@@ -40,7 +44,10 @@ const desktopShell: DesktopShellApi = {
 
 const petShell: PetShellApi = {
   requestContextMenu: () => ipcRenderer.send('pet:context-menu'),
-  toggleMainWindow: () => ipcRenderer.send('pet:toggle-main-window')
+  toggleMainWindow: () => ipcRenderer.send('pet:toggle-main-window'),
+  dragStart: (screenX, screenY) => ipcRenderer.send('pet:drag-start', screenX, screenY),
+  dragMove: (screenX, screenY) => ipcRenderer.send('pet:drag-move', screenX, screenY),
+  dragEnd: () => ipcRenderer.send('pet:drag-end')
 }
 
 const notAI: NotAiApi = {
